@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Timers;
-//using System.Windows.Forms;
+using System.Windows.Forms;
 
 using System.Threading.Tasks;
 using Emgu.CV.Dnn;
@@ -16,6 +16,10 @@ using System.Diagnostics;
 using System.Reflection;
 using DarknetYolo;
 using DarknetYolo.Models;
+
+using DarknetYOLOv4;
+
+
 
 namespace YOLOv4_TEST
 {
@@ -29,15 +33,15 @@ namespace YOLOv4_TEST
         static string video = @"https://live.cmirit.ru:443/live/rvi19_1920x1080.stream/playlist.m3u8";
         static VideoCapture cap;
         static DarknetYOLO model;
-        static Timer FrameTicker;
+        static System.Timers.Timer FrameTicker;
 
 
 
-        public static void StreamObjectDetect()
+        public static void StreamObjectDetect(Object box)
         {
-            FrameTicker = new Timer();
+            FrameTicker = new System.Timers.Timer();
             cap = new VideoCapture(video);
-           // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
+            // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
 
             Console.WriteLine("[INFO] Loading Model...");
             model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);
@@ -52,13 +56,13 @@ namespace YOLOv4_TEST
 
             while (true)
             {
-                ProcessFrame().Wait();
+                ProcessFrame((PictureBox)box).Wait();
 
             }
 
         }
 
-        public static async Task ProcessFrame()
+        public static async Task ProcessFrame(PictureBox box)
         {
             int FrameN;
             Mat frame = new Mat();
@@ -71,7 +75,7 @@ namespace YOLOv4_TEST
 
                 FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
                 FrameN = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames));
-                
+
 
                 Console.WriteLine(Convert.ToString(FrameN));
             }
@@ -99,18 +103,18 @@ namespace YOLOv4_TEST
                 CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
                 CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
             }
-            CvInvoke.Imshow("test", frame);
+           // CvInvoke.Imshow("test", frame);
             CvInvoke.WaitKey(1);
 
-
-            await Task.Delay((1100 / FPS));//1000 
+            box.Image = frame.ToBitmap();
+            await Task.Delay((1000 / FPS));//1000 
 
         }
 
-        private static void VideoTimerTick(object sender, EventArgs e)
-        {
-            Console.WriteLine("Tick");
-            //ProcessFrame();
-        }
+        /* private static void VideoTimerTick(object sender, EventArgs e)
+         {
+             Console.WriteLine("Tick");
+             //ProcessFrame();
+         }*/
     }
 }

@@ -67,6 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameObjectDetector.cs" />
+    <Compile Include="ObjectDetectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ObjectDetectorForm.Designer.cs">
+      <DependentUpon>ObjectDetectorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,6 +92,11 @@
       <Project>{7DABB117-1FC1-42B9-A385-B3786A85B025}</Project>
       <Name>DarknetYolo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ObjectDetectorForm.resx">
+      <DependentUpon>ObjectDetectorForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="..\References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
