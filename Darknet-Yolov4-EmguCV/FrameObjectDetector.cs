@@ -30,39 +30,32 @@ namespace YOLOv4_TEST
         static string labels = @"..\..\NetworkModels\coco.names";
         static string weights = @"..\..\NetworkModels\yolov4-tiny.weights";
         static string cfg = @"..\..\NetworkModels\yolov4-tiny.cfg";
-        static string video = @"https://live.cmirit.ru:443/live/rvi19_1920x1080.stream/playlist.m3u8";
+        static string video = @"https://live.cmirit.ru:443/live/axis4_1920x1080.stream/playlist.m3u8";
         static VideoCapture cap;
         static DarknetYOLO model;
         static System.Timers.Timer FrameTicker;
 
 
 
-        public static void StreamObjectDetect(Object box)
+        public  void StreamObjectDetect(Object form)
         {
             FrameTicker = new System.Timers.Timer();
             cap = new VideoCapture(video);
-            // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
+
 
             Console.WriteLine("[INFO] Loading Model...");
             model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);
             model.NMSThreshold = 0.4f;
             model.ConfidenceThreshold = 0.5f;
 
-            //Frame Rate
-            //FrameTicker.Interval = 1000 / FPS;
-            //  FrameTicker.Elapsed += new ElapsedEventHandler(VideoTimerTick);
-            // FrameTicker.Start();
-
-
             while (true)
             {
-                ProcessFrame((PictureBox)box).Wait();
-
+                ProcessFrame((ObjectDetectorForm)form).Wait();
             }
 
         }
 
-        public static async Task ProcessFrame(PictureBox box)
+        public  async Task ProcessFrame(ObjectDetectorForm form)
         {
             int FrameN;
             Mat frame = new Mat();
@@ -96,6 +89,9 @@ namespace YOLOv4_TEST
 
 
             Console.WriteLine($"Frame Processing time: {watch.ElapsedMilliseconds} ms." + $" FPS: {1000f / watch.ElapsedMilliseconds}" + $" VideoFPS: {FPS}");
+
+            form.label1.Invoke(new Action(() => form.label1.Text = $"Frame Processing time: {watch.ElapsedMilliseconds} ms." + $" FPS: {1000f / watch.ElapsedMilliseconds}" + $" VideoFPS: {FPS}"));
+           // output.StatusText.Text = $"Frame Processing time: {watch.ElapsedMilliseconds} ms." + $"Processing FPS: {1000f / watch.ElapsedMilliseconds}" + $" VideoFPS: {FPS}";
             foreach (var item in results)
             {
                 string text = item.Label + " " + item.Confidence;
@@ -106,15 +102,9 @@ namespace YOLOv4_TEST
            // CvInvoke.Imshow("test", frame);
             CvInvoke.WaitKey(1);
 
-            box.Image = frame.ToBitmap();
+            form.pictureBox1.Image = frame.ToBitmap();
             await Task.Delay((1000 / FPS));//1000 
 
         }
-
-        /* private static void VideoTimerTick(object sender, EventArgs e)
-         {
-             Console.WriteLine("Tick");
-             //ProcessFrame();
-         }*/
     }
 }
