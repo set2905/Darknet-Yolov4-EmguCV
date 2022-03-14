@@ -66,8 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DetectionResultOutput.cs" />
-    <Compile Include="FrameObjectDetector.cs" />
+    <Compile Include="FrameHandlerBase.cs" />
     <Compile Include="ObjectDetectorForm.cs">
       <SubType>Form</SubType>
     </Compile>

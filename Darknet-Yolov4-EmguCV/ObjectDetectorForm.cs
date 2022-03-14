@@ -17,7 +17,7 @@ namespace DarknetYOLOv4
     {
 
         private Thread _cameraThread;
-        private DetectionResultOutput detectionOutput;
+
 
         public ObjectDetectorForm()
         {
@@ -33,11 +33,13 @@ namespace DarknetYOLOv4
         {
 
             if (_cameraThread != null)
+            {
                 _cameraThread.Abort();
+                _cameraThread = null;
+                return;
+            }
 
-           // detectionOutput = new DetectionResultOutput(pictureBox1, label1);
-
-            _cameraThread = new Thread(new ParameterizedThreadStart(new FrameObjectDetector().StreamObjectDetect));
+            _cameraThread = new Thread(new ParameterizedThreadStart(new FrameHandlerBase().PlayFrames));
             _cameraThread.Start(this);
 
         }
