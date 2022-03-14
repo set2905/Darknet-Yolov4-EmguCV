@@ -7,22 +7,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using YOLOv4_TEST;
+using DarknetYOLOv4.FrameHandler;
 
 using System.Threading;
 
 namespace DarknetYOLOv4
 {
+    public enum PlayMode
+    {
+        DetectorYOLO,
+        Play
+    }
     public partial class ObjectDetectorForm : Form
     {
 
         private Thread _cameraThread;
-
+        public PlayMode currentPlayMode;
+        private FrameHandlerBase currentFrameHandler;
 
         public ObjectDetectorForm()
         {
             InitializeComponent();
+
+            PlayModeComboCox.DataSource = Enum.GetValues(typeof(PlayMode));
         }
+
 
         private void ObjectDetectorForm_Load(object sender, EventArgs e)
         {
@@ -32,14 +41,31 @@ namespace DarknetYOLOv4
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if (_cameraThread != null)
+            if (currentFrameHandler != null)
             {
+                //так не должно быть
                 _cameraThread.Abort();
                 _cameraThread = null;
+                currentFrameHandler = null;
+                StartButton.Text = "START";
                 return;
             }
+            else StartButton.Text = "STOP";
 
-            _cameraThread = new Thread(new ParameterizedThreadStart(new FrameHandlerBase().PlayFrames));
+            currentFrameHandler = new FramePlayer();
+
+            switch (currentPlayMode)
+            {
+                case PlayMode.Play:
+                    currentFrameHandler = new FramePlayer();
+                    break;
+                case PlayMode.DetectorYOLO:
+                    currentFrameHandler = new FrameObjectDetectorYOLO();
+                    break;
+
+            }
+
+            _cameraThread = new Thread(new ParameterizedThreadStart(currentFrameHandler.PlayFrames));
             _cameraThread.Start(this);
 
         }
@@ -54,6 +80,11 @@ namespace DarknetYOLOv4
 
         }
 
+        private void PlayModeComboCox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+            currentPlayMode = (PlayMode)PlayModeComboCox.SelectedItem;
 
+        }
     }
 }

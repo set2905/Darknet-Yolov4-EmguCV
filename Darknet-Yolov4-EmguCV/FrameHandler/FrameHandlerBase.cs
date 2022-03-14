@@ -21,73 +21,84 @@ using DarknetYOLOv4;
 
 
 
-namespace YOLOv4_TEST
+namespace DarknetYOLOv4.FrameHandler
 {
-    internal class FrameHandlerBase
+    internal abstract class FrameHandlerBase
     {
-        private int FPS = 5;
+        protected int FPS = 5;
+        protected int FrameN = 0;
 
-        string labels = @"..\..\NetworkModels\coco.names";
-        string weights = @"..\..\NetworkModels\yolov4-tiny.weights";
-        string cfg = @"..\..\NetworkModels\yolov4-tiny.cfg";
-        string video = @"https://live.cmirit.ru:443/live/smart14_1920x1080.stream/playlist.m3u8";
-        VideoCapture cap;
-        DarknetYOLO model;
+        protected string labels = @"..\..\NetworkModels\coco.names";
+        protected string weights = @"..\..\NetworkModels\yolov4-tiny.weights";
+        protected string cfg = @"..\..\NetworkModels\yolov4-tiny.cfg";
+        protected string video = @"https://live.cmirit.ru:443/live/axis4_1920x1080.stream/playlist.m3u8";
+
+
+        protected VideoCapture cap;
+        protected DarknetYOLO model;
         public bool isPlaying = false;
         public string StatusText = "";
-
+        protected ObjectDetectorForm videoForm;
         public void PlayFrames(Object form)
         {
-            ObjectDetectorForm videoForm = (ObjectDetectorForm)form;
-            cap = new VideoCapture(video);
+            videoForm = (ObjectDetectorForm)form;
 
-            LoadModel(videoForm);
+            cap = new VideoCapture(video);
+            
+            LoadModel();
 
             isPlaying = true;
             while (isPlaying)
             {
-                ProcessFrame(videoForm).Wait();
+                ProcessFrame(GetFrame()).Wait();
             }
 
         }
 
-        public async Task ProcessFrame(ObjectDetectorForm form)
+        private Mat GetFrame()
         {
-
-            int FrameN = 0;
+            
             Mat frame = new Mat();
             try
             {
-
                 cap.Read(frame);
 
                 CvInvoke.Resize(frame, frame, new Size(1280, 768));
 
                 FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
                 FrameN = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames));
-
-
                 Console.WriteLine(Convert.ToString(FrameN));
 
             }
             catch (Exception e)
             {
-                SetStatus(form, "VideoEnded");
+                SetStatus("VideoEnded");
                 frame = null;
             }
             if (frame == null)
             {
-                SetStatus(form, "FrameIsNull");
+                SetStatus("FrameIsNull");
 
-                return;
+                return null;
             }
+
+            return frame;
+        }
+
+        public virtual async Task ProcessFrame(Mat frame)
+        {
             Stopwatch watch = new Stopwatch();
             watch.Start();
             List<YoloPrediction> results = model.Predict(frame.ToBitmap(), 512, 512);
             watch.Stop();
 
-            SetStatus(form, $"Frame Processing time: {watch.ElapsedMilliseconds} ms." + $"\nFPS: {Math.Ceiling(1000f / watch.ElapsedMilliseconds)}" + $"\nVideoFPS: {FPS}" + $"\nFrameNo: {FrameN}");
-
+            SetStatus
+                (
+                $"Frame Processing time: {watch.ElapsedMilliseconds} ms."
+                + $"\nFPS: {Math.Ceiling(1000f / watch.ElapsedMilliseconds)}"
+                + $"\nVideoFPS: {FPS}"
+                + $"\nFrameNo: {FrameN}"
+                );
 
             foreach (var item in results)
             {
@@ -98,22 +109,21 @@ namespace YOLOv4_TEST
             }
             // CvInvoke.Imshow("test", frame);
             CvInvoke.WaitKey(1);
-
-            form.pictureBox1.Image = frame.ToBitmap();
+            videoForm.pictureBox1.Image = frame.ToBitmap();
             await Task.Delay((1000 / FPS));//1000 
 
         }
 
-        private void SetStatus(ObjectDetectorForm form, string status)
+        protected void SetStatus(string status)
         {
             StatusText = status;
             Console.WriteLine(StatusText);
-            form.label1.Invoke(new Action(() => form.label1.Text = StatusText));
+            videoForm.label1.Invoke(new Action(() => videoForm.label1.Text = StatusText));
         }
 
-        private void LoadModel(ObjectDetectorForm form)
+        private void LoadModel()
         {
-            SetStatus(form, "[INFO] Loading Model...");
+            SetStatus("[INFO] Loading Model...");
             model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);
             model.NMSThreshold = 0.4f;
             model.ConfidenceThreshold = 0.5f;
