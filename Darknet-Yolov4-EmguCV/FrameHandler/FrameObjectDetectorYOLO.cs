@@ -37,7 +37,7 @@ namespace DarknetYOLOv4.FrameHandler
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            List<YoloPrediction> results = model.Predict(frame.ToBitmap(),ResizedProcessing.Height, ResizedProcessing.Width);
+            List<YoloPrediction> results = model.Predict(frame.ToBitmap(),ProcessingSize.Height, ProcessingSize.Width);
             watch.Stop();
 
             SetStatus

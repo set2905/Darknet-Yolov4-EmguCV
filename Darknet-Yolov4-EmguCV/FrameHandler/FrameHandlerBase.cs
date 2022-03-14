@@ -27,8 +27,8 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FrameN = 0;
 
         protected string video = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
-        protected Size ResizedProcessing = new Size(320, 240);
-
+        protected Size ProcessingSize = new Size(320, 240);
+        protected Size OriginalSize = new Size(1920, 1080);
 
         protected VideoCapture cap;
         protected DarknetYOLO model;
@@ -62,7 +62,7 @@ namespace DarknetYOLOv4.FrameHandler
             {
                 cap.Read(frame);
 
-                CvInvoke.Resize(frame, frame, new Size(1920, 1080));
+                CvInvoke.Resize(frame, frame, OriginalSize);
 
                 if (!videoForm.isFPSFixed)
                     FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));

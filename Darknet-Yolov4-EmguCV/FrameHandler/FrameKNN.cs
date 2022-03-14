@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected override void Initialize(Object form)
         {
             base.Initialize(form);
-            backgroundSubtractor = new BackgroundSubtractorKNN(1500,16,true);
+            backgroundSubtractor = new BackgroundSubtractorKNN(1500, 16, true);
         }
 
         public override async Task ProcessFrame(Mat frame)
@@ -37,7 +37,7 @@ namespace DarknetYOLOv4.FrameHandler
 
             Mat resizedFrame = new Mat();
             //resizedFrame=frame;
-            CvInvoke.Resize(frame, resizedFrame, ResizedProcessing);
+            CvInvoke.Resize(frame, resizedFrame, ProcessingSize);
 
             try
             {
@@ -54,11 +54,15 @@ namespace DarknetYOLOv4.FrameHandler
 
                 CvInvoke.Threshold(foregroundMask, foregroundMask, 150, 400, ThresholdType.Binary);
                 // CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
-                 //    Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+                //    Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
 
                 int minArea = 250;
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+
+                // CvInvoke.AddWeighted(frame,.5f,foregroundMask,.1f,0,frame);
+              //  frame = frame | foregroundMask;
+
                 watch.Stop();
 
 
@@ -75,15 +79,15 @@ namespace DarknetYOLOv4.FrameHandler
                     Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
                     int area = bbox.Width * bbox.Height;
                     float ar = (float)bbox.Width / bbox.Height;
-                    
+
                     if (area > minArea /*&& ar < 1.0*/)
                     {
-                        CvInvoke.Rectangle(frame, RemapRect(bbox,ResizedProcessing,new Size(1920,1080)), new MCvScalar(0, 0, 255), 2);
+                        CvInvoke.Rectangle(frame, RemapRect(bbox, ProcessingSize, OriginalSize), new MCvScalar(0, 0, 255), 2);
 
                     }
 
                 }
-                
+
 
                 videoForm.pictureBox1.Image = frame.ToBitmap();
                 await Task.Delay((1000 / FPS));//1000 
@@ -107,7 +111,7 @@ namespace DarknetYOLOv4.FrameHandler
             remapped.Height = original.Size.Height * (to.Height / from.Height);
 
             remapped.X = original.X * (to.Width / from.Width);
-            remapped.Y = original.Y * (to.Height / from.Height);
+            remapped.Y = original.Y * (to.Height / from.Height)+ original.Y/2;//хз почему так
             return remapped;
         }
     }
