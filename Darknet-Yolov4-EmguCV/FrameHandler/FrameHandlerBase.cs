@@ -23,11 +23,11 @@ namespace DarknetYOLOv4.FrameHandler
 {
     internal abstract class FrameHandlerBase
     {
-        protected int FPS = 5;
+        protected int FPS = 24;
         protected int FrameN = 0;
 
         protected string video = @"https://live.cmirit.ru:443/live/smart14_1920x1080.stream/playlist.m3u8";
-        protected Size ResizedProcessing = new Size(512, 512);
+        protected Size ResizedProcessing = new Size(640, 480);
 
 
         protected VideoCapture cap;
