@@ -33,8 +33,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.PlayModeComboCox = new System.Windows.Forms.ComboBox();
+            this.isFpsFixedBox = new System.Windows.Forms.CheckBox();
+            this.FixedFpsValueBox = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FixedFpsValueBox)).BeginInit();
             this.SuspendLayout();
             // 
             // StartButton
@@ -92,12 +95,34 @@
             this.PlayModeComboCox.TabIndex = 1;
             this.PlayModeComboCox.SelectedIndexChanged += new System.EventHandler(this.PlayModeComboCox_SelectedIndexChanged);
             // 
+            // isFpsFixedBox
+            // 
+            this.isFpsFixedBox.AutoSize = true;
+            this.isFpsFixedBox.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.isFpsFixedBox.Location = new System.Drawing.Point(924, 3);
+            this.isFpsFixedBox.Name = "isFpsFixedBox";
+            this.isFpsFixedBox.Size = new System.Drawing.Size(74, 17);
+            this.isFpsFixedBox.TabIndex = 4;
+            this.isFpsFixedBox.Text = "Fixed FPS";
+            this.isFpsFixedBox.UseVisualStyleBackColor = true;
+            this.isFpsFixedBox.CheckedChanged += new System.EventHandler(this.isFpsFixedBox_CheckedChanged);
+            // 
+            // FixedFpsValueBox
+            // 
+            this.FixedFpsValueBox.Location = new System.Drawing.Point(992, 1);
+            this.FixedFpsValueBox.Name = "FixedFpsValueBox";
+            this.FixedFpsValueBox.Size = new System.Drawing.Size(39, 20);
+            this.FixedFpsValueBox.TabIndex = 5;
+            this.FixedFpsValueBox.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
             // ObjectDetectorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(59)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(1059, 517);
+            this.Controls.Add(this.FixedFpsValueBox);
+            this.Controls.Add(this.isFpsFixedBox);
             this.Controls.Add(this.PlayModeComboCox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
@@ -107,7 +132,9 @@
             this.Load += new System.EventHandler(this.ObjectDetectorForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.FixedFpsValueBox)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -118,5 +145,7 @@
         public System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel1;
         public System.Windows.Forms.ComboBox PlayModeComboCox;
+        public System.Windows.Forms.CheckBox isFpsFixedBox;
+        public System.Windows.Forms.NumericUpDown FixedFpsValueBox;
     }
 }

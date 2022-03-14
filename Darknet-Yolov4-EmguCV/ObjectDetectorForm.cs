@@ -26,11 +26,17 @@ namespace DarknetYOLOv4
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
 
+        public bool isFPSFixed;
+        public int FixedFPSValue;
+
         public ObjectDetectorForm()
         {
             InitializeComponent();
 
             PlayModeComboCox.DataSource = Enum.GetValues(typeof(PlayMode));
+            FixedFPSValue = (int)FixedFpsValueBox.Value;
+            isFPSFixed = isFpsFixedBox.Checked;
+            FixedFpsValueBox.Enabled = isFPSFixed;
         }
 
 
@@ -50,6 +56,7 @@ namespace DarknetYOLOv4
                 currentFrameHandler = null;
                 pictureBox1.Image = null;
                 PlayModeComboCox.Enabled = true;
+                label1.Text = "Video Stopped";
                 StartButton.Text = "START";
                 return;
             }
@@ -96,6 +103,17 @@ namespace DarknetYOLOv4
 
             currentPlayMode = (PlayMode)PlayModeComboCox.SelectedItem;
 
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            FixedFPSValue = (int)FixedFpsValueBox.Value;
+        }
+
+        private void isFpsFixedBox_CheckedChanged(object sender, EventArgs e)
+        {
+            isFPSFixed = isFpsFixedBox.Checked;
+            FixedFpsValueBox.Enabled = isFPSFixed;
         }
     }
 }

@@ -44,7 +44,7 @@ namespace DarknetYOLOv4.FrameHandler
         public void PlayFrames(Object form)
         {
             Initialize(form);
-            
+
 
             isPlaying = true;
             while (isPlaying)
@@ -56,15 +56,20 @@ namespace DarknetYOLOv4.FrameHandler
 
         private Mat GetFrame()
         {
-            
+
             Mat frame = new Mat();
             try
             {
                 cap.Read(frame);
 
-                CvInvoke.Resize(frame, frame, new Size(1280, 768));
+                CvInvoke.Resize(frame, frame, new Size(1920, 1080));
 
-                FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
+                if (!videoForm.isFPSFixed)
+                    FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
+                else FPS = videoForm.FixedFPSValue;
+                if (FPS <= 0 || FPS > 240) FPS = 24;
+
+
                 FrameN = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames));
                 Console.WriteLine(Convert.ToString(FrameN));
 

@@ -33,10 +33,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         public override async Task ProcessFrame(Mat frame)
         {
-            /*  int minX=int.MaxValue;
-              int maxX=0;
-              int minY=int.MaxValue;
-              int maxY=0;*/
+
 
             Mat resizedFrame = new Mat();
             //resizedFrame=frame;
@@ -73,20 +70,6 @@ namespace DarknetYOLOv4.FrameHandler
                         + $"\nFrameNo: {FrameN}"
                         );
 
-                //не надо бы второй раз проходить но это тест потом убрать мб можно
-                /* for (int i = 0; i < contours.Size; i++)
-                 {
-                     Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
-                     if (bbox.X < minX) minX = bbox.X;
-                     if (bbox.Y < minY) minY = bbox.Y;
-
-                     if (bbox.Y+bbox.Height > maxY) maxY = bbox.Y + bbox.Height;
-                     if (bbox.X + bbox.Width > maxX) maxX = bbox.X + bbox.Width;
-
-                 }
-                 Rectangle CommonBbox = new Rectangle(minX, maxY, maxX - minX, maxY - minY);
-                 CvInvoke.Rectangle(resizedFrame, CommonBbox, new MCvScalar(0, 0, 255), 2);*/
-
                 for (int i = 0; i < contours.Size; i++)
                 {
                     Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
@@ -96,19 +79,17 @@ namespace DarknetYOLOv4.FrameHandler
                     if (area > minArea && ar < 1.0)
                     {
                         CvInvoke.Rectangle(resizedFrame, bbox, new MCvScalar(0, 0, 255), 2);
+
                     }
 
                 }
-
-                
-
                 //VectorOfVectorOfPoint allContours = new VectorOfVectorOfPoint();
-               // CvInvoke.FindContours(foregroundMask, allContours, null, RetrType.Tree, ChainApproxMethod.ChainApproxSimple);
-               // CvInvoke.DrawContours(resizedFrame, allContours, 0, new MCvScalar(0, 255, 0));
+                // CvInvoke.FindContours(foregroundMask, allContours, null, RetrType.Tree, ChainApproxMethod.ChainApproxSimple);
+                // CvInvoke.DrawContours(resizedFrame, allContours, 0, new MCvScalar(0, 255, 0));
 
-           
 
-                videoForm.pictureBox1.Image = resizedFrame.ToBitmap();
+
+                videoForm.pictureBox1.Image = foregroundMask.ToBitmap();
                 await Task.Delay((1000 / FPS));//1000 
 
             }
