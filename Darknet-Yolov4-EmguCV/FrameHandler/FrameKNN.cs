@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected override void Initialize(Object form)
         {
             base.Initialize(form);
-            backgroundSubtractor = new BackgroundSubtractorKNN(1500, 16, true);
+            backgroundSubtractor = new BackgroundSubtractorMOG2(1500, 16, true);
         }
 
         public override async Task ProcessFrame(Mat frame)
@@ -53,15 +53,15 @@ namespace DarknetYOLOv4.FrameHandler
 
 
                 CvInvoke.Threshold(foregroundMask, foregroundMask, 150, 400, ThresholdType.Binary);
-                // CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
-                //    Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+                CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
+                    Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+                CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
-                int minArea = 250;
+                int minArea = 3000;
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
 
-                // CvInvoke.AddWeighted(frame,.5f,foregroundMask,.1f,0,frame);
-              //  frame = frame | foregroundMask;
+
 
                 watch.Stop();
 
@@ -82,7 +82,7 @@ namespace DarknetYOLOv4.FrameHandler
 
                     if (area > minArea /*&& ar < 1.0*/)
                     {
-                        CvInvoke.Rectangle(frame, RemapRect(bbox, ProcessingSize, OriginalSize), new MCvScalar(0, 0, 255), 2);
+                        CvInvoke.Rectangle(frame, bbox, new MCvScalar(0, 0, 255), 6);
 
                     }
 
@@ -103,7 +103,7 @@ namespace DarknetYOLOv4.FrameHandler
             await Task.Delay((1000 / FPS));//1000 
 
         }
-
+        /*
         private Rectangle RemapRect(Rectangle original, Size from, Size to)
         {
             Rectangle remapped = new Rectangle();
@@ -111,8 +111,8 @@ namespace DarknetYOLOv4.FrameHandler
             remapped.Height = original.Size.Height * (to.Height / from.Height);
 
             remapped.X = original.X * (to.Width / from.Width);
-            remapped.Y = original.Y * (to.Height / from.Height)+ original.Y/2;//хз почему так
+            remapped.Y = original.Y * (to.Height / from.Height);//хз почему так
             return remapped;
-        }
+        }*/
     }
 }

@@ -27,7 +27,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FrameN = 0;
 
         protected string video = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
-        protected Size ProcessingSize = new Size(320, 240);
+        protected Size ProcessingSize = new Size(640, 480);
         protected Size OriginalSize = new Size(1920, 1080);
 
         protected VideoCapture cap;
