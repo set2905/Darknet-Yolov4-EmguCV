@@ -78,7 +78,7 @@ namespace DarknetYOLOv4
                     currentFrameHandler = new FrameObjectDetectorYOLO();
                     break;
                 case PlayMode.BackgroundSubstraction:
-                    currentFrameHandler = new FrameMOG2();
+                    currentFrameHandler = new FrameKNN();
                     break;
 
             }

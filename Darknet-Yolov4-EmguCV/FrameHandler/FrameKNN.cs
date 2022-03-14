@@ -21,14 +21,14 @@ using DarknetYOLOv4;
 
 namespace DarknetYOLOv4.FrameHandler
 {
-    internal class FrameMOG2 : FrameHandlerBase
+    internal class FrameKNN : FrameHandlerBase
     {
         IBackgroundSubtractor backgroundSubtractor;
 
         protected override void Initialize(Object form)
         {
             base.Initialize(form);
-            backgroundSubtractor = new BackgroundSubtractorMOG2();
+            backgroundSubtractor = new BackgroundSubtractorKNN(1500,16,true);
         }
 
         public override async Task ProcessFrame(Mat frame)
@@ -46,17 +46,17 @@ namespace DarknetYOLOv4.FrameHandler
 
                 Mat smoothFrame = new Mat();
 
-                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(5, 5), 1);
+                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(9, 9), 4);
 
                 Mat foregroundMask = new Mat();
                 backgroundSubtractor.Apply(smoothFrame, foregroundMask);
 
 
                 CvInvoke.Threshold(foregroundMask, foregroundMask, 150, 400, ThresholdType.Binary);
-                 CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
-                     Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+                // CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
+                 //    Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
 
-                int minArea = 500;
+                int minArea = 250;
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
                 watch.Stop();
@@ -75,21 +75,17 @@ namespace DarknetYOLOv4.FrameHandler
                     Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
                     int area = bbox.Width * bbox.Height;
                     float ar = (float)bbox.Width / bbox.Height;
-
-                    if (area > minArea && ar < 1.0)
+                    
+                    if (area > minArea /*&& ar < 1.0*/)
                     {
-                        CvInvoke.Rectangle(resizedFrame, bbox, new MCvScalar(0, 0, 255), 2);
+                        CvInvoke.Rectangle(frame, RemapRect(bbox,ResizedProcessing,new Size(1920,1080)), new MCvScalar(0, 0, 255), 2);
 
                     }
 
                 }
-                //VectorOfVectorOfPoint allContours = new VectorOfVectorOfPoint();
-                // CvInvoke.FindContours(foregroundMask, allContours, null, RetrType.Tree, ChainApproxMethod.ChainApproxSimple);
-                // CvInvoke.DrawContours(resizedFrame, allContours, 0, new MCvScalar(0, 255, 0));
+                
 
-
-
-                videoForm.pictureBox1.Image = foregroundMask.ToBitmap();
+                videoForm.pictureBox1.Image = frame.ToBitmap();
                 await Task.Delay((1000 / FPS));//1000 
 
             }
@@ -100,9 +96,19 @@ namespace DarknetYOLOv4.FrameHandler
 
             // CvInvoke.Imshow("test", frame);
             CvInvoke.WaitKey(1);
-            //videoForm.pictureBox1.Image = frame.ToBitmap();
             await Task.Delay((1000 / FPS));//1000 
 
+        }
+
+        private Rectangle RemapRect(Rectangle original, Size from, Size to)
+        {
+            Rectangle remapped = new Rectangle();
+            remapped.Width = original.Size.Width * (to.Width / from.Width);
+            remapped.Height = original.Size.Height * (to.Height / from.Height);
+
+            remapped.X = original.X * (to.Width / from.Width);
+            remapped.Y = original.Y * (to.Height / from.Height);
+            return remapped;
         }
     }
 }

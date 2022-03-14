@@ -17,8 +17,9 @@ namespace DarknetYOLOv4.FrameHandler
                 );
 
             // CvInvoke.Imshow("test", frame);
-
+            CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
+            
             await Task.Delay((1000 / FPS));//1000 
         }
     }
