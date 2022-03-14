@@ -23,11 +23,21 @@ namespace DarknetYOLOv4.FrameHandler
 {
     internal class FrameObjectDetectorYOLO : FrameHandlerBase
     {
-        public virtual async Task ProcessFrame(Mat frame)
+
+        protected string labels = @"..\..\NetworkModels\coco.names";
+        protected string weights = @"..\..\NetworkModels\yolov4-tiny.weights";
+        protected string cfg = @"..\..\NetworkModels\yolov4-tiny.cfg";
+
+        protected override void Initialize(Object form)
+        {
+            base.Initialize(form);
+            LoadModel();
+        }
+        public override async Task ProcessFrame(Mat frame)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            List<YoloPrediction> results = model.Predict(frame.ToBitmap(), 512, 512);
+            List<YoloPrediction> results = model.Predict(frame.ToBitmap(),ResizedProcessing.Height, ResizedProcessing.Width);
             watch.Stop();
 
             SetStatus
@@ -50,6 +60,15 @@ namespace DarknetYOLOv4.FrameHandler
             videoForm.pictureBox1.Image = frame.ToBitmap();
             await Task.Delay((1000 / FPS));//1000 
 
+        }
+
+        private void LoadModel()
+        {
+            SetStatus("[INFO] Loading Model...");
+            model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);
+            model.NMSThreshold = 0.4f;
+            model.ConfidenceThreshold = 0.5f;
+            // SetStatus("[INFO] Loading Model Done!");
         }
 
     }

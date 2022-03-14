@@ -16,7 +16,8 @@ namespace DarknetYOLOv4
     public enum PlayMode
     {
         DetectorYOLO,
-        Play
+        Play,
+        BackgroundSubstraction
     }
     public partial class ObjectDetectorForm : Form
     {
@@ -62,6 +63,9 @@ namespace DarknetYOLOv4
                 case PlayMode.DetectorYOLO:
                     currentFrameHandler = new FrameObjectDetectorYOLO();
                     break;
+                case PlayMode.BackgroundSubstraction:
+                    currentFrameHandler = new FrameMOG2();
+                    break;
 
             }
 
@@ -82,7 +86,7 @@ namespace DarknetYOLOv4
 
         private void PlayModeComboCox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+
             currentPlayMode = (PlayMode)PlayModeComboCox.SelectedItem;
 
         }

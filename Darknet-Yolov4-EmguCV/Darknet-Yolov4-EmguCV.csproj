@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrameHandler\FrameHandlerBase.cs" />
+    <Compile Include="FrameHandler\FrameMOG2.cs" />
     <Compile Include="FrameHandler\FrameObjectDetectorYOLO.cs" />
     <Compile Include="FrameHandler\FramePlayer.cs" />
     <Compile Include="ObjectDetectorForm.cs">
