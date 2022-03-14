@@ -33,6 +33,11 @@ namespace DarknetYOLOv4.FrameHandler
 
         public override async Task ProcessFrame(Mat frame)
         {
+            int minX;
+            int maxX;
+            int minY;
+            int maxY;
+
             Mat resizedFrame = new Mat();
             //resizedFrame=frame;
             CvInvoke.Resize(frame, resizedFrame, ResizedProcessing);
@@ -70,9 +75,9 @@ namespace DarknetYOLOv4.FrameHandler
 
                 for (int i = 0; i < contours.Size; i++)
                 {
-                    var bbox = CvInvoke.BoundingRectangle(contours[i]);
-                    var area = bbox.Width * bbox.Height;
-                    var ar = (float)bbox.Width / bbox.Height;
+                    Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
+                    int area = bbox.Width * bbox.Height;
+                    float ar = (float)bbox.Width / bbox.Height;
 
                     if (area > minArea && ar < 1.0)
                     {

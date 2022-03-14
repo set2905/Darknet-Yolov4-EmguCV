@@ -44,14 +44,21 @@ namespace DarknetYOLOv4
 
             if (currentFrameHandler != null)
             {
-                //так не должно быть
+                //так не надо наверное
                 _cameraThread.Abort();
                 _cameraThread = null;
                 currentFrameHandler = null;
+                pictureBox1.Image = null;
+                PlayModeComboCox.Enabled = true;
                 StartButton.Text = "START";
                 return;
             }
-            else StartButton.Text = "STOP";
+            else
+            {
+                PlayModeComboCox.Enabled = false;
+                StartButton.Text = "STOP";
+            }
+
 
             currentFrameHandler = new FramePlayer();
 
