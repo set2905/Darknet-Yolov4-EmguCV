@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected override void Initialize(Object form)
         {
             base.Initialize(form);
-            backgroundSubtractor = new BackgroundSubtractorMOG2(500, 16, true);
+            backgroundSubtractor = new BackgroundSubtractorMOG2(1000, 16, true);
         }
 
         public override void ProcessFrame(Mat frame)
@@ -43,17 +43,17 @@ namespace DarknetYOLOv4.FrameHandler
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
                 Mat smoothFrame = new Mat();
-                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 2);
+                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(3, 3), 1);
 
                 Mat foregroundMask = new Mat();
                 backgroundSubtractor.Apply(smoothFrame, foregroundMask);
 
                 CvInvoke.Threshold(foregroundMask, foregroundMask, 150, 400, ThresholdType.Binary);
-                CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
-                     Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+              //  CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
+               //      Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
                 CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
-                int minArea = 3000;
+                int minArea = 10000;
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
 
@@ -66,10 +66,11 @@ namespace DarknetYOLOv4.FrameHandler
                     int area = bbox.Width * bbox.Height;
                     float ar = (float)bbox.Width / bbox.Height;
 
-                    if (area > minArea && ar < 1.0)
+                    if (area > minArea /*&& ar < 1.0*/)
                     {
                         CvInvoke.Rectangle(frame, bbox, new MCvScalar(0, 0, 255), 6);
-
+                        string text = Convert.ToString(area);
+                        CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
                     }
 
                 }

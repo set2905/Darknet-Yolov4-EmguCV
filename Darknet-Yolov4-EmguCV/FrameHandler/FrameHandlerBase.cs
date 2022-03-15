@@ -25,6 +25,8 @@ namespace DarknetYOLOv4.FrameHandler
     {
         protected int FPS = 24;
         protected int FrameN = 0;
+        public bool isFPSFixed;
+        public int FixedFPSValue;
 
 
         protected Size ProcessingSize = new Size(512, 512);
@@ -36,13 +38,14 @@ namespace DarknetYOLOv4.FrameHandler
         public string StatusText = "";
         protected ObjectDetectorForm videoForm;
 
-        protected int frameProcessTime=0;
+        protected int frameProcessTime = 0;
         protected int potentialFrameTime = 0;
 
         protected virtual void Initialize(Object form)
         {
             videoForm = (ObjectDetectorForm)form;
             cap = new VideoCapture(videoForm.video);
+           // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
         public void PlayFrames(Object form)
         {
@@ -76,13 +79,15 @@ namespace DarknetYOLOv4.FrameHandler
             Mat frame = new Mat();
             try
             {
-                cap.Read(frame);
+
+                cap.Grab();
+                cap.Retrieve(frame);
 
                 CvInvoke.Resize(frame, frame, OriginalSize);
 
-                if (!videoForm.isFPSFixed)
+                if (!isFPSFixed)
                     FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
-                else FPS = videoForm.FixedFPSValue;
+                else FPS = FixedFPSValue;
                 if (FPS <= 0 || FPS > 240) FPS = 24;
 
 
@@ -92,12 +97,12 @@ namespace DarknetYOLOv4.FrameHandler
             }
             catch (Exception e)
             {
-                SetStatus("VideoEnded");
+               // SetStatus("VideoEnded");
                 frame = null;
             }
             if (frame == null)
             {
-                //SetStatus("FrameIsNull");
+                SetStatus("FrameIsNull");
                 return null;
             }
 
@@ -107,7 +112,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int GetFPSDelay()
         {
             int delay = (1000 / FPS) - frameProcessTime;
-           // Console.WriteLine(delay);
+            // Console.WriteLine(delay);
 
             if (delay > 0)
                 return delay;
@@ -117,19 +122,19 @@ namespace DarknetYOLOv4.FrameHandler
 
         public virtual void ProcessFrame(Mat frame)
         {
-          
+
         }
 
         protected void SetStatusPlayMode()
         {
-             SetStatus
-            (
-             $"\nVideoFPS: {FPS}"
-            + $"\nFrameNo: {FrameN}"
-            + $"\nFrame Execute time: { frameProcessTime}"
-            +$"\nAlgorithm Execute Time: {potentialFrameTime}"
-            + $"\nAwaitDelay: {GetFPSDelay()}"
-            );
+            SetStatus
+           (
+            $"\nVideoFPS: {FPS}"
+           + $"\nFrameNo: {FrameN}"
+           + $"\nFrame Execute time: { frameProcessTime}"
+           + $"\nAlgorithm Execute Time: {potentialFrameTime}"
+           + $"\nAwaitDelay: {GetFPSDelay()}"
+           );
         }
 
         protected void SetStatus(string status)

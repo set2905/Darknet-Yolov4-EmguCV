@@ -27,17 +27,16 @@ namespace DarknetYOLOv4
         private FrameHandlerBase currentFrameHandler;
         public string video = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
 
-        public bool isFPSFixed;
-        public int FixedFPSValue;
+
 
         public ObjectDetectorForm()
         {
             InitializeComponent();
 
             PlayModeComboCox.DataSource = Enum.GetValues(typeof(PlayMode));
-            FixedFPSValue = (int)FixedFpsValueBox.Value;
-            isFPSFixed = isFpsFixedBox.Checked;
-            FixedFpsValueBox.Enabled = isFPSFixed;
+            //  FixedFPSValue = (int)FixedFpsValueBox.Value;
+            //isFPSFixed = isFpsFixedBox.Checked;
+            // FixedFpsValueBox.Enabled = isFPSFixed;
             FixedFpsValueBox.Value = 13;
         }
 
@@ -85,6 +84,11 @@ namespace DarknetYOLOv4
 
             }
 
+            currentFrameHandler.FixedFPSValue = (int)FixedFpsValueBox.Value;
+            currentFrameHandler.isFPSFixed = isFpsFixedBox.Checked;
+            FixedFpsValueBox.Enabled = currentFrameHandler.isFPSFixed;
+
+
             _cameraThread = new Thread(new ParameterizedThreadStart(currentFrameHandler.PlayFrames));
             _cameraThread.Start(this);
 
@@ -109,13 +113,15 @@ namespace DarknetYOLOv4
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
-            FixedFPSValue = (int)FixedFpsValueBox.Value;
+            if (currentFrameHandler == null) return;
+            currentFrameHandler.FixedFPSValue = (int)FixedFpsValueBox.Value;
         }
 
         private void isFpsFixedBox_CheckedChanged(object sender, EventArgs e)
         {
-            isFPSFixed = isFpsFixedBox.Checked;
-            FixedFpsValueBox.Enabled = isFPSFixed;
+            if (currentFrameHandler == null) return;
+            currentFrameHandler.isFPSFixed = isFpsFixedBox.Checked;
+            FixedFpsValueBox.Enabled = currentFrameHandler.isFPSFixed;
         }
 
         private void FileDialogButton_Click(object sender, EventArgs e)
@@ -123,8 +129,8 @@ namespace DarknetYOLOv4
             OpenFileDialog fdialog = new OpenFileDialog();
             if (fdialog.ShowDialog() == DialogResult.OK)
             {
-               // if (currentFrameHandler != null)
-                    video = fdialog.FileName;
+                // if (currentFrameHandler != null)
+                video = fdialog.FileName;
             }
         }
     }
