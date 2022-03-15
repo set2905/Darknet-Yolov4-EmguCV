@@ -25,6 +25,7 @@ namespace DarknetYOLOv4
         private Thread _cameraThread;
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
+        public string video = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
 
         public bool isFPSFixed;
         public int FixedFPSValue;
@@ -37,6 +38,7 @@ namespace DarknetYOLOv4
             FixedFPSValue = (int)FixedFpsValueBox.Value;
             isFPSFixed = isFpsFixedBox.Checked;
             FixedFpsValueBox.Enabled = isFPSFixed;
+            FixedFpsValueBox.Value = 13;
         }
 
 
@@ -78,7 +80,7 @@ namespace DarknetYOLOv4
                     currentFrameHandler = new FrameObjectDetectorYOLO();
                     break;
                 case PlayMode.BackgroundSubstraction:
-                    currentFrameHandler = new FrameKNN();
+                    currentFrameHandler = new FrameMOG2();
                     break;
 
             }
@@ -114,6 +116,16 @@ namespace DarknetYOLOv4
         {
             isFPSFixed = isFpsFixedBox.Checked;
             FixedFpsValueBox.Enabled = isFPSFixed;
+        }
+
+        private void FileDialogButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fdialog = new OpenFileDialog();
+            if (fdialog.ShowDialog() == DialogResult.OK)
+            {
+               // if (currentFrameHandler != null)
+                    video = fdialog.FileName;
+            }
         }
     }
 }

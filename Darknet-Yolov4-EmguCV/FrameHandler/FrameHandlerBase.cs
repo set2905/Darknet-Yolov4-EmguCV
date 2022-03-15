@@ -26,8 +26,8 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FPS = 24;
         protected int FrameN = 0;
 
-        protected string video = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
-        protected Size ProcessingSize = new Size(640, 480);
+
+        protected Size ProcessingSize = new Size(512, 512);
         protected Size OriginalSize = new Size(1920, 1080);
 
         protected VideoCapture cap;
@@ -36,10 +36,13 @@ namespace DarknetYOLOv4.FrameHandler
         public string StatusText = "";
         protected ObjectDetectorForm videoForm;
 
+        protected int frameProcessTime=0;
+        protected int potentialFrameTime = 0;
+
         protected virtual void Initialize(Object form)
         {
             videoForm = (ObjectDetectorForm)form;
-            cap = new VideoCapture(video);
+            cap = new VideoCapture(videoForm.video);
         }
         public void PlayFrames(Object form)
         {
@@ -49,8 +52,21 @@ namespace DarknetYOLOv4.FrameHandler
             isPlaying = true;
             while (isPlaying)
             {
-                ProcessFrame(GetFrame()).Wait();
+                ExecuteFrame().Wait();
             }
+
+        }
+
+        private async Task ExecuteFrame()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Mat frame = GetFrame();
+            if (frame == null) return;
+            ProcessFrame(frame);
+            stopwatch.Stop();
+            frameProcessTime = Convert.ToInt32(stopwatch.ElapsedMilliseconds);
+            await Task.Delay(GetFPSDelay());
 
         }
 
@@ -81,17 +97,39 @@ namespace DarknetYOLOv4.FrameHandler
             }
             if (frame == null)
             {
-                SetStatus("FrameIsNull");
-
+                //SetStatus("FrameIsNull");
                 return null;
             }
 
             return frame;
         }
 
-        public virtual async Task ProcessFrame(Mat frame)
+        protected int GetFPSDelay()
         {
-            await Task.Delay((1000 / FPS));//1000 
+            int delay = (1000 / FPS) - frameProcessTime;
+           // Console.WriteLine(delay);
+
+            if (delay > 0)
+                return delay;
+            else return 1;
+
+        }
+
+        public virtual void ProcessFrame(Mat frame)
+        {
+          
+        }
+
+        protected void SetStatusPlayMode()
+        {
+             SetStatus
+            (
+             $"\nVideoFPS: {FPS}"
+            + $"\nFrameNo: {FrameN}"
+            + $"\nFrame Execute time: { frameProcessTime}"
+            +$"\nAlgorithm Execute Time: {potentialFrameTime}"
+            + $"\nAwaitDelay: {GetFPSDelay()}"
+            );
         }
 
         protected void SetStatus(string status)

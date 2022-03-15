@@ -32,6 +32,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.FileDialogButton = new System.Windows.Forms.Button();
             this.PlayModeComboCox = new System.Windows.Forms.ComboBox();
             this.isFpsFixedBox = new System.Windows.Forms.CheckBox();
             this.FixedFpsValueBox = new System.Windows.Forms.NumericUpDown();
@@ -57,9 +58,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(-2, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(32, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(704, 515);
+            this.pictureBox1.Size = new System.Drawing.Size(640, 480);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
@@ -79,11 +80,27 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(60)))), ((int)(((byte)(117)))));
+            this.panel1.Controls.Add(this.FileDialogButton);
             this.panel1.Controls.Add(this.StartButton);
             this.panel1.Location = new System.Drawing.Point(706, 444);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(353, 71);
             this.panel1.TabIndex = 3;
+            // 
+            // FileDialogButton
+            // 
+            this.FileDialogButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(42)))), ((int)(((byte)(86)))));
+            this.FileDialogButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(42)))), ((int)(((byte)(86)))));
+            this.FileDialogButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.FileDialogButton.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FileDialogButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(189)))), ((int)(((byte)(50)))));
+            this.FileDialogButton.Location = new System.Drawing.Point(114, 17);
+            this.FileDialogButton.Name = "FileDialogButton";
+            this.FileDialogButton.Size = new System.Drawing.Size(103, 44);
+            this.FileDialogButton.TabIndex = 1;
+            this.FileDialogButton.Text = "Set File";
+            this.FileDialogButton.UseVisualStyleBackColor = false;
+            this.FileDialogButton.Click += new System.EventHandler(this.FileDialogButton_Click);
             // 
             // PlayModeComboCox
             // 
@@ -119,15 +136,20 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(59)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(1059, 517);
+            this.ControlBox = false;
             this.Controls.Add(this.FixedFpsValueBox);
             this.Controls.Add(this.isFpsFixedBox);
             this.Controls.Add(this.PlayModeComboCox);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ObjectDetectorForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "ObjectDetectorForm";
             this.Load += new System.EventHandler(this.ObjectDetectorForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -147,5 +169,6 @@
         public System.Windows.Forms.ComboBox PlayModeComboCox;
         public System.Windows.Forms.CheckBox isFpsFixedBox;
         public System.Windows.Forms.NumericUpDown FixedFpsValueBox;
+        private System.Windows.Forms.Button FileDialogButton;
     }
 }

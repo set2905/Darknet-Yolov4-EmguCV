@@ -9,7 +9,7 @@ namespace YOLOv4_TEST
 {
     class Program
     {
-
+        [STAThread]
         static void Main()
         {
             

@@ -1,6 +1,7 @@
 ﻿
 using System.Threading.Tasks;
-
+using System;
+using System.Diagnostics;
 using Emgu.CV;
 
 
@@ -8,19 +9,17 @@ namespace DarknetYOLOv4.FrameHandler
 {
     internal class FramePlayer : FrameHandlerBase
     {
-        public override async Task ProcessFrame(Mat frame)
+        public override void ProcessFrame(Mat frame)
         {
-            SetStatus
-                (
-                 $"\nVideoFPS: {FPS}"
-                + $"\nFrameNo: {FrameN}"
-                );
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
 
-            // CvInvoke.Imshow("test", frame);
             CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
-            
-            await Task.Delay((1000 / FPS));//1000 
+            watch.Stop();
+            potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
+
+            SetStatusPlayMode();
         }
     }
 }

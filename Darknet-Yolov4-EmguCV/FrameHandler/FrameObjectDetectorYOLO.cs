@@ -33,21 +33,13 @@ namespace DarknetYOLOv4.FrameHandler
             base.Initialize(form);
             LoadModel();
         }
-        public override async Task ProcessFrame(Mat frame)
+        public override void ProcessFrame(Mat frame)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
             List<YoloPrediction> results = model.Predict(frame.ToBitmap(),ProcessingSize.Height, ProcessingSize.Width);
             watch.Stop();
-
-            SetStatus
-                (
-                $"Frame Processing time: {watch.ElapsedMilliseconds} ms."
-                + $"\nFPS: {Math.Ceiling(1000f / watch.ElapsedMilliseconds)}"
-                + $"\nVideoFPS: {FPS}"
-                + $"\nFrameNo: {FrameN}"
-                );
-
+            potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
             foreach (var item in results)
             {
                 string text = item.Label + " " + item.Confidence;
@@ -58,7 +50,12 @@ namespace DarknetYOLOv4.FrameHandler
             // CvInvoke.Imshow("test", frame);
             CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
-            await Task.Delay((1000 / FPS));//1000 
+
+            
+
+            SetStatusPlayMode();
+
+            //await Task.Delay(GetFPSDelay());
 
         }
 
