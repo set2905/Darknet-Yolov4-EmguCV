@@ -43,14 +43,14 @@ namespace DarknetYOLOv4.FrameHandler
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
                 Mat smoothFrame = new Mat();
-                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(3, 3), 1);
+                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 1);
 
                 Mat foregroundMask = new Mat();
                 backgroundSubtractor.Apply(smoothFrame, foregroundMask);
 
                 CvInvoke.Threshold(foregroundMask, foregroundMask, 150, 400, ThresholdType.Binary);
-              //  CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
-               //      Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+                CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
+                     Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
                 CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
                 int minArea = 10000;

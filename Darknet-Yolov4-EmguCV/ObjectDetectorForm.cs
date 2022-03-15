@@ -25,7 +25,7 @@ namespace DarknetYOLOv4
         private Thread _cameraThread;
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
-        public string video = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
+        public string video = @"https://live.cmirit.ru:443/live/10school-03_1920x1080.stream/playlist.m3u8";
 
 
 
