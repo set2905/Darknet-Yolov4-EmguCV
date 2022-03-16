@@ -94,7 +94,6 @@ namespace DarknetYOLOv4.FrameHandler
 
             CvInvoke.WaitKey(1);
 
-            SetStatusPlayMode();
 
         }
 

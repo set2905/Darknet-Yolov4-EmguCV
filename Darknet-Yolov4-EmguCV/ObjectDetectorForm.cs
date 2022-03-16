@@ -94,6 +94,7 @@ namespace DarknetYOLOv4
         private void SetVideo(int index)
         {
             currentVideo = videos[index];
+           
         }
 
         public ObjectDetectorForm()
@@ -154,6 +155,7 @@ namespace DarknetYOLOv4
             if (fdialog.ShowDialog() == DialogResult.OK)
             {
                 currentVideo = fdialog.FileName;
+                ToggleFrameHandler();
             }
         }
 

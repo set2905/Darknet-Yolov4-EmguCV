@@ -27,6 +27,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FrameN = 0;
         public bool isFPSFixed;
         public int FixedFPSValue;
+        private double framesToSkip = 0;
 
 
         protected Size ProcessingSize = new Size(512, 512);
@@ -41,11 +42,12 @@ namespace DarknetYOLOv4.FrameHandler
         protected int frameProcessTime = 0;
         protected int potentialFrameTime = 0;
 
+
         protected virtual void Initialize(Object form)
         {
             videoForm = (ObjectDetectorForm)form;
             cap = new VideoCapture(videoForm.currentVideo);
-           // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
+            // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
         public void PlayFrames(Object form)
         {
@@ -64,11 +66,28 @@ namespace DarknetYOLOv4.FrameHandler
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+            cap.Grab();
+            if (framesToSkip >= 1)
+            {
+                framesToSkip -= 1;
+               // SetStatusPlayMode();
+                return;
+            }
             Mat frame = GetFrame();
             if (frame == null) return;
+
             ProcessFrame(frame);
             stopwatch.Stop();
             frameProcessTime = Convert.ToInt32(stopwatch.ElapsedMilliseconds);
+
+            if (FPS != 0 && frameProcessTime > (1000 / FPS))
+            {
+                framesToSkip = frameProcessTime / (1000 / FPS);
+                framesToSkip = Math.Ceiling(framesToSkip);
+            }
+            else framesToSkip = 0;
+
+            SetStatusPlayMode();
             await Task.Delay(GetFPSDelay());
 
         }
@@ -80,7 +99,7 @@ namespace DarknetYOLOv4.FrameHandler
             try
             {
 
-                cap.Grab();
+
                 cap.Retrieve(frame);
 
                 CvInvoke.Resize(frame, frame, OriginalSize);
@@ -97,7 +116,7 @@ namespace DarknetYOLOv4.FrameHandler
             }
             catch (Exception e)
             {
-               // SetStatus("VideoEnded");
+                // SetStatus("VideoEnded");
                 frame = null;
             }
             if (frame == null)
@@ -134,6 +153,7 @@ namespace DarknetYOLOv4.FrameHandler
            + $"\nFrame Execute time: { frameProcessTime}"
            + $"\nAlgorithm Execute Time: {potentialFrameTime}"
            + $"\nAwaitDelay: {GetFPSDelay()}"
+           + $"\nSkipped Frames: {framesToSkip}"
            );
         }
 

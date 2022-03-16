@@ -18,8 +18,6 @@ namespace DarknetYOLOv4.FrameHandler
             videoForm.pictureBox1.Image = frame.ToBitmap();
             watch.Stop();
             potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
-
-            SetStatusPlayMode();
         }
     }
 }

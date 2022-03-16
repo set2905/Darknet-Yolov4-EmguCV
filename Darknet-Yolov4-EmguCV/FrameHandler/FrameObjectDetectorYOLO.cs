@@ -47,15 +47,10 @@ namespace DarknetYOLOv4.FrameHandler
                 CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
                 CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
             }
-            // CvInvoke.Imshow("test", frame);
+
             CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
 
-            
-
-            SetStatusPlayMode();
-
-            //await Task.Delay(GetFPSDelay());
 
         }
 
@@ -65,7 +60,6 @@ namespace DarknetYOLOv4.FrameHandler
             model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);
             model.NMSThreshold = 0.4f;
             model.ConfidenceThreshold = 0.5f;
-            // SetStatus("[INFO] Loading Model Done!");
         }
 
     }
