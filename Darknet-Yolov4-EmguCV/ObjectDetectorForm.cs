@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DarknetYOLOv4.FrameHandler;
+using DarknetYOLOv4.UIExtensions;
 
 using System.Threading;
 
@@ -25,7 +26,16 @@ namespace DarknetYOLOv4
         private Thread _cameraThread;
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
-        public string video = @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8";
+        public string currentVideo = @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8";
+        List<Button> VideoButtons = new List<Button>();
+        private string[] videos = new string[4]
+        {
+            @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8",
+            @"https://live.cmirit.ru:443/live/skvermil_640x360.stream/playlist.m3u8",
+            @"https://live.cmirit.ru:443/live/smart14_1920x1080.stream/playlist.m3u8",
+            @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8"
+        };
+
 
         private void ToggleFrameHandler()
         {
@@ -35,15 +45,21 @@ namespace DarknetYOLOv4
                 _cameraThread.Abort();
                 _cameraThread = null;
                 currentFrameHandler = null;
+
+                VideoChoicePanel.Enabled = true;
+                VideoChoicePanel.Visible = true;
                 pictureBox1.Image = null;
                 pictureBox1.Enabled = false;
                 PlayModeComboCox.Enabled = true;
                 label1.Text = "Video Stopped";
                 StartButton.Text = "START";
+               // UpdateVideoCovers();
                 return;
             }
             else
             {
+                VideoChoicePanel.Enabled = false;
+                VideoChoicePanel.Visible = false;
                 pictureBox1.Enabled = true;
                 PlayModeComboCox.Enabled = false;
                 StartButton.Text = "STOP";
@@ -75,9 +91,17 @@ namespace DarknetYOLOv4
             _cameraThread.Start(this);
         }
 
+        private void SetVideo(int index)
+        {
+            currentVideo = videos[index];
+        }
+
         public ObjectDetectorForm()
         {
             InitializeComponent();
+
+            VideoChoicePanel.Enabled = true;
+            VideoChoicePanel.Visible = true;
 
             PlayModeComboCox.DataSource = Enum.GetValues(typeof(PlayMode));
             FixedFpsValueBox.Value = 12;
@@ -86,7 +110,7 @@ namespace DarknetYOLOv4
 
         private void ObjectDetectorForm_Load(object sender, EventArgs e)
         {
-
+            UpdateVideoCovers();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -129,8 +153,43 @@ namespace DarknetYOLOv4
             OpenFileDialog fdialog = new OpenFileDialog();
             if (fdialog.ShowDialog() == DialogResult.OK)
             {
-                video = fdialog.FileName;
+                currentVideo = fdialog.FileName;
             }
+        }
+
+        private void UpdateVideoCovers()
+        {
+            
+            foreach (Button b in VideoChoicePanel.Controls)
+            {
+                VideoButtons.Add(b);
+                b.SetCover(videos[VideoButtons.IndexOf(b)]);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SetVideo(VideoButtons.IndexOf(VideoButton3));
+            ToggleFrameHandler();
+
+        }
+
+        private void VideoButton1_Click(object sender, EventArgs e)
+        {
+            SetVideo(VideoButtons.IndexOf(VideoButton1));
+            ToggleFrameHandler();
+        }
+
+        private void VideoButton2_Click(object sender, EventArgs e)
+        {
+            SetVideo(VideoButtons.IndexOf(VideoButton2));
+            ToggleFrameHandler();
+        }
+
+        private void VideoButton4_Click(object sender, EventArgs e)
+        {
+            SetVideo(VideoButtons.IndexOf(VideoButton4));
+            ToggleFrameHandler();
         }
     }
 }

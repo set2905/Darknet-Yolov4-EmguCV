@@ -37,18 +37,24 @@
             this.isFpsFixedBox = new System.Windows.Forms.CheckBox();
             this.FixedFpsValueBox = new System.Windows.Forms.NumericUpDown();
             this.VideoChoicePanel = new System.Windows.Forms.Panel();
+            this.VideoButton4 = new System.Windows.Forms.Button();
+            this.VideoButton3 = new System.Windows.Forms.Button();
+            this.VideoButton2 = new System.Windows.Forms.Button();
+            this.VideoButton1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixedFpsValueBox)).BeginInit();
+            this.VideoChoicePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // StartButton
             // 
             this.StartButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(42)))), ((int)(((byte)(86)))));
+            this.StartButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.StartButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(42)))), ((int)(((byte)(86)))));
-            this.StartButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.StartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.StartButton.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StartButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(189)))), ((int)(((byte)(50)))));
+            this.StartButton.ForeColor = System.Drawing.Color.White;
             this.StartButton.Location = new System.Drawing.Point(5, 17);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(103, 44);
@@ -136,12 +142,56 @@
             // 
             // VideoChoicePanel
             // 
+            this.VideoChoicePanel.Controls.Add(this.VideoButton4);
+            this.VideoChoicePanel.Controls.Add(this.VideoButton3);
+            this.VideoChoicePanel.Controls.Add(this.VideoButton2);
+            this.VideoChoicePanel.Controls.Add(this.VideoButton1);
             this.VideoChoicePanel.Enabled = false;
-            this.VideoChoicePanel.Location = new System.Drawing.Point(332, 12);
+            this.VideoChoicePanel.Location = new System.Drawing.Point(32, 12);
             this.VideoChoicePanel.Name = "VideoChoicePanel";
-            this.VideoChoicePanel.Size = new System.Drawing.Size(340, 201);
+            this.VideoChoicePanel.Size = new System.Drawing.Size(640, 480);
             this.VideoChoicePanel.TabIndex = 6;
             this.VideoChoicePanel.Visible = false;
+            // 
+            // VideoButton4
+            // 
+            this.VideoButton4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.VideoButton4.Location = new System.Drawing.Point(315, 237);
+            this.VideoButton4.Name = "VideoButton4";
+            this.VideoButton4.Size = new System.Drawing.Size(322, 231);
+            this.VideoButton4.TabIndex = 3;
+            this.VideoButton4.UseVisualStyleBackColor = true;
+            this.VideoButton4.Click += new System.EventHandler(this.VideoButton4_Click);
+            // 
+            // VideoButton3
+            // 
+            this.VideoButton3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.VideoButton3.Location = new System.Drawing.Point(3, 237);
+            this.VideoButton3.Name = "VideoButton3";
+            this.VideoButton3.Size = new System.Drawing.Size(306, 231);
+            this.VideoButton3.TabIndex = 2;
+            this.VideoButton3.UseVisualStyleBackColor = true;
+            this.VideoButton3.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // VideoButton2
+            // 
+            this.VideoButton2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.VideoButton2.Location = new System.Drawing.Point(315, 3);
+            this.VideoButton2.Name = "VideoButton2";
+            this.VideoButton2.Size = new System.Drawing.Size(322, 231);
+            this.VideoButton2.TabIndex = 1;
+            this.VideoButton2.UseVisualStyleBackColor = true;
+            this.VideoButton2.Click += new System.EventHandler(this.VideoButton2_Click);
+            // 
+            // VideoButton1
+            // 
+            this.VideoButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.VideoButton1.Location = new System.Drawing.Point(0, 0);
+            this.VideoButton1.Name = "VideoButton1";
+            this.VideoButton1.Size = new System.Drawing.Size(309, 231);
+            this.VideoButton1.TabIndex = 0;
+            this.VideoButton1.UseVisualStyleBackColor = true;
+            this.VideoButton1.Click += new System.EventHandler(this.VideoButton1_Click);
             // 
             // ObjectDetectorForm
             // 
@@ -167,6 +217,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.FixedFpsValueBox)).EndInit();
+            this.VideoChoicePanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,5 +234,9 @@
         public System.Windows.Forms.NumericUpDown FixedFpsValueBox;
         private System.Windows.Forms.Button FileDialogButton;
         private System.Windows.Forms.Panel VideoChoicePanel;
+        private System.Windows.Forms.Button VideoButton1;
+        private System.Windows.Forms.Button VideoButton3;
+        private System.Windows.Forms.Button VideoButton2;
+        private System.Windows.Forms.Button VideoButton4;
     }
 }

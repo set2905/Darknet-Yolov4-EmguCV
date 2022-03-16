@@ -44,7 +44,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected virtual void Initialize(Object form)
         {
             videoForm = (ObjectDetectorForm)form;
-            cap = new VideoCapture(videoForm.video);
+            cap = new VideoCapture(videoForm.currentVideo);
            // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
         public void PlayFrames(Object form)

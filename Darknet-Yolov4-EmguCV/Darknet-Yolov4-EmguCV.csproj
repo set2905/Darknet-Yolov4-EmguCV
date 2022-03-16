@@ -66,12 +66,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomControls\VideoButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CustomControls\VideoButton.Designer.cs">
-      <DependentUpon>VideoButton.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrameHandler\FrameHandlerBase.cs" />
     <Compile Include="FrameHandler\FrameMOG2.cs" />
     <Compile Include="FrameHandler\FrameObjectDetectorYOLO.cs" />
@@ -84,6 +78,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UIExtensions\ButtonCover.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\cars road.jpg" />
+    <None Include="Resources\SandyGravel_S.jpg" />
     <Content Include="Resources\test.mp4" />
   </ItemGroup>
   <ItemGroup>
@@ -103,11 +104,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CustomControls\VideoButton.resx">
-      <DependentUpon>VideoButton.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ObjectDetectorForm.resx">
       <DependentUpon>ObjectDetectorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="..\References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems" Label="Shared" />
