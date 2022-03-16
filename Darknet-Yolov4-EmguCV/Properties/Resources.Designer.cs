@@ -59,15 +59,5 @@ namespace DarknetYOLOv4.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap SandyGravel_S {
-            get {
-                object obj = ResourceManager.GetObject("SandyGravel_S", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

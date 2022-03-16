@@ -113,12 +113,12 @@ namespace DarknetYOLOv4.FrameHandler
                 CvInvoke.Resize(frame, frame, OriginalSize);
 
                 if (!isFPSFixed)
-                    FPS = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps));
+                    FPS = Convert.ToInt32(cap.Get(Emgu.CV.CvEnum.CapProp.Fps));
                 else FPS = FixedFPSValue;
                 if (FPS <= 0 || FPS > 240) FPS = 24;
 
 
-                FrameN = Convert.ToInt32(cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames));
+                FrameN = Convert.ToInt32(cap.Get(Emgu.CV.CvEnum.CapProp.PosFrames));
                 Console.WriteLine(Convert.ToString(FrameN));
 
             }
