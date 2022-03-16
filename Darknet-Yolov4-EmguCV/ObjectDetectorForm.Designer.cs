@@ -36,6 +36,7 @@
             this.PlayModeComboCox = new System.Windows.Forms.ComboBox();
             this.isFpsFixedBox = new System.Windows.Forms.CheckBox();
             this.FixedFpsValueBox = new System.Windows.Forms.NumericUpDown();
+            this.VideoChoicePanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FixedFpsValueBox)).BeginInit();
@@ -58,6 +59,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Enabled = false;
             this.pictureBox1.Location = new System.Drawing.Point(32, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(640, 480);
@@ -132,6 +134,15 @@
             this.FixedFpsValueBox.TabIndex = 5;
             this.FixedFpsValueBox.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
+            // VideoChoicePanel
+            // 
+            this.VideoChoicePanel.Enabled = false;
+            this.VideoChoicePanel.Location = new System.Drawing.Point(332, 12);
+            this.VideoChoicePanel.Name = "VideoChoicePanel";
+            this.VideoChoicePanel.Size = new System.Drawing.Size(340, 201);
+            this.VideoChoicePanel.TabIndex = 6;
+            this.VideoChoicePanel.Visible = false;
+            // 
             // ObjectDetectorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -140,6 +151,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(59)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(1059, 517);
             this.ControlBox = false;
+            this.Controls.Add(this.VideoChoicePanel);
             this.Controls.Add(this.FixedFpsValueBox);
             this.Controls.Add(this.isFpsFixedBox);
             this.Controls.Add(this.PlayModeComboCox);
@@ -170,5 +182,6 @@
         public System.Windows.Forms.CheckBox isFpsFixedBox;
         public System.Windows.Forms.NumericUpDown FixedFpsValueBox;
         private System.Windows.Forms.Button FileDialogButton;
+        private System.Windows.Forms.Panel VideoChoicePanel;
     }
 }

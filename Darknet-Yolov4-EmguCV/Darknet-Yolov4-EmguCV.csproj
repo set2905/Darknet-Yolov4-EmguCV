@@ -66,6 +66,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomControls\VideoButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\VideoButton.Designer.cs">
+      <DependentUpon>VideoButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrameHandler\FrameHandlerBase.cs" />
     <Compile Include="FrameHandler\FrameMOG2.cs" />
     <Compile Include="FrameHandler\FrameObjectDetectorYOLO.cs" />
@@ -97,6 +103,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CustomControls\VideoButton.resx">
+      <DependentUpon>VideoButton.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ObjectDetectorForm.resx">
       <DependentUpon>ObjectDetectorForm.cs</DependentUpon>
     </EmbeddedResource>

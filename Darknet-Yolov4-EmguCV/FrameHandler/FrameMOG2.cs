@@ -28,14 +28,17 @@ namespace DarknetYOLOv4.FrameHandler
         protected override void Initialize(Object form)
         {
             base.Initialize(form);
-            backgroundSubtractor = new BackgroundSubtractorMOG2(1000, 16, true);
+            backgroundSubtractor = new BackgroundSubtractorMOG2(500, 16, true);
         }
 
         public override void ProcessFrame(Mat frame)
         {
             Mat resizedFrame = new Mat();
             //resizedFrame=frame;
+
+          //  CvInvoke.CvtColor(frame, frame, ColorConversion.Bgr2Gray);
             CvInvoke.Resize(frame, resizedFrame, ProcessingSize);
+
             
 
             try
@@ -76,10 +79,10 @@ namespace DarknetYOLOv4.FrameHandler
                 }
                 //-------+15ms-------
                 
-                CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
+               CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
                 Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
                 Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
-                CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .5f, 0, frame);
+                CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
                 
                 //------------------
                 videoForm.pictureBox1.Image = frame.ToBitmap();

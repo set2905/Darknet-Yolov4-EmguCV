@@ -25,30 +25,10 @@ namespace DarknetYOLOv4
         private Thread _cameraThread;
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
-        public string video = @"https://live.cmirit.ru:443/live/10school-03_1920x1080.stream/playlist.m3u8";
+        public string video = @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8";
 
-
-
-        public ObjectDetectorForm()
+        private void ToggleFrameHandler()
         {
-            InitializeComponent();
-
-            PlayModeComboCox.DataSource = Enum.GetValues(typeof(PlayMode));
-            //  FixedFPSValue = (int)FixedFpsValueBox.Value;
-            //isFPSFixed = isFpsFixedBox.Checked;
-            // FixedFpsValueBox.Enabled = isFPSFixed;
-            FixedFpsValueBox.Value = 13;
-        }
-
-
-        private void ObjectDetectorForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
             if (currentFrameHandler != null)
             {
                 //так не надо наверное
@@ -56,6 +36,7 @@ namespace DarknetYOLOv4
                 _cameraThread = null;
                 currentFrameHandler = null;
                 pictureBox1.Image = null;
+                pictureBox1.Enabled = false;
                 PlayModeComboCox.Enabled = true;
                 label1.Text = "Video Stopped";
                 StartButton.Text = "START";
@@ -63,6 +44,7 @@ namespace DarknetYOLOv4
             }
             else
             {
+                pictureBox1.Enabled = true;
                 PlayModeComboCox.Enabled = false;
                 StartButton.Text = "STOP";
             }
@@ -91,7 +73,25 @@ namespace DarknetYOLOv4
 
             _cameraThread = new Thread(new ParameterizedThreadStart(currentFrameHandler.PlayFrames));
             _cameraThread.Start(this);
+        }
 
+        public ObjectDetectorForm()
+        {
+            InitializeComponent();
+
+            PlayModeComboCox.DataSource = Enum.GetValues(typeof(PlayMode));
+            FixedFpsValueBox.Value = 12;
+        }
+
+
+        private void ObjectDetectorForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ToggleFrameHandler();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -129,7 +129,6 @@ namespace DarknetYOLOv4
             OpenFileDialog fdialog = new OpenFileDialog();
             if (fdialog.ShowDialog() == DialogResult.OK)
             {
-                // if (currentFrameHandler != null)
                 video = fdialog.FileName;
             }
         }
