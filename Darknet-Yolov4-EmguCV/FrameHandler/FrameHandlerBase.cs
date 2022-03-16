@@ -28,6 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         public bool isFPSFixed;
         public int FixedFPSValue;
         private double framesToSkip = 0;
+        private double spareAfterSkip=0;
 
 
         protected Size ProcessingSize = new Size(512, 512);
@@ -69,10 +70,12 @@ namespace DarknetYOLOv4.FrameHandler
             cap.Grab();
             if (framesToSkip >= 1)
             {
+                stopwatch.Stop();
                 framesToSkip -= 1;
-               // SetStatusPlayMode();
+                // SetStatusPlayMode();
                 return;
             }
+            else await Task.Delay(TimeSpan.FromMilliseconds(spareAfterSkip));
             Mat frame = GetFrame();
             if (frame == null) return;
 
@@ -83,9 +86,14 @@ namespace DarknetYOLOv4.FrameHandler
             if (FPS != 0 && frameProcessTime > (1000 / FPS))
             {
                 framesToSkip = frameProcessTime / (1000 / FPS);
+                spareAfterSkip = frameProcessTime % (1000 / FPS);
                 framesToSkip = Math.Ceiling(framesToSkip);
             }
-            else framesToSkip = 0;
+            else 
+            {
+                spareAfterSkip = 0;
+                framesToSkip = 0; 
+            }
 
             SetStatusPlayMode();
             await Task.Delay(GetFPSDelay());
@@ -154,6 +162,7 @@ namespace DarknetYOLOv4.FrameHandler
            + $"\nAlgorithm Execute Time: {potentialFrameTime}"
            + $"\nAwaitDelay: {GetFPSDelay()}"
            + $"\nSkipped Frames: {framesToSkip}"
+           +$"\nSpare After Skip ms: {spareAfterSkip}"
            );
         }
 
