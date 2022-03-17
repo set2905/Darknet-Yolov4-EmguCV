@@ -36,7 +36,7 @@ namespace DarknetYOLOv4.FrameHandler
 
 
         protected Size ProcessingSize = new Size(320, 320);
-        protected Size OriginalSize = new Size(1920, 1080);
+        protected Size OriginalSize = new Size(1024, 720);
 
         protected VideoCapture cap;
         protected DarknetYOLO model;
