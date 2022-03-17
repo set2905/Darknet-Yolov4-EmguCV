@@ -56,7 +56,7 @@ namespace DarknetYOLOv4.FrameHandler
                      Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
                 CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
-                int minArea = 10000;
+                int minArea = 7000;
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
 

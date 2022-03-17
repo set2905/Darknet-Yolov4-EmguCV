@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Reflection;
 using DarknetYolo;
+using System.Threading;
 
 
 
@@ -23,15 +24,17 @@ namespace DarknetYOLOv4.FrameHandler
 {
     internal abstract class FrameHandlerBase
     {
+
+        private Thread _cameraThread;
         protected int FPS = 24;
         protected int FrameN = 0;
         public bool isFPSFixed;
         public int FixedFPSValue;
         private double framesToSkip = 0;
-        private double spareAfterSkip=0;
+        private double spareAfterSkip = 0;
 
 
-        protected Size ProcessingSize = new Size(512, 512);
+        protected Size ProcessingSize = new Size(320, 320);
         protected Size OriginalSize = new Size(1920, 1080);
 
         protected VideoCapture cap;
@@ -39,6 +42,11 @@ namespace DarknetYOLOv4.FrameHandler
         public bool isPlaying = false;
         public string StatusText = "";
         protected ObjectDetectorForm videoForm;
+
+        Mat frame;
+        public bool SnapshotRequired = false;
+        private string snapshotFileName = "snapshot.jpg";
+        public string snapShotDirectory= @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
 
         protected int frameProcessTime = 0;
         protected int potentialFrameTime = 0;
@@ -50,6 +58,41 @@ namespace DarknetYOLOv4.FrameHandler
             cap = new VideoCapture(videoForm.currentVideo);
             // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
+
+        protected void SaveSnapshot()
+        {
+            if (SnapshotRequired)
+            {
+                Image<Bgr, Byte> snapshot = frame.ToImage<Bgr, Byte>();
+
+                string newFileName;
+                for (int i = 1; true; i++)
+                {
+                    //this is so that you can alter the name and keep the file format 
+                    newFileName = snapShotDirectory + $"\\{i}_" + snapshotFileName;
+                    if (!File.Exists(newFileName))
+                    {
+                        break;
+                    }
+                }
+                snapshot.Save(newFileName);
+                SnapshotRequired = false;
+                Console.WriteLine($"Snapshot saved: {newFileName}");
+            }
+        }
+
+        public void Stop()
+        {
+            //так не надо наверное
+            _cameraThread.Abort();
+            _cameraThread = null;
+        }
+        public void Play(ObjectDetectorForm form)
+        {
+            _cameraThread = new Thread(new ParameterizedThreadStart(PlayFrames));
+            _cameraThread.Start(form);
+        }
+
         public void PlayFrames(Object form)
         {
             Initialize(form);
@@ -58,6 +101,7 @@ namespace DarknetYOLOv4.FrameHandler
             isPlaying = true;
             while (isPlaying)
             {
+
                 ExecuteFrame().Wait();
             }
 
@@ -76,8 +120,9 @@ namespace DarknetYOLOv4.FrameHandler
                 return;
             }
             else await Task.Delay(TimeSpan.FromMilliseconds(spareAfterSkip));
-            Mat frame = GetFrame();
+            frame = GetFrame();
             if (frame == null) return;
+            if (SnapshotRequired) SaveSnapshot();
 
             ProcessFrame(frame);
             stopwatch.Stop();
@@ -89,10 +134,10 @@ namespace DarknetYOLOv4.FrameHandler
                 spareAfterSkip = frameProcessTime % (1000 / FPS);
                 framesToSkip = Math.Ceiling(framesToSkip);
             }
-            else 
+            else
             {
                 spareAfterSkip = 0;
-                framesToSkip = 0; 
+                framesToSkip = 0;
             }
 
             SetStatusPlayMode();
@@ -106,8 +151,6 @@ namespace DarknetYOLOv4.FrameHandler
             Mat frame = new Mat();
             try
             {
-
-
                 cap.Retrieve(frame);
 
                 CvInvoke.Resize(frame, frame, OriginalSize);
@@ -119,12 +162,11 @@ namespace DarknetYOLOv4.FrameHandler
 
 
                 FrameN = Convert.ToInt32(cap.Get(Emgu.CV.CvEnum.CapProp.PosFrames));
-                Console.WriteLine(Convert.ToString(FrameN));
+
 
             }
             catch (Exception e)
             {
-                // SetStatus("VideoEnded");
                 frame = null;
             }
             if (frame == null)
@@ -139,7 +181,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int GetFPSDelay()
         {
             int delay = (1000 / FPS) - frameProcessTime;
-            // Console.WriteLine(delay);
+
 
             if (delay > 0)
                 return delay;
@@ -147,10 +189,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         }
 
-        public virtual void ProcessFrame(Mat frame)
-        {
-
-        }
+        public abstract void ProcessFrame(Mat frame);
 
         protected void SetStatusPlayMode()
         {
@@ -162,14 +201,14 @@ namespace DarknetYOLOv4.FrameHandler
            + $"\nAlgorithm Execute Time: {potentialFrameTime}"
            + $"\nAwaitDelay: {GetFPSDelay()}"
            + $"\nSkipped Frames: {framesToSkip}"
-           +$"\nSpare After Skip ms: {spareAfterSkip}"
+           + $"\nSpare After Skip ms: {spareAfterSkip}"
            );
         }
 
         protected void SetStatus(string status)
         {
             StatusText = status;
-            Console.WriteLine(StatusText);
+            //Console.WriteLine(StatusText);
             videoForm.label1.Invoke(new Action(() => videoForm.label1.Text = StatusText));
         }
 

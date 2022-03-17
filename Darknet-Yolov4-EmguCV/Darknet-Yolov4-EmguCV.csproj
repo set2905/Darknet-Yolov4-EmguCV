@@ -90,7 +90,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UIExtensions\ButtonCover.cs" />
+    <Compile Include="UIExtensions\ButtonExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

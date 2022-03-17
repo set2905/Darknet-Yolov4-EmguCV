@@ -8,7 +8,7 @@ using Emgu.CV.Structure;
 using System.Windows.Forms;
 namespace DarknetYOLOv4.UIExtensions
 {
-    public static class ButtonCover
+    public static class ButtonExtensions
     {
         public static void SetCover(this Button b, string VideoPath)
         {

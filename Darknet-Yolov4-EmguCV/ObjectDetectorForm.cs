@@ -23,7 +23,10 @@ namespace DarknetYOLOv4
     public partial class ObjectDetectorForm : Form
     {
 
-        private Thread _cameraThread;
+
+        private Thread _buttonCoversThread;
+
+
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
         public string currentVideo = @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8";
@@ -41,9 +44,7 @@ namespace DarknetYOLOv4
         {
             if (currentFrameHandler != null)
             {
-                //так не надо наверное
-                _cameraThread.Abort();
-                _cameraThread = null;
+                currentFrameHandler.Stop();
                 currentFrameHandler = null;
 
                 VideoChoicePanel.Enabled = true;
@@ -53,7 +54,7 @@ namespace DarknetYOLOv4
                 PlayModeComboCox.Enabled = true;
                 label1.Text = "Video Stopped";
                 StartButton.Text = "START";
-               // UpdateVideoCovers();
+                // UpdateVideoCovers();
                 return;
             }
             else
@@ -85,21 +86,24 @@ namespace DarknetYOLOv4
             currentFrameHandler.FixedFPSValue = (int)FixedFpsValueBox.Value;
             currentFrameHandler.isFPSFixed = isFpsFixedBox.Checked;
             FixedFpsValueBox.Enabled = currentFrameHandler.isFPSFixed;
+            currentFrameHandler.Play(this);
 
-
-            _cameraThread = new Thread(new ParameterizedThreadStart(currentFrameHandler.PlayFrames));
-            _cameraThread.Start(this);
         }
 
         private void SetVideo(int index)
         {
             currentVideo = videos[index];
-           
+
         }
 
         public ObjectDetectorForm()
         {
             InitializeComponent();
+
+            foreach (Button b in VideoChoicePanel.Controls)
+            {
+                VideoButtons.Add(b);
+            }
 
             VideoChoicePanel.Enabled = true;
             VideoChoicePanel.Visible = true;
@@ -111,7 +115,10 @@ namespace DarknetYOLOv4
 
         private void ObjectDetectorForm_Load(object sender, EventArgs e)
         {
-            UpdateVideoCovers();
+            _buttonCoversThread = new Thread(new ThreadStart(UpdateVideoCovers));
+            _buttonCoversThread.Start();
+
+            // UpdateVideoCovers();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -161,10 +168,9 @@ namespace DarknetYOLOv4
 
         private void UpdateVideoCovers()
         {
-            
-            foreach (Button b in VideoChoicePanel.Controls)
+
+            foreach (Button b in VideoButtons)
             {
-                VideoButtons.Add(b);
                 b.SetCover(videos[VideoButtons.IndexOf(b)]);
             }
         }
@@ -192,6 +198,23 @@ namespace DarknetYOLOv4
         {
             SetVideo(VideoButtons.IndexOf(VideoButton4));
             ToggleFrameHandler();
+        }
+
+        private void ScreenShotButton_Click(object sender, EventArgs e)
+        {
+            if (currentFrameHandler == null) return;
+
+            if (currentFrameHandler.snapShotDirectory == null)
+            {
+                var dirDialog = new FolderBrowserDialog();
+                if (dirDialog.ShowDialog() == DialogResult.OK)
+                {
+                    currentFrameHandler.snapShotDirectory = dirDialog.SelectedPath;
+                }
+                Console.WriteLine($"new Snapshot path is: {currentFrameHandler.snapShotDirectory}");
+
+            }
+            currentFrameHandler.SnapshotRequired = true;
         }
     }
 }
