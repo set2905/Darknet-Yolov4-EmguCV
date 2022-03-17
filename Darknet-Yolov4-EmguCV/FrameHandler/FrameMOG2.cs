@@ -24,22 +24,23 @@ namespace DarknetYOLOv4.FrameHandler
     internal class FrameMOG2 : FrameHandlerBase
     {
         IBackgroundSubtractor backgroundSubtractor;
+        bool CanSnapshot = false;
+        int SnapshotCDSeconds = 120;
+        double lastSnapshotAt = 0;
 
         protected override void Initialize(Object form)
         {
             base.Initialize(form);
-            backgroundSubtractor = new BackgroundSubtractorMOG2(500, 16, true);
+            backgroundSubtractor = new BackgroundSubtractorMOG2(200, 16, true);
         }
 
         public override void ProcessFrame(Mat frame)
         {
             Mat resizedFrame = new Mat();
-            //resizedFrame=frame;
 
-          //  CvInvoke.CvtColor(frame, frame, ColorConversion.Bgr2Gray);
             CvInvoke.Resize(frame, resizedFrame, ProcessingSize);
 
-            
+
 
             try
             {
@@ -56,34 +57,23 @@ namespace DarknetYOLOv4.FrameHandler
                      Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
                 CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
-                int minArea = 7000;
+
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
-
                 watch.Stop();
+
+
                 potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
-
-                for (int i = 0; i < contours.Size; i++)
-                {
-                    Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
-                    int area = bbox.Width * bbox.Height;
-                    float ar = (float)bbox.Width / bbox.Height;
-
-                    if (area > minArea /*&& ar < 1.0*/)
-                    {
-                        CvInvoke.Rectangle(frame, bbox, new MCvScalar(0, 0, 255), 6);
-                        string text = Convert.ToString(area);
-                        CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
-                    }
-
-                }
+                ProcessResults(contours, frame);
                 //-------+15ms-------
-                
-               CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
-                Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
-                Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
-                CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
-                
+                /*
+                 CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
+                 Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
+                 Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
+                 CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
+                 frameImg.Dispose();
+                 foregroundImg.Dispose();*/
+
                 //------------------
                 videoForm.pictureBox1.Image = frame.ToBitmap();
             }
@@ -92,9 +82,46 @@ namespace DarknetYOLOv4.FrameHandler
                 throw new Exception(ex.Message);
             }
 
+            //скрин
+            if (!CanSnapshot)
+            {
+                double currentSec = GetCurrentSeconds();
+                if (currentSec % SnapshotCDSeconds == 0 && lastSnapshotAt != currentSec)
+                {
+                    CanSnapshot = true;
+                }
+            }
+
+
             CvInvoke.WaitKey(1);
 
 
+        }
+        private void ProcessResults(VectorOfVectorOfPoint contours, Mat frame)
+        {
+            int minArea = 7000;
+            for (int i = 0; i < contours.Size; i++)
+            {
+                Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
+                int area = bbox.Width * bbox.Height;
+                float ar = (float)bbox.Width / bbox.Height;
+
+                if (area > minArea && ar < 1.0)
+                {
+                    CvInvoke.Rectangle(frame, bbox, new MCvScalar(0, 0, 255), 6);
+                    string text = Convert.ToString(area);
+                    //площадь объекта
+                    CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
+                }
+
+            }
+
+            if (contours.Size > 0 && CanSnapshot)
+            {
+                CanSnapshot = false;
+                lastSnapshotAt = GetCurrentSeconds();
+                SnapshotRequired = true;
+            }
         }
 
         public Image<Bgra, Byte> BlackTransparent(Image<Bgr, Byte> image)

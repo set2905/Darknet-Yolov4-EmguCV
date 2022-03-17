@@ -27,6 +27,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         private Thread _cameraThread;
         protected int FPS = 24;
+        protected double currentVideoTime = 0;
         protected int FrameN = 0;
         public bool isFPSFixed;
         public int FixedFPSValue;
@@ -43,10 +44,10 @@ namespace DarknetYOLOv4.FrameHandler
         public string StatusText = "";
         protected ObjectDetectorForm videoForm;
 
-        Mat frame;
+        private Mat frame;
         public bool SnapshotRequired = false;
         private string snapshotFileName = "snapshot.jpg";
-        public string snapShotDirectory= @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
+        public string snapShotDirectory = @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
 
         protected int frameProcessTime = 0;
         protected int potentialFrameTime = 0;
@@ -56,7 +57,7 @@ namespace DarknetYOLOv4.FrameHandler
         {
             videoForm = (ObjectDetectorForm)form;
             cap = new VideoCapture(videoForm.currentVideo);
-            // cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
+            cap.Set(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
 
         protected void SaveSnapshot()
@@ -103,15 +104,18 @@ namespace DarknetYOLOv4.FrameHandler
             {
 
                 ExecuteFrame().Wait();
+                //frame.Dispose();
             }
 
         }
 
         private async Task ExecuteFrame()
         {
+
+            if (!cap.Grab()) return;
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            cap.Grab();
+
             if (framesToSkip >= 1)
             {
                 stopwatch.Stop();
@@ -159,10 +163,9 @@ namespace DarknetYOLOv4.FrameHandler
                     FPS = Convert.ToInt32(cap.Get(Emgu.CV.CvEnum.CapProp.Fps));
                 else FPS = FixedFPSValue;
                 if (FPS <= 0 || FPS > 240) FPS = 24;
-
-
                 FrameN = Convert.ToInt32(cap.Get(Emgu.CV.CvEnum.CapProp.PosFrames));
 
+                currentVideoTime = FrameN * (1000 / FPS);
 
             }
             catch (Exception e)
@@ -196,6 +199,7 @@ namespace DarknetYOLOv4.FrameHandler
             SetStatus
            (
             $"\nVideoFPS: {FPS}"
+           + $"\nCurrent Seconds: {GetCurrentSeconds()}"
            + $"\nFrameNo: {FrameN}"
            + $"\nFrame Execute time: { frameProcessTime}"
            + $"\nAlgorithm Execute Time: {potentialFrameTime}"
@@ -203,6 +207,11 @@ namespace DarknetYOLOv4.FrameHandler
            + $"\nSkipped Frames: {framesToSkip}"
            + $"\nSpare After Skip ms: {spareAfterSkip}"
            );
+        }
+
+        protected double GetCurrentSeconds()
+        {
+            return Math.Ceiling(currentVideoTime * 0.001f);
         }
 
         protected void SetStatus(string status)

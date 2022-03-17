@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System;
 using System.Diagnostics;
 using Emgu.CV;
-
+using Emgu.CV.Structure;
 
 namespace DarknetYOLOv4.FrameHandler
 {
