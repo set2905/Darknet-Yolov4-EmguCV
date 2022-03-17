@@ -1,6 +1,8 @@
 ﻿
 using System.Threading.Tasks;
 using System;
+using System.Drawing;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Emgu.CV;
 using Emgu.CV.Structure;
@@ -9,7 +11,7 @@ namespace DarknetYOLOv4.FrameHandler
 {
     internal class FramePlayer : FrameHandlerBase
     {
-        public override void ProcessFrame(Mat frame)
+        public override List<Rectangle> ProcessFrame(Mat frame)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -18,6 +20,7 @@ namespace DarknetYOLOv4.FrameHandler
             videoForm.pictureBox1.Image = frame.ToBitmap();
             watch.Stop();
             potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
+            return null;
         }
     }
 }

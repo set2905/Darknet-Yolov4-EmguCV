@@ -34,12 +34,12 @@ namespace DarknetYOLOv4.FrameHandler
             backgroundSubtractor = new BackgroundSubtractorMOG2(200, 16, true);
         }
 
-        public override void ProcessFrame(Mat frame)
+        public override List<Rectangle> ProcessFrame(Mat frame)
         {
             Mat resizedFrame = new Mat();
 
             CvInvoke.Resize(frame, resizedFrame, ProcessingSize);
-
+            VectorOfVectorOfPoint contours;
 
 
             try
@@ -57,14 +57,13 @@ namespace DarknetYOLOv4.FrameHandler
                      Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
                 CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
-
-                VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+                contours = new VectorOfVectorOfPoint();
                 CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
                 watch.Stop();
 
 
                 potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
-                ProcessResults(contours, frame);
+                
                 //-------+15ms-------
                 /*
                  CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
@@ -75,7 +74,7 @@ namespace DarknetYOLOv4.FrameHandler
                  foregroundImg.Dispose();*/
 
                 //------------------
-                videoForm.pictureBox1.Image = frame.ToBitmap();
+                
             }
             catch (Exception ex)
             {
@@ -94,12 +93,15 @@ namespace DarknetYOLOv4.FrameHandler
 
 
             CvInvoke.WaitKey(1);
+           return  ProcessResults(contours, frame);
 
 
         }
-        private void ProcessResults(VectorOfVectorOfPoint contours, Mat frame)
+        private List<Rectangle> ProcessResults(VectorOfVectorOfPoint contours, Mat frame)
         {
-            int minArea = 7000;
+            if (contours.Size == 0) return null;
+            int minArea = 5000;
+            List<Rectangle> rects = new List<Rectangle>();
             for (int i = 0; i < contours.Size; i++)
             {
                 Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
@@ -112,6 +114,7 @@ namespace DarknetYOLOv4.FrameHandler
                     string text = Convert.ToString(area);
                     //площадь объекта
                     CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
+                    rects.Add(bbox);
                 }
 
             }
@@ -122,6 +125,8 @@ namespace DarknetYOLOv4.FrameHandler
                 lastSnapshotAt = GetCurrentSeconds();
                 SnapshotRequired = true;
             }
+            videoForm.pictureBox1.Image = frame.ToBitmap();
+            return rects;
         }
 
         public Image<Bgra, Byte> BlackTransparent(Image<Bgr, Byte> image)

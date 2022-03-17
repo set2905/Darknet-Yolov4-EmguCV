@@ -33,8 +33,9 @@ namespace DarknetYOLOv4.FrameHandler
             base.Initialize(form);
             LoadModel();
         }
-        public override void ProcessFrame(Mat frame)
+        public override List<Rectangle> ProcessFrame(Mat frame)
         {
+            List<Rectangle> rects = new List<Rectangle>();
             Stopwatch watch = new Stopwatch();
             watch.Start();
             List<YoloPrediction> results = model.Predict(frame.ToBitmap(),ProcessingSize.Height, ProcessingSize.Width);
@@ -46,12 +47,12 @@ namespace DarknetYOLOv4.FrameHandler
                 CvInvoke.Rectangle(frame, new Rectangle(item.Rectangle.X - 2, item.Rectangle.Y - 33, item.Rectangle.Width + 4, 40), new MCvScalar(255, 0, 0), -1);
                 CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
                 CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
+                rects.Add(item.Rectangle);
             }
 
             CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
-
-
+            return rects;
         }
 
         private void LoadModel()

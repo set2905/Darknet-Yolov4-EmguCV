@@ -192,7 +192,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         }
 
-        public abstract void ProcessFrame(Mat frame);
+        public abstract List<Rectangle> ProcessFrame(Mat frame);
 
         protected void SetStatusPlayMode()
         {
