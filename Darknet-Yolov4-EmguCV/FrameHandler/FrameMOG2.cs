@@ -34,7 +34,7 @@ namespace DarknetYOLOv4.FrameHandler
             backgroundSubtractor = new BackgroundSubtractorMOG2(200, 16, true);
         }
 
-        public override List<Rectangle> ProcessFrame(Mat frame)
+        public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
             Mat resizedFrame = new Mat();
 
@@ -86,7 +86,7 @@ namespace DarknetYOLOv4.FrameHandler
 
             if (contours.Size == 0) return null;
             int minArea = 5000;
-            List<Rectangle> rects = new List<Rectangle>();
+            List<FrameProcessResult> rects = new List<FrameProcessResult>();
             for (int i = 0; i < contours.Size; i++)
             {
                 Rectangle bbox = CvInvoke.BoundingRectangle(contours[i]);
@@ -96,7 +96,7 @@ namespace DarknetYOLOv4.FrameHandler
                 if (area > minArea /*&& ar < 1.0*/)
                 {
                     
-                    rects.Add(bbox);
+                    rects.Add(new FrameProcessResult(bbox));
                 }
 
             }
@@ -116,12 +116,12 @@ namespace DarknetYOLOv4.FrameHandler
 
 
         }
-        protected override void ProcessResults(List<Rectangle> rects, Mat frame)
+        protected override void ProcessResults(List<FrameProcessResult> results, Mat frame)
         {
 
-            foreach(Rectangle rect in rects)
+            foreach(FrameProcessResult result in results)
             {
-                CvInvoke.Rectangle(frame, rect, new MCvScalar(0, 0, 255), 6);
+                CvInvoke.Rectangle(frame, result.Rectangle, new MCvScalar(0, 0, 255), 6);
                 //string text = Convert.ToString(area);
                 //площадь объекта
                // CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);

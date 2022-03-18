@@ -129,7 +129,7 @@ namespace DarknetYOLOv4.FrameHandler
             if (SnapshotRequired) SaveSnapshot();
 
             //ProcessFrame(frame);
-            List<Rectangle> results = ProcessFrame(frame);
+            List<FrameProcessResult> results = ProcessFrame(frame);
             if (results != null)
                 ProcessResults(results, frame);
 
@@ -197,9 +197,9 @@ namespace DarknetYOLOv4.FrameHandler
 
         }
 
-        public abstract List<Rectangle> ProcessFrame(Mat frame);
+        public abstract List<FrameProcessResult> ProcessFrame(Mat frame);
 
-        protected abstract void ProcessResults(List<Rectangle> rects, Mat frame);
+        protected abstract void ProcessResults(List<FrameProcessResult> results, Mat frame);
         protected void SetStatusPlayMode()
         {
             SetStatus

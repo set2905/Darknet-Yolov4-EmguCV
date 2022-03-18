@@ -33,30 +33,29 @@ namespace DarknetYOLOv4.FrameHandler
             base.Initialize(form);
             LoadModel();
         }
-        public override List<Rectangle> ProcessFrame(Mat frame)
+        public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
-            List<Rectangle> rects = new List<Rectangle>();
             Stopwatch watch = new Stopwatch();
             watch.Start();
-            List<YoloPrediction> results = model.Predict(frame.ToBitmap(),ProcessingSize.Height, ProcessingSize.Width);
+            List<FrameProcessResult> results = model.Predict(frame.ToBitmap(),ProcessingSize.Height, ProcessingSize.Width);
             watch.Stop();
             potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
-            foreach (var item in results)
-            {
-                string text = item.Label + " " + item.Confidence;
-                CvInvoke.Rectangle(frame, new Rectangle(item.Rectangle.X - 2, item.Rectangle.Y - 33, item.Rectangle.Width + 4, 40), new MCvScalar(255, 0, 0), -1);
-                CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
-                CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
-                rects.Add(item.Rectangle);
-            }
 
             CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
-            return rects;
+            return results;
         }
 
-        protected override void ProcessResults(List<Rectangle> rects, Mat frame)
-        { }
+        protected override void ProcessResults(List<FrameProcessResult> results, Mat frame)
+        {
+            foreach (FrameProcessResult item in results)
+            {
+                string text = item.Label + " " + item.Value;
+                CvInvoke.Rectangle(frame, new Rectangle(item.Rectangle.X - 2, item.Rectangle.Y - 33, item.Rectangle.Width + 4, 40), new MCvScalar(255, 0, 0), -1);
+                CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
+                CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
+            }
+        }
 
             private void LoadModel()
         {

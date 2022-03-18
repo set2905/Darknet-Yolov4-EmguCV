@@ -11,7 +11,7 @@ namespace DarknetYOLOv4.FrameHandler
 {
     internal class FramePlayer : FrameHandlerBase
     {
-        public override List<Rectangle> ProcessFrame(Mat frame)
+        public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -23,7 +23,7 @@ namespace DarknetYOLOv4.FrameHandler
             return null;
         }
 
-        protected override void ProcessResults(List<Rectangle> rects, Mat frame)
+        protected override void ProcessResults(List<FrameProcessResult> rects, Mat frame)
         { }
     }
 }

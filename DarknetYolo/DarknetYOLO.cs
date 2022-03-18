@@ -10,6 +10,7 @@ using System.Drawing;
 using Emgu.CV.Structure;
 using DarknetYolo.Models;
 using System.IO;
+using DarknetYOLOv4.FrameHandler;
 
 namespace DarknetYolo
 {
@@ -57,7 +58,7 @@ namespace DarknetYolo
         /// <param name="resizedWidth">(Optional) Resize image width before feeding it to the network (smaller results in faster predictions but may hurt accuracy).</param>
         /// <param name="resizedHeight">(Optional) Resize image height before feeding it to the network (smaller results in faster predictions but may hurt accuracy)</param>
         /// <returns>List of all detected objects.</returns>
-        public List<YoloPrediction> Predict(Bitmap inputImage, int resizedWidth = 512, int resizedHeight = 512)
+        public List<FrameProcessResult> Predict(Bitmap inputImage, int resizedWidth = 512, int resizedHeight = 512)
         {
             if (resizedWidth % 32 is int rest)
             {
@@ -137,17 +138,12 @@ namespace DarknetYolo
             }
             int[] bIndexes = DnnInvoke.NMSBoxes(boxes.ToArray(), confidences.ToArray(), ConfidenceThreshold, NMSThreshold);
 
-            List<YoloPrediction> filteredBoxes = new List<YoloPrediction>();
+            List<FrameProcessResult> filteredBoxes = new List<FrameProcessResult>();
             if (bIndexes.Length > 0)
             {
                 foreach (var idx in bIndexes)
                 {
-                    filteredBoxes.Add(new YoloPrediction()
-                    {
-                        Rectangle = boxes[idx],
-                        Confidence = Math.Round(confidences[idx], 4),
-                        Label = _labels[classIDs[idx]]
-                    });
+                    filteredBoxes.Add(new FrameProcessResult(boxes[idx], _labels[classIDs[idx]], Math.Round(confidences[idx], 4)));
                 }
             }
             return filteredBoxes;

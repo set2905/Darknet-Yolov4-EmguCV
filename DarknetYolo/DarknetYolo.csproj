@@ -55,7 +55,7 @@
     <Compile Include="DarknetYOLO.cs" />
     <Compile Include="Models\PreferredBackend.cs" />
     <Compile Include="Models\PreferredTarget.cs" />
-    <Compile Include="Models\YoloPrediction.cs" />
+    <Compile Include="Models\FrameProcessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
