@@ -36,7 +36,7 @@ namespace DarknetYOLOv4.FrameHandler
 
 
         protected Size ProcessingSize = new Size(320, 320);
-        protected Size OriginalSize = new Size(1024, 720);
+        protected Size OriginalSize = new Size(1280, 720);
 
         protected VideoCapture cap;
         protected DarknetYOLO model;
@@ -50,7 +50,7 @@ namespace DarknetYOLOv4.FrameHandler
         public string snapShotDirectory = @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
 
         protected int frameProcessTime = 0;
-        protected int potentialFrameTime = 0;
+        protected int algorithmExecTime = 0;
 
 
         protected virtual void Initialize(Object form)
@@ -129,7 +129,15 @@ namespace DarknetYOLOv4.FrameHandler
             if (SnapshotRequired) SaveSnapshot();
 
             //ProcessFrame(frame);
+            Stopwatch algExecWatch = new Stopwatch();
+            algExecWatch.Start();
+
             List<FrameProcessResult> results = ProcessFrame(frame);
+
+            algExecWatch.Stop();
+            algorithmExecTime = Convert.ToInt32(algExecWatch.ElapsedMilliseconds);
+
+
             if (results != null)
                 ProcessResults(results, frame);
 
@@ -208,7 +216,7 @@ namespace DarknetYOLOv4.FrameHandler
            + $"\nCurrent Seconds: {GetCurrentSeconds()}"
            + $"\nFrameNo: {FrameN}"
            + $"\nFrame Execute time: { frameProcessTime}"
-           + $"\nAlgorithm Execute Time: {potentialFrameTime}"
+           + $"\nAlgorithm Execute Time: {algorithmExecTime}"
            + $"\nAwaitDelay: {GetFPSDelay()}"
            + $"\nSkipped Frames: {framesToSkip}"
            + $"\nSpare After Skip ms: {spareAfterSkip}"

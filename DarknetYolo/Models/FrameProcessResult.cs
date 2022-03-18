@@ -16,6 +16,7 @@ namespace DarknetYOLOv4.FrameHandler
         public double Value { get; set; }
 
 
+        public FrameProcessResult() { }
         public FrameProcessResult(Rectangle Rectangle)
         {
             this.Rectangle = Rectangle;

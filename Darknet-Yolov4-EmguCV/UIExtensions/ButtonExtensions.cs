@@ -21,6 +21,7 @@ namespace DarknetYOLOv4.UIExtensions
             CoverCapture.Grab();
 
             CoverCapture.Retrieve(frame);
+            if (frame.GetData() == null) return;
             CvInvoke.Resize(frame, frame, new Size(b.Width, b.Height));
             Image<Bgr, Byte> img = frame.ToImage<Bgr, Byte>();
 

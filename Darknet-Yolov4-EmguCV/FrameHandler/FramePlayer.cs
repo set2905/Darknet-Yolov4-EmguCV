@@ -13,13 +13,9 @@ namespace DarknetYOLOv4.FrameHandler
     {
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-
             CvInvoke.WaitKey(1);
             videoForm.pictureBox1.Image = frame.ToBitmap();
-            watch.Stop();
-            potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
+
             return null;
         }
 

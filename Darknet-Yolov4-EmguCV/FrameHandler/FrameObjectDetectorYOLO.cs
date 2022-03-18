@@ -35,14 +35,10 @@ namespace DarknetYOLOv4.FrameHandler
         }
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
             List<FrameProcessResult> results = model.Predict(frame.ToBitmap(),ProcessingSize.Height, ProcessingSize.Width);
-            watch.Stop();
-            potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
+           // CvInvoke.WaitKey(1);
 
-            CvInvoke.WaitKey(1);
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+            
             return results;
         }
 
@@ -55,6 +51,7 @@ namespace DarknetYOLOv4.FrameHandler
                 CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
                 CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
             }
+            videoForm.pictureBox1.Image = frame.ToBitmap();
         }
 
             private void LoadModel()

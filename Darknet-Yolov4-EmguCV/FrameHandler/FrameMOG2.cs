@@ -37,17 +37,13 @@ namespace DarknetYOLOv4.FrameHandler
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
             Mat resizedFrame = new Mat();
+            Mat smoothFrame = new Mat();
+            Mat foregroundMask = new Mat();
 
             CvInvoke.Resize(frame, resizedFrame, ProcessingSize);
             VectorOfVectorOfPoint contours;
-
-
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            Mat smoothFrame = new Mat();
-            CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 1);
-
-            Mat foregroundMask = new Mat();
+           
+            CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 1);          
             backgroundSubtractor.Apply(smoothFrame, foregroundMask);
 
             CvInvoke.Threshold(foregroundMask, foregroundMask, 254, 255, ThresholdType.Binary);
@@ -57,10 +53,7 @@ namespace DarknetYOLOv4.FrameHandler
 
             contours = new VectorOfVectorOfPoint();
             CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
-            watch.Stop();
 
-
-            potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
 
             //-------+15ms-------
 
@@ -95,20 +88,10 @@ namespace DarknetYOLOv4.FrameHandler
 
                 if (area > minArea /*&& ar < 1.0*/)
                 {
-                    
                     rects.Add(new FrameProcessResult(bbox));
                 }
 
             }
-
-
-            if (contours.Size > 0 && CanSnapshot)
-            {
-                CanSnapshot = false;
-                lastSnapshotAt = GetCurrentSeconds();
-                SnapshotRequired = true;
-            }
-
 
             CvInvoke.WaitKey(1);
            
@@ -125,6 +108,14 @@ namespace DarknetYOLOv4.FrameHandler
                 //string text = Convert.ToString(area);
                 //площадь объекта
                // CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
+            }
+
+
+            if (results.Count > 0 && CanSnapshot)
+            {
+                CanSnapshot = false;
+                lastSnapshotAt = GetCurrentSeconds();
+                SnapshotRequired = true;
             }
 
             videoForm.pictureBox1.Image = frame.ToBitmap();
