@@ -1,10 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Timers;
-using System.Windows.Forms;
 
 using System.Threading.Tasks;
 using Emgu.CV.Dnn;
@@ -113,12 +109,12 @@ namespace DarknetYOLOv4.FrameHandler
         {
 
             if (!cap.Grab()) return;
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Stopwatch frameProcessWatch = new Stopwatch();
+            frameProcessWatch.Start();
 
             if (framesToSkip >= 1)
             {
-                stopwatch.Stop();
+                frameProcessWatch.Stop();
                 framesToSkip -= 1;
                 // SetStatusPlayMode();
                 return;
@@ -141,8 +137,8 @@ namespace DarknetYOLOv4.FrameHandler
             if (results != null)
                 ProcessResults(results, frame);
 
-            stopwatch.Stop();
-            frameProcessTime = Convert.ToInt32(stopwatch.ElapsedMilliseconds);
+            frameProcessWatch.Stop();
+            frameProcessTime = Convert.ToInt32(frameProcessWatch.ElapsedMilliseconds);
 
             //если кадр обрабатываетсмя дольше чем фреймтайм видео то пропускать фреймы
             if (FPS != 0 && frameProcessTime > (1000 / FPS))
