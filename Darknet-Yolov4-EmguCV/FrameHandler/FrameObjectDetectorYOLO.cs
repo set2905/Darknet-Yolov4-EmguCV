@@ -55,7 +55,10 @@ namespace DarknetYOLOv4.FrameHandler
             return rects;
         }
 
-        private void LoadModel()
+        protected override void ProcessResults(List<Rectangle> rects, Mat frame)
+        { }
+
+            private void LoadModel()
         {
             SetStatus("[INFO] Loading Model...");
             model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);

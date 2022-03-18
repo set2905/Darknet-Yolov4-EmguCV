@@ -42,44 +42,37 @@ namespace DarknetYOLOv4.FrameHandler
             VectorOfVectorOfPoint contours;
 
 
-            try
-            {
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-                Mat smoothFrame = new Mat();
-                CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 1);
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            Mat smoothFrame = new Mat();
+            CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 1);
 
-                Mat foregroundMask = new Mat();
-                backgroundSubtractor.Apply(smoothFrame, foregroundMask);
+            Mat foregroundMask = new Mat();
+            backgroundSubtractor.Apply(smoothFrame, foregroundMask);
 
-                CvInvoke.Threshold(foregroundMask, foregroundMask, 150, 400, ThresholdType.Binary);
-                CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
-                     Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
-                CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
+            CvInvoke.Threshold(foregroundMask, foregroundMask, 254, 255, ThresholdType.Binary);
+            CvInvoke.MorphologyEx(foregroundMask, foregroundMask, MorphOp.Close,
+                 Mat.Ones(3, 7, DepthType.Cv8U, 1), new Point(-1, -1), 1, BorderType.Reflect, new MCvScalar(0));
+            CvInvoke.Resize(foregroundMask, foregroundMask, OriginalSize);
 
-                contours = new VectorOfVectorOfPoint();
-                CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
-                watch.Stop();
+            contours = new VectorOfVectorOfPoint();
+            CvInvoke.FindContours(foregroundMask, contours, null, RetrType.External, ChainApproxMethod.ChainApproxSimple);
+            watch.Stop();
 
 
-                potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
-                
-                //-------+15ms-------
-                /*
-                 CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
-                 Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
-                 Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
-                 CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
-                 frameImg.Dispose();
-                 foregroundImg.Dispose();*/
+            potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
 
-                //------------------
-                
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            //-------+15ms-------
+
+           /* CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
+            Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
+            Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
+            CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
+            frameImg.Dispose();
+            foregroundImg.Dispose();*/
+
+            //------------------
+
 
             //скрин
             if (!CanSnapshot)
@@ -91,14 +84,6 @@ namespace DarknetYOLOv4.FrameHandler
                 }
             }
 
-
-            CvInvoke.WaitKey(1);
-           return  ProcessResults(contours, frame);
-
-
-        }
-        private List<Rectangle> ProcessResults(VectorOfVectorOfPoint contours, Mat frame)
-        {
             if (contours.Size == 0) return null;
             int minArea = 5000;
             List<Rectangle> rects = new List<Rectangle>();
@@ -108,16 +93,14 @@ namespace DarknetYOLOv4.FrameHandler
                 int area = bbox.Width * bbox.Height;
                 float ar = (float)bbox.Width / bbox.Height;
 
-                if (area > minArea && ar < 1.0)
+                if (area > minArea /*&& ar < 1.0*/)
                 {
-                    CvInvoke.Rectangle(frame, bbox, new MCvScalar(0, 0, 255), 6);
-                    string text = Convert.ToString(area);
-                    //площадь объекта
-                    CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
+                    
                     rects.Add(bbox);
                 }
 
             }
+
 
             if (contours.Size > 0 && CanSnapshot)
             {
@@ -125,8 +108,27 @@ namespace DarknetYOLOv4.FrameHandler
                 lastSnapshotAt = GetCurrentSeconds();
                 SnapshotRequired = true;
             }
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+
+
+            CvInvoke.WaitKey(1);
+           
             return rects;
+
+
+        }
+        protected override void ProcessResults(List<Rectangle> rects, Mat frame)
+        {
+
+            foreach(Rectangle rect in rects)
+            {
+                CvInvoke.Rectangle(frame, rect, new MCvScalar(0, 0, 255), 6);
+                //string text = Convert.ToString(area);
+                //площадь объекта
+               // CvInvoke.PutText(frame, text, new Point(bbox.X, bbox.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
+            }
+
+            videoForm.pictureBox1.Image = frame.ToBitmap();
+            
         }
 
         public Image<Bgra, Byte> BlackTransparent(Image<Bgr, Byte> image)

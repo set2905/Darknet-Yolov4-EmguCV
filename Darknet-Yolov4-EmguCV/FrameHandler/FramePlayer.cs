@@ -22,5 +22,8 @@ namespace DarknetYOLOv4.FrameHandler
             potentialFrameTime = Convert.ToInt32(watch.ElapsedMilliseconds);
             return null;
         }
+
+        protected override void ProcessResults(List<Rectangle> rects, Mat frame)
+        { }
     }
 }

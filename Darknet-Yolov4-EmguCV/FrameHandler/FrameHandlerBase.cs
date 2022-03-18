@@ -94,7 +94,7 @@ namespace DarknetYOLOv4.FrameHandler
             _cameraThread.Start(form);
         }
 
-        public void PlayFrames(Object form)
+        private void PlayFrames(Object form)
         {
             Initialize(form);
 
@@ -128,10 +128,15 @@ namespace DarknetYOLOv4.FrameHandler
             if (frame == null) return;
             if (SnapshotRequired) SaveSnapshot();
 
-            ProcessFrame(frame);
+            //ProcessFrame(frame);
+            List<Rectangle> results = ProcessFrame(frame);
+            if (results != null)
+                ProcessResults(results, frame);
+
             stopwatch.Stop();
             frameProcessTime = Convert.ToInt32(stopwatch.ElapsedMilliseconds);
 
+            //если кадр обрабатываетсмя дольше чем фреймтайм видео то пропускать фреймы
             if (FPS != 0 && frameProcessTime > (1000 / FPS))
             {
                 framesToSkip = frameProcessTime / (1000 / FPS);
@@ -194,6 +199,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         public abstract List<Rectangle> ProcessFrame(Mat frame);
 
+        protected abstract void ProcessResults(List<Rectangle> rects, Mat frame);
         protected void SetStatusPlayMode()
         {
             SetStatus
