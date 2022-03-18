@@ -73,8 +73,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\CVExtensions\RectangleExtensions.cs" />
     <Compile Include="FrameHandler\FrameHandlerBase.cs" />
     <Compile Include="FrameHandler\FrameMOG2.cs" />
+    <Compile Include="FrameHandler\FrameMOG2KCF.cs" />
     <Compile Include="FrameHandler\FrameObjectDetectorYOLO.cs" />
     <Compile Include="FrameHandler\FramePlayer.cs" />
     <Compile Include="ObjectDetectorForm.cs">
@@ -90,7 +92,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UIExtensions\ButtonExtensions.cs" />
+    <Compile Include="Extensions\UIExtensions\ButtonExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

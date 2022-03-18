@@ -49,7 +49,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int algorithmExecTime = 0;
 
 
-        protected virtual void Initialize(Object form)
+        public virtual void Initialize(Object form)
         {
             videoForm = (ObjectDetectorForm)form;
             cap = new VideoCapture(videoForm.currentVideo);

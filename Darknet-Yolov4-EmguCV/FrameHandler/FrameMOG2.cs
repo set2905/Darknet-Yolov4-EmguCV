@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         int SnapshotCDSeconds = 120;
         double lastSnapshotAt = 0;
 
-        protected override void Initialize(Object form)
+        public override void Initialize(Object form)
         {
             base.Initialize(form);
             backgroundSubtractor = new BackgroundSubtractorMOG2(200, 16, true);

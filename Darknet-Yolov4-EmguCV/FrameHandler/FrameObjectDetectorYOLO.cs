@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected string weights = @"..\..\NetworkModels\yolov4-tiny.weights";
         protected string cfg = @"..\..\NetworkModels\yolov4-tiny.cfg";
 
-        protected override void Initialize(Object form)
+        public override void Initialize(Object form)
         {
             base.Initialize(form);
             LoadModel();

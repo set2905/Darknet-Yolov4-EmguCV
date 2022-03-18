@@ -16,9 +16,10 @@ namespace DarknetYOLOv4
 {
     public enum PlayMode
     {
-        DetectorYOLO,
+        YOLO,
         Play,
-        BackgroundSubstraction
+        MOG2,
+        KCF_MOG2
     }
     public partial class ObjectDetectorForm : Form
     {
@@ -74,11 +75,15 @@ namespace DarknetYOLOv4
                 case PlayMode.Play:
                     currentFrameHandler = new FramePlayer();
                     break;
-                case PlayMode.DetectorYOLO:
+                case PlayMode.YOLO:
                     currentFrameHandler = new FrameObjectDetectorYOLO();
                     break;
-                case PlayMode.BackgroundSubstraction:
+                case PlayMode.MOG2:
                     currentFrameHandler = new FrameMOG2();
+                    break;
+
+                case PlayMode.KCF_MOG2:
+                    currentFrameHandler = new FrameMOG2KCF();
                     break;
 
             }
