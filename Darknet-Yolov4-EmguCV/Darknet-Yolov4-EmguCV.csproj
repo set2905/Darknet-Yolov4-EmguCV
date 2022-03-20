@@ -79,6 +79,7 @@
     <Compile Include="FrameHandler\FrameMOG2KCF.cs" />
     <Compile Include="FrameHandler\FrameObjectDetectorYOLO.cs" />
     <Compile Include="FrameHandler\FramePlayer.cs" />
+    <Compile Include="FrameHandler\YOLOKCFtest.cs" />
     <Compile Include="ObjectDetectorForm.cs">
       <SubType>Form</SubType>
     </Compile>

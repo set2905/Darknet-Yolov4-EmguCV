@@ -40,7 +40,11 @@ namespace DarknetYOLOv4.FrameHandler
             Mat smoothFrame = new Mat();
             Mat foregroundMask = new Mat();
 
+          //  CvInvoke.CvtColor(frame, frame, ColorConversion.Bgr2Gray);
+
             CvInvoke.Resize(frame, resizedFrame, ProcessingSize);
+            
+
             VectorOfVectorOfPoint contours;
            
             CvInvoke.GaussianBlur(resizedFrame, smoothFrame, new Size(7, 7), 1);          
@@ -57,12 +61,12 @@ namespace DarknetYOLOv4.FrameHandler
 
             //-------+15ms-------
 
-           /* CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
+            CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
             Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
             Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
             CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
             frameImg.Dispose();
-            foregroundImg.Dispose();*/
+            foregroundImg.Dispose();
 
             //------------------
 
@@ -78,7 +82,7 @@ namespace DarknetYOLOv4.FrameHandler
             }
 
             if (contours.Size == 0) return null;
-            int minArea = 5000;
+            int minArea = 4000;
             List<FrameProcessResult> rects = new List<FrameProcessResult>();
             for (int i = 0; i < contours.Size; i++)
             {
@@ -86,12 +90,16 @@ namespace DarknetYOLOv4.FrameHandler
                 int area = bbox.Width * bbox.Height;
                 float ar = (float)bbox.Width / bbox.Height;
 
-                if (area > minArea /*&& ar < 1.0*/)
+                if (area > minArea && ar < 1.0)
                 {
                     rects.Add(new FrameProcessResult(bbox));
                 }
 
             }
+
+            foregroundMask.Dispose();
+            resizedFrame.Dispose();
+            smoothFrame.Dispose();
 
             CvInvoke.WaitKey(1);
            

@@ -158,7 +158,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         }
 
-        private Mat GetFrame()
+        protected Mat GetFrame()
         {
 
             Mat frame = new Mat();

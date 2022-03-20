@@ -19,7 +19,8 @@ namespace DarknetYOLOv4
         YOLO,
         Play,
         MOG2,
-        KCF_MOG2
+        YOLOKCF,
+        KCF_MOG2_DONTUSE
     }
     public partial class ObjectDetectorForm : Form
     {
@@ -82,8 +83,11 @@ namespace DarknetYOLOv4
                     currentFrameHandler = new FrameMOG2();
                     break;
 
-                case PlayMode.KCF_MOG2:
+                case PlayMode.KCF_MOG2_DONTUSE:
                     currentFrameHandler = new FrameMOG2KCF();
+                    break;
+                case PlayMode.YOLOKCF:
+                    currentFrameHandler = new YOLOKCFtest();
                     break;
 
             }
