@@ -16,7 +16,7 @@ namespace DarknetYOLOv4.FrameHandler
     {
         FrameObjectDetectorYOLO yoloDetector;
         List<FrameProcessResult> yoloInitResults;
-        public List<TrackedObject> trackedObjs=new List<TrackedObject>();
+        public List<TrackedObject> trackedObjs = new List<TrackedObject>();
         public override void Initialize(Object form)
         {
             base.Initialize(form);
@@ -26,28 +26,55 @@ namespace DarknetYOLOv4.FrameHandler
 
         }
 
-        private void GetPredictionOnFrame(int n, Mat initFrame)
+        private void GetPredictionOnFrame(int n, Mat frame)
         {
-            if (FrameN == n)
+            if (FrameN % n == 0)
             {
-               // Mat initFrame = GetFrame();
-                yoloInitResults = yoloDetector.ProcessFrame(initFrame);
+                // Mat initFrame = GetFrame();
+                yoloInitResults = yoloDetector.ProcessFrame(frame);
 
                 foreach (FrameProcessResult res in yoloInitResults)
                 {
-                    trackedObjs.Add(new TrackedObject(res.Rectangle, initFrame));
+                    foreach (TrackedObject tracked in trackedObjs)
+                    {
+                        if (res.Rectangle.IntersectsWith(tracked.Bbox))
+                        {
+                           // tracked.Tracker.Init(frame, res.Rectangle);
+                            return;
+                        }
+                    }
+                    trackedObjs.Add(new TrackedObject(res.Rectangle, frame));
+
                 }
+                Console.WriteLine($"trackedObjs:{trackedObjs.Count}");
             }
         }
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
-            GetPredictionOnFrame(10,frame);
+            GetPredictionOnFrame(50, frame);
             List<FrameProcessResult> results = new List<FrameProcessResult>();
-            foreach (TrackedObject tracked in trackedObjs)
+
+            for (int i = trackedObjs.Count - 1; i >= 0; i--)
             {
-                tracked.Tracker.Update(frame, out tracked.Bbox);
-                results.Add(new FrameProcessResult(tracked.Bbox));
+                if (!trackedObjs[i].TryUpdate(frame))
+                {
+                    trackedObjs.RemoveAt(i);
+                    continue;
+                }
+
+                results.Add(new FrameProcessResult(trackedObjs[i].Bbox));
             }
+              /*  foreach (TrackedObject tracked in trackedObjs)
+            {
+                // tracked.Tracker.Update(frame, out tracked.Bbox);
+                if (!tracked.TryUpdate(frame))
+                {
+                    trackedObjs.Remove(tracked);
+                    continue;
+                }
+
+                results.Add(new FrameProcessResult(tracked.Bbox));
+            }*/
             return results;
         }
 
@@ -74,6 +101,16 @@ public class TrackedObject
         Bbox = bbox;
         Tracker = new TrackerKCF();
         Tracker.Init(frame, Bbox);
+    }
+
+    public bool TryUpdate(Mat frame)
+    {
+        if (!Tracker.Update(frame, out Bbox))
+        {
+            Tracker.Dispose();
+            return false;
+        }
+        return true;
     }
 
 }
