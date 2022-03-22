@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
 {

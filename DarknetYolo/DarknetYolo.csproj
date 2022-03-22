@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Emgu.CV.Bitmap">
@@ -55,11 +56,16 @@
     <Compile Include="DarknetYOLO.cs" />
     <Compile Include="Models\PreferredBackend.cs" />
     <Compile Include="Models\PreferredTarget.cs" />
-    <Compile Include="Models\FrameProcessResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FrameProcessing\FrameProcessing.csproj">
+      <Project>{df6f1253-f657-4c5f-ab70-21cf9df4b6a4}</Project>
+      <Name>FrameProcessing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

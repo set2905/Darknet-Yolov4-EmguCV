@@ -5,20 +5,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DarknetYOLOv4.FrameHandler
+namespace FrameProcessing
 {
     public class FrameProcessResult
     {
-        public Rectangle Rectangle { get; set; }
+        public Rectangle Rectangle;
 
-        public string Label { get; set; }
+        public string Label;
 
-        public double Value { get; set; }
+        public double Value;
 
 
-        public FrameProcessResult() { }
+        public FrameProcessResult() 
+        {
+            Label = "";
+            Value = 0;
+        }
         public FrameProcessResult(Rectangle Rectangle)
         {
+            Label = "";
             this.Rectangle = Rectangle;
         }
 

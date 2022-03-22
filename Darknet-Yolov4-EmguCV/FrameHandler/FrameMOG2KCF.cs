@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using DarknetYOLOv4.Extensions.CVExtensions;
+using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
 {/// <summary>

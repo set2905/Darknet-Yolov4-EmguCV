@@ -15,6 +15,7 @@ using Emgu.CV.CvEnum;
 using System.Drawing;
 using System.Diagnostics;
 using System.Reflection;
+using FrameProcessing;
 
 
 using DarknetYOLOv4;

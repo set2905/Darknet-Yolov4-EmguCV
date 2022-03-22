@@ -10,7 +10,7 @@ using System.Drawing;
 using Emgu.CV.Structure;
 using DarknetYolo.Models;
 using System.IO;
-using DarknetYOLOv4.FrameHandler;
+using FrameProcessing;
 
 namespace DarknetYolo
 {
