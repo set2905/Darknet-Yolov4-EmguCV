@@ -231,7 +231,6 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(59)))), ((int)(((byte)(72)))));
             this.ClientSize = new System.Drawing.Size(1431, 783);
-            this.ControlBox = false;
             this.Controls.Add(this.RightPanel);
             this.Controls.Add(this.VideoChoicePanel);
             this.Controls.Add(this.pictureBox1);
