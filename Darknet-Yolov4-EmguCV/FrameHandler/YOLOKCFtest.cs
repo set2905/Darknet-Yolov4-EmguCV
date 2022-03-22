@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using DarknetYOLOv4.Extensions.CVExtensions;
+using DarknetYolo;
 
 namespace DarknetYOLOv4.FrameHandler
 {
@@ -39,7 +40,7 @@ namespace DarknetYOLOv4.FrameHandler
                     {
                         if (res.Rectangle.IntersectsWith(tracked.Bbox))
                         {
-                           // tracked.Tracker.Init(frame, res.Rectangle);
+                            // tracked.Tracker.Init(frame, res.Rectangle);
                             return;
                         }
                     }
@@ -62,19 +63,19 @@ namespace DarknetYOLOv4.FrameHandler
                     continue;
                 }
 
-                results.Add(new FrameProcessResult(trackedObjs[i].Bbox));
+                results.Add(new FrameProcessResult(trackedObjs[i].Bbox, i.ToString()));
             }
-              /*  foreach (TrackedObject tracked in trackedObjs)
-            {
-                // tracked.Tracker.Update(frame, out tracked.Bbox);
-                if (!tracked.TryUpdate(frame))
-                {
-                    trackedObjs.Remove(tracked);
-                    continue;
-                }
+            /*  foreach (TrackedObject tracked in trackedObjs)
+          {
+              // tracked.Tracker.Update(frame, out tracked.Bbox);
+              if (!tracked.TryUpdate(frame))
+              {
+                  trackedObjs.Remove(tracked);
+                  continue;
+              }
 
-                results.Add(new FrameProcessResult(tracked.Bbox));
-            }*/
+              results.Add(new FrameProcessResult(tracked.Bbox));
+          }*/
             return results;
         }
 
@@ -83,6 +84,7 @@ namespace DarknetYOLOv4.FrameHandler
             foreach (FrameProcessResult result in results)
             {
                 CvInvoke.Rectangle(frame, result.Rectangle, new MCvScalar(0, 255, 255), 3);
+                CvInvoke.PutText(frame, result.Label, new Point(result.Rectangle.X, result.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
             }
 
             videoForm.pictureBox1.Image = frame.ToBitmap();
