@@ -16,4 +16,6 @@
   <LangVersion>8.0</LangVersion>
 </PropertyGroup>
 
+  <Import Project="..\References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems" Label="Shared" />
+
 </Project>

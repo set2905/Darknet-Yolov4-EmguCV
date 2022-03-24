@@ -16,6 +16,7 @@ namespace FrameProcessing
         public double Value;
 
 
+
         public FrameProcessResult() 
         {
             Label = "";

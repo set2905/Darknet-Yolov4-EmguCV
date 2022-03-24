@@ -9,6 +9,10 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
 {
     internal static class RectangleExtensions
     {
+        public static double Area(this Rectangle rect)
+        {
+            return rect.Width * rect.Height;
+        }
 
         public static bool isCloseToAnyRect(this Rectangle original, Rectangle[] rects, double dist)
         {

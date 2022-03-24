@@ -19,8 +19,7 @@ namespace DarknetYOLOv4
         YOLO,
         Play,
         MOG2,
-        YOLOKCF,
-        KCF_MOG2_DONTUSE
+        YOLOTrackMoving
     }
     public partial class ObjectDetectorForm : Form
     {
@@ -44,7 +43,7 @@ namespace DarknetYOLOv4
 
         private void ToggleFrameHandler()
         {
-            if (currentFrameHandler != null)
+            if (currentFrameHandler != null && currentFrameHandler.isPlaying)
             {
                 currentFrameHandler.Stop();
                 currentFrameHandler = null;
@@ -68,26 +67,30 @@ namespace DarknetYOLOv4
                 StartButton.Text = "STOP";
             }
 
-
-            currentFrameHandler = new FramePlayer();
+          //  if (currentFrameHandler == null)
+                currentFrameHandler = new FramePlayer();
 
             switch (currentPlayMode)
             {
                 case PlayMode.Play:
-                    currentFrameHandler = new FramePlayer();
+                  //  if (currentFrameHandler.GetType() != typeof(FramePlayer))
+                        currentFrameHandler = new FramePlayer();
                     break;
                 case PlayMode.YOLO:
-                    currentFrameHandler = new FrameObjectDetectorYOLO();
+                  //  if (currentFrameHandler.GetType() != typeof(FrameObjectDetectorYOLO))
+                        currentFrameHandler = new FrameObjectDetectorYOLO();
                     break;
                 case PlayMode.MOG2:
-                    currentFrameHandler = new FrameMOG2();
+                 //   if (currentFrameHandler.GetType() != typeof(FrameMOG2))
+                        currentFrameHandler = new FrameMOG2();
                     break;
 
-                case PlayMode.KCF_MOG2_DONTUSE:
-                    currentFrameHandler = new FrameMOG2KCF();
-                    break;
-                case PlayMode.YOLOKCF:
-                    currentFrameHandler = new YOLOKCFtest();
+                /* case PlayMode.KCF_MOG2_DONTUSE:
+                     currentFrameHandler = new FrameMOG2KCF();
+                     break;*/
+                case PlayMode.YOLOTrackMoving:
+             //       if (currentFrameHandler.GetType() != typeof(FrameYoloTracker))
+                        currentFrameHandler = new FrameYoloTracker();
                     break;
 
             }

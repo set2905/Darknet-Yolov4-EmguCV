@@ -32,6 +32,7 @@ namespace DarknetYOLOv4.FrameHandler
         public override void Initialize(Object form)
         {
             base.Initialize(form);
+           // ProcessingSize = new Size(512, 512);
             backgroundSubtractor = new BackgroundSubtractorMOG2(200, 16, true);
         }
 
@@ -61,13 +62,13 @@ namespace DarknetYOLOv4.FrameHandler
 
 
             //-------+15ms-------
-
+            /*
             CvInvoke.Threshold(foregroundMask, foregroundMask, 180, 250, ThresholdType.Binary);
             Image<Bgra, Byte> frameImg = frame.ToImage<Bgra, Byte>();
             Image<Bgra, Byte> foregroundImg = BlackTransparent(foregroundMask.ToImage<Bgr, Byte>());
             CvInvoke.AddWeighted(frameImg, 1f, foregroundImg, .3f, 0, frame);
             frameImg.Dispose();
-            foregroundImg.Dispose();
+            foregroundImg.Dispose();*/
 
             //------------------
 
@@ -83,7 +84,7 @@ namespace DarknetYOLOv4.FrameHandler
             }
 
             if (contours.Size == 0) return null;
-            int minArea = 4000;
+            int minArea = 3000;
             List<FrameProcessResult> rects = new List<FrameProcessResult>();
             for (int i = 0; i < contours.Size; i++)
             {

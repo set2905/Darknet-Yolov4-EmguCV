@@ -31,7 +31,7 @@ namespace DarknetYOLOv4.FrameHandler
         private double spareAfterSkip = 0;
 
 
-        protected Size ProcessingSize = new Size(320, 320);
+        protected Size ProcessingSize = new Size(416, 416);
         protected Size OriginalSize = new Size(1280, 720);
 
         protected VideoCapture cap;
@@ -81,11 +81,13 @@ namespace DarknetYOLOv4.FrameHandler
         public void Stop()
         {
             //так не надо наверное
+            isPlaying = false;
             _cameraThread.Abort();
             _cameraThread = null;
         }
         public void Play(ObjectDetectorForm form)
         {
+            isPlaying = true;
             _cameraThread = new Thread(new ParameterizedThreadStart(PlayFrames));
             _cameraThread.Start(form);
         }
