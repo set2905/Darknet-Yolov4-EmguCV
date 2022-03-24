@@ -16,7 +16,6 @@ Global
 		References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems*{088d5238-32eb-4514-9832-13a1b9689a8c}*SharedItemsImports = 4
 		References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems*{7dabb117-1fc1-42b9-a385-b3786a85b025}*SharedItemsImports = 4
 		References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems*{adc3c8e5-ebcd-4d3c-b3a4-20cfe0e42fc1}*SharedItemsImports = 13
-		References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems*{df6f1253-f657-4c5f-ab70-21cf9df4b6a4}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

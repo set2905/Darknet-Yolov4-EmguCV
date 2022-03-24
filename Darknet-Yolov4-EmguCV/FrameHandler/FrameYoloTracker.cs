@@ -148,7 +148,7 @@ public class TrackedObject
     public Rectangle Bbox;
     public string label = "Unindetified";
     public Point[] PreviousPositions;
-    public int TrailCacheSize = 50;
+    public int TrailCacheSize = 25;
     private int currentTrailIndex = 0;
 
     public TrackedObject(Rectangle bbox, Mat frame)
@@ -167,10 +167,12 @@ public class TrackedObject
 
         if (currentTrailIndex < PreviousPositions.Length)
         {
+            Point currentPos = Bbox.Center();
+            currentPos.Y += Bbox.Height / 2;
 
-            if (currentTrailIndex != 0 && !RectangleExtensions.isPointsClose(PreviousPositions[currentTrailIndex - 1], Bbox.Center(), 20))
+            if (currentTrailIndex != 0 && !RectangleExtensions.isPointsClose(PreviousPositions[currentTrailIndex - 1], currentPos, 20))
             {
-                PreviousPositions[currentTrailIndex] = Bbox.Center();
+                PreviousPositions[currentTrailIndex] = currentPos;
                 currentTrailIndex++;
             }
             if (currentTrailIndex == 0) currentTrailIndex++;
