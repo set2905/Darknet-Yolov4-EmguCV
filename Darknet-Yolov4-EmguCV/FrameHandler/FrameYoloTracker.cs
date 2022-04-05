@@ -77,9 +77,9 @@ namespace DarknetYOLOv4.FrameHandler
 
 
 
-        private bool isNewObjectMoving(Mat frame)
+        private bool isNewObjectMoving(Mat frame, out List<FrameProcessResult> results)
         {
-            List<FrameProcessResult> results = new List<FrameProcessResult>();
+            results = new List<FrameProcessResult>();
             results = MovementDetector.ProcessFrame(frame);
             if (results == null) return false;
 
@@ -88,7 +88,7 @@ namespace DarknetYOLOv4.FrameHandler
                 // CvInvoke.Rectangle(frame, res.Rectangle, new MCvScalar(0, 0, 255), 6);
                 if (isIntersectingWithAnyTracked(res))
                     continue;
-
+                
                 return true;
             }
 
@@ -99,10 +99,12 @@ namespace DarknetYOLOv4.FrameHandler
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
             // GetPredictionOnFrame(10, frame);
-            if (isNewObjectMoving(frame))
+            List<FrameProcessResult> moving;
+            if (isNewObjectMoving(frame, out moving))
             {
                 GetPredictions(frame);
             }
+
 
             List<FrameProcessResult> results = new List<FrameProcessResult>();
 
@@ -116,6 +118,13 @@ namespace DarknetYOLOv4.FrameHandler
 
                 results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label));
             }
+
+            if (moving != null)
+                foreach (FrameProcessResult m in moving)
+                {
+                    CvInvoke.Rectangle(frame, m.Rectangle, new MCvScalar(0, 0, 255), 6);
+                }
+
             return results;
         }
 
@@ -135,8 +144,8 @@ namespace DarknetYOLOv4.FrameHandler
                         CvInvoke.Circle(frame, tracked.PreviousPositions[i], 5, tracked.color, -1);
                 }
             }
-
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+            CvInvoke.Imshow("test", frame);
+           // videoForm.pictureBox1.Image = frame.ToBitmap();
         }
     }
 }
@@ -165,6 +174,19 @@ public class TrackedObject
     public bool TryUpdate(Mat frame)
     {
 
+        UpdateTrail();
+
+        if (!Tracker.Update(frame, out Bbox))
+        {
+            Tracker.Dispose();
+
+            return false;
+        }
+        return true;
+    }
+
+    private void UpdateTrail()
+    {
         if (currentTrailIndex < PreviousPositions.Length)
         {
             Point currentPos = Bbox.Center();
@@ -175,18 +197,11 @@ public class TrackedObject
                 PreviousPositions[currentTrailIndex] = currentPos;
                 currentTrailIndex++;
             }
+            else
             if (currentTrailIndex == 0) currentTrailIndex++;
 
         }
         else currentTrailIndex = 0;
-
-
-        if (!Tracker.Update(frame, out Bbox))
-        {
-            Tracker.Dispose();
-            return false;
-        }
-        return true;
     }
 
 }

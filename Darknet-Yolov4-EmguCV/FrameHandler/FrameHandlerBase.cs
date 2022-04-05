@@ -157,6 +157,7 @@ namespace DarknetYOLOv4.FrameHandler
 
             SetStatusPlayMode();
             await Task.Delay(GetFPSDelay());
+            GC.Collect();
 
         }
 
