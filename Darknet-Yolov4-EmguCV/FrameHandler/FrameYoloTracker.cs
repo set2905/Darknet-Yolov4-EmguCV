@@ -1,15 +1,10 @@
 ﻿using Emgu.CV;
 using Emgu.CV.Legacy;
-using Emgu.CV.Util;
 using Emgu.CV.Structure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using DarknetYOLOv4.Extensions.CVExtensions;
-using DarknetYolo;
 using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
@@ -88,7 +83,7 @@ namespace DarknetYOLOv4.FrameHandler
                 // CvInvoke.Rectangle(frame, res.Rectangle, new MCvScalar(0, 0, 255), 6);
                 if (isIntersectingWithAnyTracked(res))
                     continue;
-                
+
                 return true;
             }
 
@@ -125,10 +120,21 @@ namespace DarknetYOLOv4.FrameHandler
                     CvInvoke.Rectangle(frame, m.Rectangle, new MCvScalar(0, 0, 255), 6);
                 }
 
+         /*   if (DetectionResults != null)
+                foreach (FrameProcessResult item in DetectionResults)
+                {
+                    string text = item.Label + " " + item.Value;
+                    CvInvoke.Rectangle(frame, new Rectangle(item.Rectangle.X - 2, item.Rectangle.Y - 33, item.Rectangle.Width + 4, 40), new MCvScalar(255, 0, 0), -1);
+                    CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
+                    CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
+                }*/
+
+
+
             return results;
         }
 
-        protected override void ProcessResults(List<FrameProcessResult> results, Mat frame)
+        protected override Mat ProcessResults(List<FrameProcessResult> results, Mat frame)
         {
             foreach (FrameProcessResult result in results)
             {
@@ -144,8 +150,8 @@ namespace DarknetYOLOv4.FrameHandler
                         CvInvoke.Circle(frame, tracked.PreviousPositions[i], 5, tracked.color, -1);
                 }
             }
-            CvInvoke.Imshow("test", frame);
-           // videoForm.pictureBox1.Image = frame.ToBitmap();
+            return frame;
+            // videoForm.pictureBox1.Image = frame.ToBitmap();
         }
     }
 }

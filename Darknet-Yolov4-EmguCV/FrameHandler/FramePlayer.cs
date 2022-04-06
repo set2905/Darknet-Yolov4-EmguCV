@@ -15,12 +15,14 @@ namespace DarknetYOLOv4.FrameHandler
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
             CvInvoke.WaitKey(1);
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+           // videoForm.pictureBox1.Image = frame.ToBitmap();
 
             return null;
         }
 
-        protected override void ProcessResults(List<FrameProcessResult> rects, Mat frame)
-        { }
+        protected override Mat ProcessResults(List<FrameProcessResult> rects, Mat frame)
+        {
+            return frame;
+        }
     }
 }

@@ -109,7 +109,7 @@ namespace DarknetYOLOv4.FrameHandler
 
 
         }
-        protected override void ProcessResults(List<FrameProcessResult> results, Mat frame)
+        protected override Mat ProcessResults(List<FrameProcessResult> results, Mat frame)
         {
 
             foreach(FrameProcessResult result in results)
@@ -127,8 +127,8 @@ namespace DarknetYOLOv4.FrameHandler
                 lastSnapshotAt = GetCurrentSeconds();
                 SnapshotRequired = true;
             }
-
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+            return frame;
+            //videoForm.pictureBox1.Image = frame.ToBitmap();
             
         }
 

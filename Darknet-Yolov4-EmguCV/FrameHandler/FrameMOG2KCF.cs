@@ -78,14 +78,15 @@ namespace DarknetYOLOv4.FrameHandler
         }
 
 
-        protected override void ProcessResults(List<FrameProcessResult> results, Mat frame)
+        protected override Mat ProcessResults(List<FrameProcessResult> results, Mat frame)
         {
             foreach (FrameProcessResult result in results)
             {
                 CvInvoke.Rectangle(frame, result.Rectangle, new MCvScalar(0, 255, 255), 3);
             }
 
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+            // videoForm.pictureBox1.Image = frame.ToBitmap();
+            return frame;
 
         }
     }

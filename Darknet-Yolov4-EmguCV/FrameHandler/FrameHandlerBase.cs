@@ -40,7 +40,6 @@ namespace DarknetYOLOv4.FrameHandler
         public string StatusText = "";
         protected ObjectDetectorForm videoForm;
 
-        private Mat frame;
         public bool SnapshotRequired = false;
         private string snapshotFileName = "snapshot.jpg";
         public string snapShotDirectory = @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
@@ -56,7 +55,7 @@ namespace DarknetYOLOv4.FrameHandler
             cap.Set(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
 
-        protected void SaveSnapshot()
+        protected void SaveSnapshot(Mat frame)
         {
             if (SnapshotRequired)
             {
@@ -87,6 +86,7 @@ namespace DarknetYOLOv4.FrameHandler
         }
         public void Play(ObjectDetectorForm form)
         {
+            CvInvoke.DestroyAllWindows();
             isPlaying = true;
             _cameraThread = new Thread(new ParameterizedThreadStart(PlayFrames));
             _cameraThread.Start(form);
@@ -109,7 +109,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         private async Task ExecuteFrame()
         {
-
+            Mat currentFrame;
             if (!cap.Grab()) return;
             Stopwatch frameProcessWatch = new Stopwatch();
             frameProcessWatch.Start();
@@ -122,22 +122,24 @@ namespace DarknetYOLOv4.FrameHandler
                 return;
             }
             else await Task.Delay(TimeSpan.FromMilliseconds(spareAfterSkip));
-            frame = GetFrame();
-            if (frame == null) return;
-            if (SnapshotRequired) SaveSnapshot();
+            currentFrame = GetFrame();
+            if (currentFrame == null) return;
+            if (SnapshotRequired) SaveSnapshot(currentFrame);
 
             //ProcessFrame(frame);
             Stopwatch algExecWatch = new Stopwatch();
             algExecWatch.Start();
 
-            List<FrameProcessResult> results = ProcessFrame(frame);
+            List<FrameProcessResult> results = ProcessFrame(currentFrame);
 
             algExecWatch.Stop();
             algorithmExecTime = Convert.ToInt32(algExecWatch.ElapsedMilliseconds);
 
 
-            if (results != null)
-                ProcessResults(results, frame);
+            if (results != null && results.Count > 0)
+                currentFrame = ProcessResults(results, currentFrame);
+
+            ShowFrame(currentFrame);
 
             frameProcessWatch.Stop();
             frameProcessTime = Convert.ToInt32(frameProcessWatch.ElapsedMilliseconds);
@@ -159,6 +161,12 @@ namespace DarknetYOLOv4.FrameHandler
             await Task.Delay(GetFPSDelay());
             GC.Collect();
 
+        }
+        private void ShowFrame(Mat _frame)
+        {
+            // videoForm.pictureBox1.Image = frame.ToBitmap();
+            CvInvoke.Imshow("1", _frame);
+            CvInvoke.WaitKey(1);
         }
 
         protected Mat GetFrame()
@@ -206,7 +214,7 @@ namespace DarknetYOLOv4.FrameHandler
 
         public abstract List<FrameProcessResult> ProcessFrame(Mat frame);
 
-        protected abstract void ProcessResults(List<FrameProcessResult> results, Mat frame);
+        protected abstract Mat ProcessResults(List<FrameProcessResult> results, Mat frame);
         protected void SetStatusPlayMode()
         {
             SetStatus

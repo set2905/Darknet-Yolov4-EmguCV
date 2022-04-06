@@ -43,7 +43,7 @@ namespace DarknetYOLOv4.FrameHandler
             return results;
         }
 
-        protected override void ProcessResults(List<FrameProcessResult> results, Mat frame)
+        protected override Mat ProcessResults(List<FrameProcessResult> results, Mat frame)
         {
             foreach (FrameProcessResult item in results)
             {
@@ -52,7 +52,8 @@ namespace DarknetYOLOv4.FrameHandler
                 CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
                 CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
             }
-            videoForm.pictureBox1.Image = frame.ToBitmap();
+            // videoForm.pictureBox1.Image = frame.ToBitmap();
+            return frame;
         }
 
             private void LoadModel()
