@@ -29,7 +29,7 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
         public static bool isPointsClose(Point p1, Point p2, double dist)
         {
             double distance = GetDistance(p1,p2);
-            if (distance < dist) return true;
+            if (distance <= dist) return true;
 
             return false;
 

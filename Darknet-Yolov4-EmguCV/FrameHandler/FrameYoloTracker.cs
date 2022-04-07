@@ -35,13 +35,17 @@ namespace DarknetYOLOv4.FrameHandler
             }
         }
 
-        public bool isIntersectingWithAnyTracked(FrameProcessResult res)
+        public bool isIntersectingWithAnyTracked(FrameProcessResult res, Mat frame)
         {
             foreach (TrackedObject tracked in trackedObjs)
             {
                 Rectangle intersect = Rectangle.Intersect(tracked.Bbox, res.Rectangle);
                 if (intersect.Area() > tracked.Bbox.Area() * 0.25)
                 {
+                    if (tracked.lostTrack)
+                    {
+                        tracked.InitTracker(res.Rectangle, frame);
+                    }
                     return true;
                 }
             }
@@ -52,15 +56,15 @@ namespace DarknetYOLOv4.FrameHandler
         {
             DetectionResults = ObjectDetector.ProcessFrame(frame);
             //это вернуть когда веса будут хорошие
-            /* foreach(TrackedObject tracked in trackedObjs)
+            foreach(TrackedObject tracked in trackedObjs)
              {
                  tracked.Tracker.Dispose();
              }
-             trackedObjs.Clear();*/
+             trackedObjs.Clear();
 
             foreach (FrameProcessResult res in DetectionResults)
             {
-                if (!isIntersectingWithAnyTracked(res))
+                if (!isIntersectingWithAnyTracked(res, frame))
                 {
                     TrackedObject newTracked = new TrackedObject(res.Rectangle, frame);
                     newTracked.label = res.Label;
@@ -80,20 +84,19 @@ namespace DarknetYOLOv4.FrameHandler
 
             foreach (FrameProcessResult res in results)
             {
-                // CvInvoke.Rectangle(frame, res.Rectangle, new MCvScalar(0, 0, 255), 6);
-                if (isIntersectingWithAnyTracked(res))
+                if (isIntersectingWithAnyTracked(res, frame))
+                {
                     continue;
+                }
 
                 return true;
             }
-
             return false;
         }
 
 
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {
-            // GetPredictionOnFrame(10, frame);
             List<FrameProcessResult> moving;
             if (isNewObjectMoving(frame, out moving))
             {
@@ -105,12 +108,13 @@ namespace DarknetYOLOv4.FrameHandler
 
             for (int i = trackedObjs.Count - 1; i >= 0; i--)
             {
-                if (!trackedObjs[i].TryUpdate(frame))
+                if (trackedObjs[i].Disposed == true)
                 {
                     trackedObjs.RemoveAt(i);
                     continue;
                 }
 
+                trackedObjs[i].TryUpdate(frame);
                 results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label));
             }
 
@@ -119,18 +123,6 @@ namespace DarknetYOLOv4.FrameHandler
                 {
                     CvInvoke.Rectangle(frame, m.Rectangle, new MCvScalar(0, 0, 255), 6);
                 }
-
-         /*   if (DetectionResults != null)
-                foreach (FrameProcessResult item in DetectionResults)
-                {
-                    string text = item.Label + " " + item.Value;
-                    CvInvoke.Rectangle(frame, new Rectangle(item.Rectangle.X - 2, item.Rectangle.Y - 33, item.Rectangle.Width + 4, 40), new MCvScalar(255, 0, 0), -1);
-                    CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
-                    CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
-                }*/
-
-
-
             return results;
         }
 
@@ -151,7 +143,6 @@ namespace DarknetYOLOv4.FrameHandler
                 }
             }
             return frame;
-            // videoForm.pictureBox1.Image = frame.ToBitmap();
         }
     }
 }
@@ -163,40 +154,83 @@ public class TrackedObject
     public Rectangle Bbox;
     public string label = "Unindetified";
     public Point[] PreviousPositions;
-    public int TrailCacheSize = 25;
+    public int TrailCacheSize = 5;
     private int currentTrailIndex = 0;
+
+    public bool lostTrack = false;
+    public bool Disposed = false;
+    private int lostTrackLifeTime = 3;
+    private int lostTrackCountDown = 0;
 
     public TrackedObject(Rectangle bbox, Mat frame)
     {
         Bbox = bbox;
-        Tracker = new TrackerMOSSE();
-        Tracker.Init(frame, Bbox);
+        InitTracker(Bbox, frame);
         PreviousPositions = new Point[TrailCacheSize];
 
         System.Random rnd = new System.Random();
         color = new MCvScalar(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
     }
 
+    public void InitTracker(Rectangle bbox, Mat frame)
+    {
+        Tracker = new TrackerMOSSE();
+        Tracker.Init(frame, bbox);
+        lostTrackCountDown = 0;
+        lostTrack = false;
+    }
+
     public bool TryUpdate(Mat frame)
     {
-
+        Rectangle cachedBbox = Bbox;
         UpdateTrail();
+        if (lostTrack)
+        {
+            label = "Lost Track: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
+            PerformCountDown();
+            return false;
+        }
+
 
         if (!Tracker.Update(frame, out Bbox))
         {
-            Tracker.Dispose();
-
+            // Tracker.Dispose();
+            lostTrack = true;
+            Bbox = cachedBbox;
             return false;
         }
+
+        label = "Person";
+        lostTrackCountDown = 0;
         return true;
+
+    }
+
+    private void PerformCountDown()
+    {
+        lostTrackCountDown++;
+        if (lostTrackCountDown > lostTrackLifeTime)
+        {
+            Tracker.Dispose();
+            Disposed = true;
+        }
     }
 
     private void UpdateTrail()
     {
+
+
+
         if (currentTrailIndex < PreviousPositions.Length)
         {
             Point currentPos = Bbox.Center();
             currentPos.Y += Bbox.Height / 2;
+
+            if (currentTrailIndex != 0 && !RectangleExtensions.isPointsClose(PreviousPositions[currentTrailIndex - 1], currentPos, 5))
+            {
+                label = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
+                PerformCountDown();
+            }
 
             if (currentTrailIndex != 0 && !RectangleExtensions.isPointsClose(PreviousPositions[currentTrailIndex - 1], currentPos, 20))
             {
