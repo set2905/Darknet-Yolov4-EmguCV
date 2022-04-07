@@ -15,6 +15,7 @@ namespace DarknetYOLOv4.FrameHandler
         FrameObjectDetectorYOLO ObjectDetector;
         List<FrameProcessResult> DetectionResults;
         public List<TrackedObject> trackedObjs = new List<TrackedObject>();
+        private System.Random rnd = new System.Random();
         public override void Initialize(Object form)
         {
             base.Initialize(form);
@@ -52,32 +53,59 @@ namespace DarknetYOLOv4.FrameHandler
             return false;
         }
 
+        public bool isIntersectingWithAnyTracked(List<TrackedObject> tr, FrameProcessResult res, Mat frame, out int i)
+        {
+            foreach (TrackedObject tracked in tr)
+            {
+                Rectangle intersect = Rectangle.Intersect(tracked.Bbox, res.Rectangle);
+                if (intersect.Area() > tracked.Bbox.Area() * 0.25)
+                {
+                    if (tracked.lostTrack)
+                    {
+                        tracked.InitTracker(res.Rectangle, frame);
+                    }
+                    i = tr.IndexOf(tracked);
+                    return true;
+                }
+            }
+            i = -1;
+            return false;
+        }
+
         private void GetPredictions(Mat frame)
         {
             DetectionResults = ObjectDetector.ProcessFrame(frame);
             //это вернуть когда веса будут хорошие
+            List<TrackedObject> cached = new List<TrackedObject>(trackedObjs);
             RefreshTracked();
             //-----------------------------------
 
             foreach (FrameProcessResult res in DetectionResults)
             {
-                if (!isIntersectingWithAnyTracked(trackedObjs,res, frame))
+                int i;
+                if (isIntersectingWithAnyTracked(cached, res, frame, out i))
                 {
-                    TrackedObject newTracked = new TrackedObject(res.Rectangle, frame);
-                    newTracked.label = res.Label;
-                    trackedObjs.Add(newTracked);
-
+                    trackedObjs.Add(cached[i]);
+                    continue;
                 }
+
+                if (i >= 0)
+                    cached[i].Tracker.Dispose();
+
+                TrackedObject newTracked = new TrackedObject(res.Rectangle, frame, rnd);
+                newTracked.label = res.Label;
+                trackedObjs.Add(newTracked);
+
             }
         }
 
         private void RefreshTracked()
         {
-
-            foreach (TrackedObject tracked in trackedObjs)
-            {
-                tracked.Tracker.Dispose();
-            }
+            /*
+                        foreach (TrackedObject tracked in trackedObjs)
+                        {
+                            tracked.Tracker.Dispose();
+                        }*/
             trackedObjs.Clear();
         }
 
@@ -89,7 +117,7 @@ namespace DarknetYOLOv4.FrameHandler
 
             foreach (FrameProcessResult res in results)
             {
-                if (isIntersectingWithAnyTracked(trackedObjs,res, frame))
+                if (isIntersectingWithAnyTracked(trackedObjs, res, frame))
                 {
                     continue;
                 }
@@ -120,14 +148,14 @@ namespace DarknetYOLOv4.FrameHandler
                 }
 
                 trackedObjs[i].TryUpdate(frame);
-                results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label));
+                results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label + " " + trackedObjs[i].status));
             }
 
-           /* if (moving != null)
-                foreach (FrameProcessResult m in moving)
-                {
-                    CvInvoke.Rectangle(frame, m.Rectangle, new MCvScalar(0, 0, 255), 6);
-                }*/
+            /* if (moving != null)
+                 foreach (FrameProcessResult m in moving)
+                 {
+                     CvInvoke.Rectangle(frame, m.Rectangle, new MCvScalar(0, 0, 255), 6);
+                 }*/
             return results;
         }
 
@@ -158,22 +186,23 @@ public class TrackedObject
     public TrackerMOSSE Tracker;
     public Rectangle Bbox;
     public string label = "Unindetified";
+    public string status = "normal";
     public Point[] PreviousPositions;
     public int TrailCacheSize = 15;
     private int currentTrailIndex = 0;
 
     public bool lostTrack = false;
     public bool Disposed = false;
-    private int lostTrackLifeTime = 5;
+    private int lostTrackLifeTime = 50;
     private int lostTrackCountDown = 0;
 
-    public TrackedObject(Rectangle bbox, Mat frame)
+    public TrackedObject(Rectangle bbox, Mat frame, System.Random rnd)
     {
         Bbox = bbox;
         InitTracker(Bbox, frame);
         PreviousPositions = new Point[TrailCacheSize];
 
-        System.Random rnd = new System.Random();
+       // System.Random rnd = new System.Random();
         color = new MCvScalar(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
     }
 
@@ -191,7 +220,7 @@ public class TrackedObject
         UpdateTrail();
         if (lostTrack)
         {
-            label = "Lost Track: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
+            status = "Lost Track: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
             PerformCountDown();
             return false;
         }
@@ -204,8 +233,7 @@ public class TrackedObject
             Bbox = cachedBbox;
             return false;
         }
-
-        label = "Person";
+        status = "normal";
         lostTrackCountDown = 0;
         return true;
 
@@ -239,7 +267,7 @@ public class TrackedObject
             else
             {
                 if (currentTrailIndex == 0) currentTrailIndex++;
-                label = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
+                status = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
                 PerformCountDown();
 
             }
