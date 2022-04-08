@@ -27,6 +27,9 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FrameN = 0;
         public bool isFPSFixed;
         public int FixedFPSValue;
+        public int FixedFrameSkip = 5;
+
+        private bool shouldSkipFrames=false;
         private double framesToSkip = 0;
         private double spareAfterSkip = 0;
 
@@ -53,6 +56,7 @@ namespace DarknetYOLOv4.FrameHandler
             videoForm = (ObjectDetectorForm)form;
             cap = new VideoCapture(videoForm.currentVideo);
             cap.Set(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
+            framesToSkip = Math.Max(framesToSkip, FixedFrameSkip);
         }
 
         protected void SaveSnapshot(Mat frame)
@@ -114,6 +118,7 @@ namespace DarknetYOLOv4.FrameHandler
             Stopwatch frameProcessWatch = new Stopwatch();
             frameProcessWatch.Start();
 
+
             if (framesToSkip >= 1)
             {
                 frameProcessWatch.Stop();
@@ -121,7 +126,12 @@ namespace DarknetYOLOv4.FrameHandler
                 // SetStatusPlayMode();
                 return;
             }
-            else await Task.Delay(TimeSpan.FromMilliseconds(spareAfterSkip));
+
+            else 
+            { 
+                await Task.Delay(TimeSpan.FromMilliseconds(spareAfterSkip));
+            }
+
             currentFrame = GetFrame();
             if (currentFrame == null) return;
             if (SnapshotRequired) SaveSnapshot(currentFrame);
@@ -164,9 +174,9 @@ namespace DarknetYOLOv4.FrameHandler
         }
         private void ShowFrame(Mat _frame)
         {
-            // videoForm.pictureBox1.Image = frame.ToBitmap();
-            CvInvoke.Imshow("1", _frame);
-            CvInvoke.WaitKey(1);
+             videoForm.pictureBox1.Image = _frame.ToBitmap();
+           // CvInvoke.Imshow("1", _frame);
+           // CvInvoke.WaitKey(1);
         }
 
         protected Mat GetFrame()

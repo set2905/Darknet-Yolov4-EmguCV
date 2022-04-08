@@ -58,7 +58,7 @@ namespace DarknetYOLOv4.FrameHandler
             foreach (TrackedObject tracked in tr)
             {
                 Rectangle intersect = Rectangle.Intersect(tracked.Bbox, res.Rectangle);
-                if (intersect.Area() > tracked.Bbox.Area() * 0.25)
+                if (intersect.Area() > tracked.Bbox.Area() * 0.1)
                 {
                     if (tracked.lostTrack)
                     {
@@ -188,7 +188,7 @@ public class TrackedObject
     public string label = "Unindetified";
     public string status = "normal";
     public Point[] PreviousPositions;
-    public int TrailCacheSize = 15;
+    public int TrailCacheSize = 20;
     private int currentTrailIndex = 0;
 
     public bool lostTrack = false;

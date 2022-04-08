@@ -35,7 +35,7 @@ namespace DarknetYOLOv4
         private string[] videos = new string[4]
         {
             @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8",
-            @"https://live.cmirit.ru:443/live/200-11_1920x1080.stream/playlist.m3u8",
+            @"https://live.cmirit.ru:443/live/10school-03_1920x1080.stream/playlist.m3u8",
             @"https://live.cmirit.ru:443/live/smart14_1920x1080.stream/playlist.m3u8",
             @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8"
         };
