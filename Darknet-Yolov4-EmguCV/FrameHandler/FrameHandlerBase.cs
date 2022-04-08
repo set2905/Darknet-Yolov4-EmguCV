@@ -27,9 +27,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FrameN = 0;
         public bool isFPSFixed;
         public int FixedFPSValue;
-        public int FixedFrameSkip = 5;
 
-        private bool shouldSkipFrames=false;
         private double framesToSkip = 0;
         private double spareAfterSkip = 0;
 
@@ -56,7 +54,6 @@ namespace DarknetYOLOv4.FrameHandler
             videoForm = (ObjectDetectorForm)form;
             cap = new VideoCapture(videoForm.currentVideo);
             cap.Set(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
-            framesToSkip = Math.Max(framesToSkip, FixedFrameSkip);
         }
 
         protected void SaveSnapshot(Mat frame)
