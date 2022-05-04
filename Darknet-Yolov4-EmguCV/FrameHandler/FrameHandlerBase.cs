@@ -171,9 +171,9 @@ namespace DarknetYOLOv4.FrameHandler
         }
         private void ShowFrame(Mat _frame)
         {
-             videoForm.pictureBox1.Image = _frame.ToBitmap();
-           // CvInvoke.Imshow("1", _frame);
-           // CvInvoke.WaitKey(1);
+            // videoForm.pictureBox1.Image = _frame.ToBitmap();
+            CvInvoke.Imshow("1", _frame);
+            CvInvoke.WaitKey(1);
         }
 
         protected Mat GetFrame()

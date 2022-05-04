@@ -267,8 +267,8 @@ public class TrackedObject
             else
             {
                 if (currentTrailIndex == 0) currentTrailIndex++;
-                status = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
-                PerformCountDown();
+               // status = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
+                //PerformCountDown();
 
             }
 
