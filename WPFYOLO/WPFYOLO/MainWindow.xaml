@@ -21,11 +21,34 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="2" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="600"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="650"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" Name="PlayMode" Height="30" VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center">Video Player</TextBlock>
+                    <TextBlock VerticalAlignment="Center">Motion Detector</TextBlock>
+                    <TextBlock VerticalAlignment="Center">Object Detection(SLOW)</TextBlock>
+                    <TextBlock VerticalAlignment="Center">Combined</TextBlock>
+                </ComboBox>
+                <CheckBox Grid.Column="1" x:Name="FixedFPSCheckBox" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <TextBlock HorizontalAlignment="Left" Width="50" FontSize="10" Height="15">Fixed FPS</TextBlock>
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="2" ScaleY="2"/>
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Border Background="#f5f6fa" BorderBrush="#f5f6fa" BorderThickness="1" CornerRadius="8,8,3,3">
+                    
+                </Border>
+            </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -50,11 +73,11 @@
                         </DataTemplate>
                     </Button.ContentTemplate>
                 </Button>
-                <Button Grid.Column="4" Grid.Row="3" Margin="3" HorizontalAlignment="Stretch" x:Name="StopButton">
+                <Button Grid.Column="4" Grid.Row="3" Margin="3" HorizontalAlignment="Stretch" x:Name="ScreenShotButton">
                     <Button.ContentTemplate>
                         <DataTemplate>
                             <Viewbox>
-                                <TextBlock>Scrrenshot</TextBlock>
+                                <TextBlock>Screenshot</TextBlock>
                             </Viewbox>
                         </DataTemplate>
                     </Button.ContentTemplate>
@@ -63,12 +86,7 @@
         </Grid>
         <Image Grid.Column="0" Grid.RowSpan="4" x:Name="FrameDisplay"/>
 
-        <CheckBox Grid.Column="3" Grid.Row="0" x:Name="FixedFPSCheckBox" VerticalAlignment="Center" HorizontalAlignment="Left">
-            <TextBlock HorizontalAlignment="Left" Width="50" FontSize="10" Height="15">Fixed FPS</TextBlock>
-            <CheckBox.LayoutTransform>
-                <ScaleTransform ScaleX="2" ScaleY="2"/>
-            </CheckBox.LayoutTransform>
-        </CheckBox>
+       
 
     </Grid>
 </Window>
