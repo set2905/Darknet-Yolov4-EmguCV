@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarknetYolo", "DarknetYolo\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameProcessing", "FrameProcessing\FrameProcessing.csproj", "{DF6F1253-F657-4C5F-AB70-21CF9DF4B6A4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFYOLO", "WPFYOLO\WPFYOLO\WPFYOLO.csproj", "{2229543F-3DA8-4D59-AE07-C1CC49095951}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		References\EmguCV\Emgu.CV.Runtime\Windows\Emgu.CV.Runtime.Windows.projitems*{088d5238-32eb-4514-9832-13a1b9689a8c}*SharedItemsImports = 4
@@ -48,6 +50,14 @@ Global
 		{DF6F1253-F657-4C5F-AB70-21CF9DF4B6A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DF6F1253-F657-4C5F-AB70-21CF9DF4B6A4}.Release|x64.ActiveCfg = Release|Any CPU
 		{DF6F1253-F657-4C5F-AB70-21CF9DF4B6A4}.Release|x64.Build.0 = Release|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Debug|x64.Build.0 = Debug|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Release|x64.ActiveCfg = Release|Any CPU
+		{2229543F-3DA8-4D59-AE07-C1CC49095951}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
