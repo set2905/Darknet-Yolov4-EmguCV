@@ -208,6 +208,7 @@ public class TrackedObject
 
     public void InitTracker(Rectangle bbox, Mat frame)
     {
+        if (Tracker != null) Tracker.Dispose();
         Tracker = new TrackerMOSSE();
         Tracker.Init(frame, bbox);
         lostTrackCountDown = 0;

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:WPFYOLO"
-        xmlns:objdetection="clr-namespace:DarknetYOLOv4;assembly=YOLO_WinForms"
+        xmlns:objdetection="clr-namespace:DarknetYOLOv4;assembly=Darknet-Yolov4-EmguCV"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1450">
     

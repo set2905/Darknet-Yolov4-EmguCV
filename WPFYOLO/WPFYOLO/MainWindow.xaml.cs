@@ -63,13 +63,17 @@ namespace WPFYOLO
         }
         private void SetVideo(int index)
         {
+            SetPlayMode();
             if (currentFrameHandler != null)
                 currentFrameHandler.currentVideo = videos[index];
+
+           // ToggleFrameHandler();
 
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+
             ToggleFrameHandler();
         }
 
@@ -134,28 +138,12 @@ namespace WPFYOLO
 
             currentFrameHandler = new FramePlayer();
 
-            switch (currentPlayMode)
-            {
-                case PlayMode.Play:
-                    currentFrameHandler = new FramePlayer();
-                    break;
-                case PlayMode.YOLO:
-                    currentFrameHandler = new FrameObjectDetectorYOLO();
-                    break;
-                case PlayMode.MOG2:
-                    currentFrameHandler = new FrameMOG2();
-                    break;
-
-                case PlayMode.YOLOTrackMoving:
-                    currentFrameHandler = new FrameYoloTracker();
-                    break;
-
-            }
+            SetPlayMode();
 
             currentFrameHandler.FixedFPSValue = (int)FixedFPSValueUpDown.Value;
             currentFrameHandler.isFPSFixed = FixedFPSCheckBox.IsChecked.HasValue ? FixedFPSCheckBox.IsChecked.Value : false;
             FixedFPSValueUpDown.IsEnabled = currentFrameHandler.isFPSFixed;
-             currentFrameHandler.Play();
+            currentFrameHandler.Play();
         }
 
         private void FrameButton1_Click(object sender, RoutedEventArgs e)
@@ -198,6 +186,27 @@ namespace WPFYOLO
         private void PlayModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currentPlayMode = (PlayMode)PlayModeComboBox.SelectedItem;
+        }
+
+        private void SetPlayMode()
+        {
+            switch (currentPlayMode)
+            {
+                case PlayMode.Play:
+                    currentFrameHandler = new FramePlayer();
+                    break;
+                case PlayMode.YOLO:
+                    currentFrameHandler = new FrameObjectDetectorYOLO();
+                    break;
+                case PlayMode.MOG2:
+                    currentFrameHandler = new FrameMOG2();
+                    break;
+
+                case PlayMode.YOLOTrackMoving:
+                    currentFrameHandler = new FrameYoloTracker();
+                    break;
+
+            }
         }
     }
 
