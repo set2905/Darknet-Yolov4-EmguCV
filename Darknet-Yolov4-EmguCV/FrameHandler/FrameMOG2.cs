@@ -29,9 +29,9 @@ namespace DarknetYOLOv4.FrameHandler
         int SnapshotCDSeconds = 120;
         double lastSnapshotAt = 0;
 
-        public override void Initialize(Object form)
+        public override void Initialize()
         {
-            base.Initialize(form);
+            base.Initialize();
            // ProcessingSize = new Size(512, 512);
             backgroundSubtractor = new BackgroundSubtractorMOG2(200, 16, true);
         }

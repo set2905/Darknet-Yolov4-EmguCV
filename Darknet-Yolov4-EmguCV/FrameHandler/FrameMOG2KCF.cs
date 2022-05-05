@@ -25,12 +25,12 @@ namespace DarknetYOLOv4.FrameHandler
 
         private TrackerMOSSE tracker;
 
-        public override void Initialize(object form)
+        public override void Initialize()
         {
-            base.Initialize(form);
+            base.Initialize();
             trackedObjs = new VectorOfRect();
             MOG2Handler = new FrameMOG2();
-            MOG2Handler.Initialize(form);
+            MOG2Handler.Initialize();
             _multiTracker = new MultiTracker();
             tracker = new TrackerMOSSE();
         }

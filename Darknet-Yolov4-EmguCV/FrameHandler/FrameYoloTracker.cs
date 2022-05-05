@@ -16,14 +16,14 @@ namespace DarknetYOLOv4.FrameHandler
         List<FrameProcessResult> DetectionResults;
         public List<TrackedObject> trackedObjs = new List<TrackedObject>();
         private System.Random rnd = new System.Random();
-        public override void Initialize(Object form)
+        public override void Initialize()
         {
-            base.Initialize(form);
+            base.Initialize();
             MovementDetector = new FrameMOG2();
             ObjectDetector = new FrameObjectDetectorYOLO();
 
-            MovementDetector.Initialize(form);
-            ObjectDetector.Initialize(form);
+            MovementDetector.Initialize();
+            ObjectDetector.Initialize();
 
 
         }

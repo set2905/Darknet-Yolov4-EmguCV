@@ -35,7 +35,7 @@ namespace WPFYOLO
 
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
-        public string currentVideo = @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8";
+
         List<Button> VideoButtons = new List<Button>();
         private string[] videos = new string[4]
         {
@@ -63,7 +63,8 @@ namespace WPFYOLO
         }
         private void SetVideo(int index)
         {
-            currentVideo = videos[index];
+            if (currentFrameHandler != null)
+                currentFrameHandler.currentVideo = videos[index];
 
         }
 
@@ -77,7 +78,8 @@ namespace WPFYOLO
             OpenFileDialog fdialog = new OpenFileDialog();
             if (fdialog.ShowDialog() == true)
             {
-                currentVideo = fdialog.FileName;
+                if (currentFrameHandler != null)
+                    currentFrameHandler.currentVideo = fdialog.FileName;
                 ToggleFrameHandler();
             }
         }
@@ -153,7 +155,7 @@ namespace WPFYOLO
             currentFrameHandler.FixedFPSValue = (int)FixedFPSValueUpDown.Value;
             currentFrameHandler.isFPSFixed = FixedFPSCheckBox.IsChecked.HasValue ? FixedFPSCheckBox.IsChecked.Value : false;
             FixedFPSValueUpDown.IsEnabled = currentFrameHandler.isFPSFixed;
-            // currentFrameHandler.Play(this);
+             currentFrameHandler.Play();
         }
 
         private void FrameButton1_Click(object sender, RoutedEventArgs e)

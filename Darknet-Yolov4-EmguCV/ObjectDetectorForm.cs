@@ -98,7 +98,7 @@ namespace DarknetYOLOv4
             currentFrameHandler.FixedFPSValue = (int)FixedFpsValueBox.Value;
             currentFrameHandler.isFPSFixed = isFpsFixedBox.Checked;
             FixedFpsValueBox.Enabled = currentFrameHandler.isFPSFixed;
-            currentFrameHandler.Play(this);
+            currentFrameHandler.Play();
 
         }
 

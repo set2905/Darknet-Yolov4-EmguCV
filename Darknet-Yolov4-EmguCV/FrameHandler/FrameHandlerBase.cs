@@ -13,6 +13,7 @@ using System.Reflection;
 using DarknetYolo;
 using System.Threading;
 using FrameProcessing;
+using System.Windows.Controls;
 
 
 
@@ -39,8 +40,10 @@ namespace DarknetYOLOv4.FrameHandler
         protected DarknetYOLO model;
         public bool isPlaying = false;
         public string StatusText = "";
-        protected ObjectDetectorForm videoForm;
+        //protected ObjectDetectorForm videoForm;
 
+
+        public string currentVideo = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
         public bool SnapshotRequired = false;
         private string snapshotFileName = "snapshot.jpg";
         public string snapShotDirectory = @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
@@ -49,10 +52,9 @@ namespace DarknetYOLOv4.FrameHandler
         protected int algorithmExecTime = 0;
 
 
-        public virtual void Initialize(Object form)
+        public virtual void Initialize()
         {
-            videoForm = (ObjectDetectorForm)form;
-            cap = new VideoCapture(videoForm.currentVideo);
+            cap = new VideoCapture(currentVideo);
             cap.Set(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
 
@@ -85,17 +87,17 @@ namespace DarknetYOLOv4.FrameHandler
             _cameraThread.Abort();
             _cameraThread = null;
         }
-        public void Play(ObjectDetectorForm form)
+        public void Play()
         {
             CvInvoke.DestroyAllWindows();
             isPlaying = true;
-            _cameraThread = new Thread(new ParameterizedThreadStart(PlayFrames));
-            _cameraThread.Start(form);
+            _cameraThread = new Thread(new ThreadStart(PlayFrames));
+            _cameraThread.Start();
         }
 
-        private void PlayFrames(Object form)
+        private void PlayFrames()
         {
-            Initialize(form);
+            Initialize();
 
 
             isPlaying = true;
@@ -103,7 +105,7 @@ namespace DarknetYOLOv4.FrameHandler
             {
 
                 ExecuteFrame().Wait();
-                //frame.Dispose();
+               // frame.Dispose();
             }
 
         }
@@ -246,7 +248,7 @@ namespace DarknetYOLOv4.FrameHandler
         {
             StatusText = status;
             //Console.WriteLine(StatusText);
-            videoForm.label1.Invoke(new Action(() => videoForm.label1.Text = StatusText));
+           // videoForm.label1.Invoke(new Action(() => videoForm.label1.Text = StatusText));
         }
 
 

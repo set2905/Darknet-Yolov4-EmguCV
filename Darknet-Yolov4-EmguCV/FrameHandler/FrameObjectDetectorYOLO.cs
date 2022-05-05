@@ -25,13 +25,13 @@ namespace DarknetYOLOv4.FrameHandler
     public class FrameObjectDetectorYOLO : FrameHandlerBase
     {
 
-        protected string labels = @"..\..\NetworkModels\obj.names";
-        protected string weights = @"..\..\NetworkModels\custom-yolov4-tiny-detector_final.weights";
-        protected string cfg = @"..\..\NetworkModels\custom-yolov4-tiny-detector.cfg";
+        protected string labels = @"E:\YOLOv4Network\obj.names";
+        protected string weights = @"E:\YOLOv4Network\custom-yolov4-tiny-detector_final.weights";
+        protected string cfg = @"E:\YOLOv4Network\custom-yolov4-tiny-detector.cfg";
 
-        public override void Initialize(Object form)
+        public override void Initialize()
         {
-            base.Initialize(form);
+            base.Initialize();
             LoadModel();
         }
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
