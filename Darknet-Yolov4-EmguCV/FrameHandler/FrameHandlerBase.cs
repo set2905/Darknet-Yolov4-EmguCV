@@ -25,7 +25,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FPS = 24;
         protected double currentVideoTime = 0;
         protected int FrameN = 0;
-        public bool isFPSFixed;
+        public bool isFPSFixed=false;
         public int FixedFPSValue;
 
         private double framesToSkip = 0;
