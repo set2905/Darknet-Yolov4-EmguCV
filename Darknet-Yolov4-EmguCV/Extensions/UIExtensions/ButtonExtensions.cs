@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Emgu.CV;
+using System.Runtime.InteropServices;
 using Emgu.CV.Structure;
 using System.Windows.Forms;
+using System.Windows.Controls;
 namespace DarknetYOLOv4.UIExtensions
 {
     public static class ButtonExtensions
@@ -30,6 +32,11 @@ namespace DarknetYOLOv4.UIExtensions
             img.Dispose();
             CoverCapture.Dispose();
         }
+
+
+
+
+
 
     }
 }

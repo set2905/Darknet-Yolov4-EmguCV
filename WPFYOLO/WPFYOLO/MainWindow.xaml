@@ -77,10 +77,18 @@
             </Grid>
         </Grid>
         <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="20" x:Name="FrameDisplay"/>
-        <Button Grid.Column="0" Grid.Row="0" Margin="10"  x:Name="FrameButton1" />
-        <Button Grid.Column="0" Grid.Row="1" Margin="10" x:Name="FrameButton2" />
-        <Button Grid.Column="1" Grid.Row="0" Margin="10" x:Name="FrameButton3"  />
-        <Button Grid.Column="1" Grid.Row="1" Margin="10" x:Name="FrameButton4" />
+        <Button Grid.Column="0" Grid.Row="0" Margin="10"  x:Name="FrameButton1" Click="FrameButton1_Click" >
+            <Image x:Name="capBtn1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </Button>
+        <Button Grid.Column="0" Grid.Row="1" Margin="10" x:Name="FrameButton2" Click="FrameButton2_Click" >
+            <Image x:Name="capBtn2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </Button>
+        <Button Grid.Column="1" Grid.Row="0" Margin="10" x:Name="FrameButton3" Click="FrameButton3_Click"  >
+            <Image x:Name="capBtn3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </Button>
+        <Button Grid.Column="1" Grid.Row="1" Margin="10" x:Name="FrameButton4" Click="FrameButton4_Click">
+            <Image x:Name="capBtn4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+        </Button>
 
     </Grid>
 </Window>

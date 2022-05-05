@@ -7,18 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DarknetYOLOv4;
 using DarknetYOLOv4.FrameHandler;
 using DarknetYOLOv4.UIExtensions;
+using Emgu.CV;
+using Emgu.CV.Structure;
+using System.Runtime.InteropServices;
 
 using Microsoft.Win32;
+
 
 namespace WPFYOLO
 {
@@ -60,6 +58,10 @@ namespace WPFYOLO
 
             ToggleVideoChoice(true);
 
+            // _buttonCoversThread = new Thread(new ThreadStart(UpdateVideoCovers));
+            //_buttonCoversThread.Start();
+            UpdateVideoCovers();
+
         }
         private void SetVideo(int index)
         {
@@ -67,7 +69,7 @@ namespace WPFYOLO
             if (currentFrameHandler != null)
                 currentFrameHandler.currentVideo = videos[index];
 
-           // ToggleFrameHandler();
+            // ToggleFrameHandler();
 
         }
 
@@ -136,9 +138,11 @@ namespace WPFYOLO
                 StartButtonText.Text = "STOP";
             }
 
-            currentFrameHandler = new FramePlayer();
+           
 
-            SetPlayMode();
+          //  SetPlayMode();
+
+            if(currentFrameHandler==null) currentFrameHandler = new FramePlayer();
 
             currentFrameHandler.FixedFPSValue = (int)FixedFPSValueUpDown.Value;
             currentFrameHandler.isFPSFixed = FixedFPSCheckBox.IsChecked.HasValue ? FixedFPSCheckBox.IsChecked.Value : false;
@@ -146,6 +150,13 @@ namespace WPFYOLO
             currentFrameHandler.Play();
         }
 
+        private void UpdateVideoCovers()
+        {
+            SetCover(capBtn1, videos[0]);
+            SetCover(capBtn2, videos[1]);
+            SetCover(capBtn3, videos[2]);
+            SetCover(capBtn4, videos[3]);
+        }
         private void FrameButton1_Click(object sender, RoutedEventArgs e)
         {
             SetVideo(VideoButtons.IndexOf(FrameButton1));
@@ -207,6 +218,51 @@ namespace WPFYOLO
                     break;
 
             }
+        }
+
+        public void SetCover(Image imageControl, string VideoPath)
+        {
+            VideoCapture CoverCapture;
+            CoverCapture = new VideoCapture(VideoPath);
+
+            Mat frame = new Mat();
+            CoverCapture.Grab();
+
+            CoverCapture.Retrieve(frame);
+            if (frame.GetData() == null) return;
+           // int w = (int)Math.Round(imageControl.Width);
+           // int h = (int)Math.Round(imageControl.Height);
+            //CvInvoke.Resize(frame, frame, new Size(w, h));
+            Image<Bgr, Byte> img = frame.ToImage<Bgr, Byte>();
+
+                System.Drawing.Bitmap bm = img.ToBitmap();
+
+            imageControl.Source = BitmapSourceConvert.ToBitmapSource(bm);
+
+            img.Dispose();
+            CoverCapture.Dispose();
+        }
+
+    }
+
+
+    public static class BitmapSourceConvert
+    {
+        [DllImport("gdi32")]
+        private static extern int DeleteObject(IntPtr o);
+
+        public static BitmapSource ToBitmapSource(System.Drawing.Bitmap source)
+        {
+            IntPtr ptr = source.GetHbitmap();
+
+            BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                ptr,
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+
+            DeleteObject(ptr);
+            return bs;
         }
     }
 
