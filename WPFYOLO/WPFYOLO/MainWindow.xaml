@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:WPFYOLO"
+        xmlns:objdetection="clr-namespace:DarknetYOLOv4;assembly=YOLO_WinForms"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1450">
+    
     <Grid x:Name="ObjectTrackerWindow" Background="#dcdde1">
         <Grid.RowDefinitions>
 
@@ -32,12 +34,9 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" Height="30" VerticalAlignment="Center" x:Name="PlayModeComboBox" SelectionChanged="PlayModeComboBox_SelectionChanged">
-                    <TextBlock VerticalAlignment="Center">Video Player</TextBlock>
-                    <TextBlock VerticalAlignment="Center">Motion Detector</TextBlock>
-                    <TextBlock VerticalAlignment="Center">Object Detection(SLOW)</TextBlock>
-                    <TextBlock VerticalAlignment="Center">Combined</TextBlock>
-                </ComboBox>
+                <ComboBox Grid.Column="0" Height="30" VerticalAlignment="Center" x:Name="PlayModeComboBox" SelectionChanged="PlayModeComboBox_SelectionChanged"
+                          ItemsSource="{local:EnumBindingSourceExtension objdetection:PlayMode}"/>
+
                 <CheckBox Grid.Column="1" x:Name="FixedFPSCheckBox" VerticalAlignment="Center" HorizontalAlignment="Left" Checked="FixedFPSCheckBox_Checked">
                     <TextBlock HorizontalAlignment="Left" Width="50" FontSize="10" Height="15">Fixed FPS</TextBlock>
                     <CheckBox.LayoutTransform>
