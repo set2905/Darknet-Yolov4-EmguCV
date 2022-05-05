@@ -18,7 +18,7 @@ using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
 {
-    internal abstract class FrameHandlerBase
+    public abstract class FrameHandlerBase
     {
 
         private Thread _cameraThread;

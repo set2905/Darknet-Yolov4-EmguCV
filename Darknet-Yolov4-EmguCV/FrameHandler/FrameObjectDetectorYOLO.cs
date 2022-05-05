@@ -22,7 +22,7 @@ using DarknetYOLOv4;
 
 namespace DarknetYOLOv4.FrameHandler
 {
-    internal class FrameObjectDetectorYOLO : FrameHandlerBase
+    public class FrameObjectDetectorYOLO : FrameHandlerBase
     {
 
         protected string labels = @"..\..\NetworkModels\obj.names";

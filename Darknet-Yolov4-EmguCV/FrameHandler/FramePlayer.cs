@@ -10,7 +10,7 @@ using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
 {
-    internal class FramePlayer : FrameHandlerBase
+    public class FramePlayer : FrameHandlerBase
     {
         public override List<FrameProcessResult> ProcessFrame(Mat frame)
         {

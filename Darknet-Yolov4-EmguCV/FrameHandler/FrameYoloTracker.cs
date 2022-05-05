@@ -9,7 +9,7 @@ using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
 {
-    internal class FrameYoloTracker : FrameHandlerBase
+    public class FrameYoloTracker : FrameHandlerBase
     {
         FrameMOG2 MovementDetector;
         FrameObjectDetectorYOLO ObjectDetector;

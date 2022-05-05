@@ -15,7 +15,7 @@ namespace DarknetYOLOv4.FrameHandler
 {/// <summary>
 /// Хуета и не работает нормально надо придумать что-то другое
 /// </summary>
-    internal class FrameMOG2KCF : FrameHandlerBase
+    public class FrameMOG2KCF : FrameHandlerBase
     {
         private FrameMOG2 MOG2Handler;
 

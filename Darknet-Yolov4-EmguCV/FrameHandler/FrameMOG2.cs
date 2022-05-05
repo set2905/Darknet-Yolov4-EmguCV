@@ -22,7 +22,7 @@ using DarknetYOLOv4;
 
 namespace DarknetYOLOv4.FrameHandler
 {
-    internal class FrameMOG2 : FrameHandlerBase
+    public class FrameMOG2 : FrameHandlerBase
     {
         IBackgroundSubtractor backgroundSubtractor;
         bool CanSnapshot = false;
