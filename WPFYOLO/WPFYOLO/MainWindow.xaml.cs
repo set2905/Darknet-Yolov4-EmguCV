@@ -42,7 +42,8 @@ namespace WPFYOLO
             @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8",
             @"https://live.cmirit.ru:443/live/10school-03_1920x1080.stream/playlist.m3u8",
             @"https://live.cmirit.ru:443/live/smart14_1920x1080.stream/playlist.m3u8",
-            @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8"
+            //@"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8",
+            @"https://live.cmirit.ru:443/live/jdvhod.stream/playlist.m3u8"
         };
 
         public MainWindow()
@@ -91,6 +92,7 @@ namespace WPFYOLO
             OpenFileDialog fdialog = new OpenFileDialog();
             if (fdialog.ShowDialog() == true)
             {
+                SetPlayMode();
                 if (currentFrameHandler != null)
                     currentFrameHandler.currentVideo = fdialog.FileName;
                 ToggleFrameHandler();
