@@ -12,7 +12,7 @@ namespace DarknetYOLOv4.UIExtensions
 {
     public static class ButtonExtensions
     {
-        public static void SetCover(this Button b, string VideoPath)
+        public static void SetCover(this System.Windows.Forms.Button b, string VideoPath)
         {
             VideoCapture CoverCapture;
             CoverCapture = new VideoCapture(VideoPath);

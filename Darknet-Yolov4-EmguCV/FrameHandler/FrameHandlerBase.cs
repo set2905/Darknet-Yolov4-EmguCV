@@ -15,6 +15,8 @@ using System.Threading;
 using FrameProcessing;
 using System.Windows.Controls;
 
+using System.Windows.Media;
+
 
 
 namespace DarknetYOLOv4.FrameHandler
@@ -52,6 +54,8 @@ namespace DarknetYOLOv4.FrameHandler
         protected int algorithmExecTime = 0;
 
 
+        protected System.Windows.Controls.Image currentImgControl;
+
         public virtual void Initialize()
         {
             cap = new VideoCapture(currentVideo);
@@ -87,8 +91,9 @@ namespace DarknetYOLOv4.FrameHandler
             _cameraThread.Abort();
             _cameraThread = null;
         }
-        public void Play()
+        public void Play(System.Windows.Controls.Image controlImg)
         {
+            currentImgControl = controlImg;
             CvInvoke.DestroyAllWindows();
             isPlaying = true;
             _cameraThread = new Thread(new ThreadStart(PlayFrames));
@@ -98,7 +103,7 @@ namespace DarknetYOLOv4.FrameHandler
         private void PlayFrames()
         {
             Initialize();
-
+            
 
             isPlaying = true;
             while (isPlaying)
@@ -173,9 +178,15 @@ namespace DarknetYOLOv4.FrameHandler
         }
         private void ShowFrame(Mat _frame)
         {
-            // videoForm.pictureBox1.Image = _frame.ToBitmap();
-            CvInvoke.Imshow("1", _frame);
-            CvInvoke.WaitKey(1);
+
+            Image<Bgr, Byte> img = _frame.ToImage<Bgr, Byte>();
+
+            System.Drawing.Bitmap bm = img.ToBitmap();
+          //  currentImgControl.Source = BitmapSourceConvert.ToBitmapSource(bm);
+
+            currentImgControl.Dispatcher.Invoke(new Action(() => { currentImgControl.Source = BitmapSourceConvert.ToBitmapSource(bm); }));
+            //CvInvoke.Imshow("1", _frame);
+            // CvInvoke.WaitKey(1);
         }
 
         protected Mat GetFrame()

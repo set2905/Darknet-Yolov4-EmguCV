@@ -16,4 +16,10 @@
   <LangVersion>8.0</LangVersion>
 </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+
 </Project>

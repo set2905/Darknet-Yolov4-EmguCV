@@ -14,6 +14,7 @@ using DarknetYOLOv4.UIExtensions;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
+using FrameProcessing;
 
 using Microsoft.Win32;
 
@@ -35,6 +36,7 @@ namespace WPFYOLO
         private FrameHandlerBase currentFrameHandler;
 
         List<Button> VideoButtons = new List<Button>();
+        List<Image> VideoButtonsCovers = new List<Image>();
         private string[] videos = new string[4]
         {
             @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8",
@@ -55,8 +57,13 @@ namespace WPFYOLO
             VideoButtons.Add(FrameButton2);
             VideoButtons.Add(FrameButton3);
             VideoButtons.Add(FrameButton4);
+            VideoButtonsCovers.Add(capBtn1);
+            VideoButtonsCovers.Add(capBtn2);
+            VideoButtonsCovers.Add(capBtn3);
+            VideoButtonsCovers.Add(capBtn4);
 
             ToggleVideoChoice(true);
+            PlayModeComboBox.SelectedIndex = 0;
 
             // _buttonCoversThread = new Thread(new ThreadStart(UpdateVideoCovers));
             //_buttonCoversThread.Start();
@@ -147,15 +154,17 @@ namespace WPFYOLO
             currentFrameHandler.FixedFPSValue = (int)FixedFPSValueUpDown.Value;
             currentFrameHandler.isFPSFixed = FixedFPSCheckBox.IsChecked.HasValue ? FixedFPSCheckBox.IsChecked.Value : false;
             FixedFPSValueUpDown.IsEnabled = currentFrameHandler.isFPSFixed;
-            currentFrameHandler.Play();
+            currentFrameHandler.Play(FrameDisplay);
         }
 
         private void UpdateVideoCovers()
         {
-            SetCover(capBtn1, videos[0]);
-            SetCover(capBtn2, videos[1]);
-            SetCover(capBtn3, videos[2]);
-            SetCover(capBtn4, videos[3]);
+            if (VideoButtons.Count != VideoButtonsCovers.Count) return;
+            for (int i = 0; i < VideoButtonsCovers.Count; i++)
+            {
+                SetCover(VideoButtonsCovers[i], videos[i]);
+            }
+
         }
         private void FrameButton1_Click(object sender, RoutedEventArgs e)
         {
@@ -246,25 +255,7 @@ namespace WPFYOLO
     }
 
 
-    public static class BitmapSourceConvert
-    {
-        [DllImport("gdi32")]
-        private static extern int DeleteObject(IntPtr o);
 
-        public static BitmapSource ToBitmapSource(System.Drawing.Bitmap source)
-        {
-            IntPtr ptr = source.GetHbitmap();
-
-            BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                ptr,
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-
-            DeleteObject(ptr);
-            return bs;
-        }
-    }
 
 
 
