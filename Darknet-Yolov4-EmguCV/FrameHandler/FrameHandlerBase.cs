@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected int FPS = 24;
         protected double currentVideoTime = 0;
         protected int FrameN = 0;
-        public bool isFPSFixed=false;
+        public bool isFPSFixed = false;
         public int FixedFPSValue;
 
         private double framesToSkip = 0;
@@ -55,6 +55,7 @@ namespace DarknetYOLOv4.FrameHandler
 
 
         protected System.Windows.Controls.Image currentImgControl;
+        protected TextBlock currentStatusControl;
 
         public virtual void Initialize()
         {
@@ -91,9 +92,10 @@ namespace DarknetYOLOv4.FrameHandler
             _cameraThread.Abort();
             _cameraThread = null;
         }
-        public void Play(System.Windows.Controls.Image controlImg)
+        public void Play(System.Windows.Controls.Image controlImg, TextBlock statusTextControl)
         {
             currentImgControl = controlImg;
+            currentStatusControl = statusTextControl;
             CvInvoke.DestroyAllWindows();
             isPlaying = true;
             _cameraThread = new Thread(new ThreadStart(PlayFrames));
@@ -103,14 +105,14 @@ namespace DarknetYOLOv4.FrameHandler
         private void PlayFrames()
         {
             Initialize();
-            
+
 
             isPlaying = true;
             while (isPlaying)
             {
 
                 ExecuteFrame().Wait();
-               // frame.Dispose();
+                // frame.Dispose();
             }
 
         }
@@ -131,8 +133,8 @@ namespace DarknetYOLOv4.FrameHandler
                 return;
             }
 
-            else 
-            { 
+            else
+            {
                 await Task.Delay(TimeSpan.FromMilliseconds(spareAfterSkip));
             }
 
@@ -182,7 +184,7 @@ namespace DarknetYOLOv4.FrameHandler
             Image<Bgr, Byte> img = _frame.ToImage<Bgr, Byte>();
 
             System.Drawing.Bitmap bm = img.ToBitmap();
-          //  currentImgControl.Source = BitmapSourceConvert.ToBitmapSource(bm);
+            //  currentImgControl.Source = BitmapSourceConvert.ToBitmapSource(bm);
 
             currentImgControl.Dispatcher.Invoke(new Action(() => { currentImgControl.Source = BitmapSourceConvert.ToBitmapSource(bm); }));
             //CvInvoke.Imshow("1", _frame);
@@ -259,7 +261,10 @@ namespace DarknetYOLOv4.FrameHandler
         {
             StatusText = status;
             //Console.WriteLine(StatusText);
-           // videoForm.label1.Invoke(new Action(() => videoForm.label1.Text = StatusText));
+            // videoForm.label1.Invoke(new Action(() => videoForm.label1.Text = StatusText));
+
+            if (currentStatusControl != null)
+                currentStatusControl.Dispatcher.Invoke(new Action(() => { currentStatusControl.Text = StatusText; }));
         }
 
 

@@ -16,6 +16,10 @@
 		<ProjectReference Include="..\..\..\EmguCVYolov4\Darknet-Yolov4-EmguCV\Darknet-Yolov4-EmguCV.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<LangVersion>8.0</LangVersion>

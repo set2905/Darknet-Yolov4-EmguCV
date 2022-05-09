@@ -15,6 +15,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using System.Runtime.InteropServices;
 using FrameProcessing;
+using WinForms = System.Windows.Forms;
 
 using Microsoft.Win32;
 
@@ -101,6 +102,19 @@ namespace WPFYOLO
 
         private void ScreenShotButton_Click(object sender, RoutedEventArgs e)
         {
+            if (currentFrameHandler == null) return;
+
+            if (currentFrameHandler.snapShotDirectory == null)
+            {
+                var dirDialog = new WinForms.FolderBrowserDialog();
+                if (dirDialog.ShowDialog() == WinForms.DialogResult.OK)
+                {
+                    currentFrameHandler.snapShotDirectory = dirDialog.SelectedPath;
+                }
+                Console.WriteLine($"new Snapshot path is: {currentFrameHandler.snapShotDirectory}");
+
+            }
+            currentFrameHandler.SnapshotRequired = true;
 
         }
         private void ToggleVideoChoice(bool value)
@@ -147,16 +161,16 @@ namespace WPFYOLO
                 StartButtonText.Text = "STOP";
             }
 
-           
 
-          //  SetPlayMode();
 
-            if(currentFrameHandler==null) currentFrameHandler = new FramePlayer();
+            //  SetPlayMode();
+
+            if (currentFrameHandler == null) currentFrameHandler = new FramePlayer();
 
             currentFrameHandler.FixedFPSValue = (int)FixedFPSValueUpDown.Value;
             currentFrameHandler.isFPSFixed = FixedFPSCheckBox.IsChecked.HasValue ? FixedFPSCheckBox.IsChecked.Value : false;
             FixedFPSValueUpDown.IsEnabled = currentFrameHandler.isFPSFixed;
-            currentFrameHandler.Play(FrameDisplay);
+            currentFrameHandler.Play(FrameDisplay, StatusTextBox);
         }
 
         private void UpdateVideoCovers()
@@ -241,12 +255,12 @@ namespace WPFYOLO
 
             CoverCapture.Retrieve(frame);
             if (frame.GetData() == null) return;
-           // int w = (int)Math.Round(imageControl.Width);
-           // int h = (int)Math.Round(imageControl.Height);
+            // int w = (int)Math.Round(imageControl.Width);
+            // int h = (int)Math.Round(imageControl.Height);
             //CvInvoke.Resize(frame, frame, new Size(w, h));
             Image<Bgr, Byte> img = frame.ToImage<Bgr, Byte>();
 
-                System.Drawing.Bitmap bm = img.ToBitmap();
+            System.Drawing.Bitmap bm = img.ToBitmap();
 
             imageControl.Source = BitmapSourceConvert.ToBitmapSource(bm);
 
