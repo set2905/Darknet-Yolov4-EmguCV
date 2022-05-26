@@ -24,11 +24,11 @@ using System.Windows.Input;
 
 namespace WPFYOLO
 {
-   /* public enum ToolSelection
-    {
-        None,
-        RectangleIntruder
-    }*/
+    /* public enum ToolSelection
+     {
+         None,
+         RectangleIntruder
+     }*/
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -40,7 +40,7 @@ namespace WPFYOLO
 
         private Thread _buttonCoversThread;
 
-        private ZoneTool currentZoneTool=new ZoneRectangleTool();
+        private ZoneTool currentZoneTool;
         //public ToolSelection SelectedTool = ToolSelection.RectangleIntruder;
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
@@ -312,8 +312,8 @@ namespace WPFYOLO
                 userDrawStarted = false;
                 IntruderZone.EndLocation = GetMousePositionOnImage(e);
                 Trace.WriteLine("EndLocation: " + IntruderZone.EndLocation);
-
-                currentZoneTool.SetZone(imgIntruderZoneOverlay, FrameUserDraw);
+                if (currentZoneTool != null)
+                    currentZoneTool.SetZone(imgIntruderZoneOverlay, FrameUserDraw);
 
             }
         }
@@ -333,6 +333,12 @@ namespace WPFYOLO
             FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
         }
 
+        private void ButtonRectangleTool_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneRectangleTool))
+                currentZoneTool = new ZoneRectangleTool();
+            else currentZoneTool = null;
+        }
     }
 
 

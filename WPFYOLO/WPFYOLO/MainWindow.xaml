@@ -67,8 +67,17 @@
                         <RowDefinition/>
 
                     </Grid.RowDefinitions>
-                    <Button  Grid.Row="0" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch"></Button>
-                    </Grid>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="0" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch" x:Name="ButtonRectangleTool" Click="ButtonRectangleTool_Click">
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="/images/RectTool.png" />
+                            </Image.Source>
+                        </Image>
+                    </RadioButton>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" x:Name="ButtonLineTool"></RadioButton>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch"></RadioButton>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch"></RadioButton>
+                </Grid>
                 </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>

@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="images\RectTool.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Emgu.CV.Bitmap" Version="4.5.5.4823" />
 		<PackageReference Include="Extended.Wpf.Toolkit" Version="4.3.0" />
 	</ItemGroup>
@@ -18,6 +22,10 @@
 
 	<ItemGroup>
 	  <Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="images\RectTool.png" />
 	</ItemGroup>
 
 	<PropertyGroup>
