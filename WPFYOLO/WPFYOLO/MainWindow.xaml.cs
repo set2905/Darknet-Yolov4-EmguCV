@@ -24,6 +24,11 @@ using System.Windows.Input;
 
 namespace WPFYOLO
 {
+   /* public enum ToolSelection
+    {
+        None,
+        RectangleIntruder
+    }*/
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -35,7 +40,8 @@ namespace WPFYOLO
 
         private Thread _buttonCoversThread;
 
-
+        private ZoneTool currentZoneTool=new ZoneRectangleTool();
+        //public ToolSelection SelectedTool = ToolSelection.RectangleIntruder;
         public PlayMode currentPlayMode;
         private FrameHandlerBase currentFrameHandler;
 
@@ -303,28 +309,18 @@ namespace WPFYOLO
         {
             if (userDrawStarted == true)
             {
-
+                userDrawStarted = false;
                 IntruderZone.EndLocation = GetMousePositionOnImage(e);
                 Trace.WriteLine("EndLocation: " + IntruderZone.EndLocation);
-                System.Drawing.Rectangle newRect = IntruderZone.AddRectangle();
-                userDrawStarted = false;
-                if (newRect != null)
-                {
-                    imgIntruderZoneOverlay.Draw(newRect, new Bgra(255, 255, 255, 180), 4);
 
-                    Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
-                    imgIntruderZoneOverlay.CopyTo(temp);
-                    FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
-                    
-                }
+                currentZoneTool.SetZone(imgIntruderZoneOverlay, FrameUserDraw);
+
             }
         }
 
         private System.Drawing.Point GetMousePositionOnImage(MouseEventArgs e)
         {
             System.Windows.Point mousePos = e.GetPosition(FrameDisplay);
-            //mousePos.Y += FrameDisplay.ActualHeight / 2;
-            // mousePos.X += FrameDisplay.ActualWidth / 2;
             mousePos.Y = ((mousePos.Y * imgIntruderZoneOverlay.Height) / FrameDisplay.ActualHeight);
             mousePos.X = ((mousePos.X * imgIntruderZoneOverlay.Width) / FrameDisplay.ActualWidth);
 

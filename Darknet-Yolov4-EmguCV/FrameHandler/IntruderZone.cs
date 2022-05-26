@@ -27,6 +27,8 @@ namespace DarknetYOLOv4.FrameHandler
             _rect.Y = Math.Min(StartLocation.Y, EndLocation.Y);
             _rect.Width = Math.Abs(StartLocation.X - EndLocation.X);
             _rect.Height = Math.Abs(StartLocation.Y - EndLocation.Y);
+
+            if (_rect.Width * _rect.Height < 5000) return Rectangle.Empty;
             ZoneRectangles.Add(_rect);
             return _rect;
         }
