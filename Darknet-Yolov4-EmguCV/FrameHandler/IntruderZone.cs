@@ -16,9 +16,18 @@ namespace DarknetYOLOv4.FrameHandler
 {
     public static class IntruderZone
     {
+        public static List<Line> Lines = new List<Line>();
         public static List<Rectangle> ZoneRectangles=new List<Rectangle>();
         public static System.Drawing.Point StartLocation;
         public static System.Drawing.Point EndLocation;
+
+
+        public static void AddLine()
+        {
+            Line line = new Line(StartLocation, EndLocation);
+            Lines.Add(line);
+        }
+
 
         public static Rectangle AddRectangle()
         {
@@ -41,5 +50,26 @@ namespace DarknetYOLOv4.FrameHandler
             }
             return false;
         }
+
+        public static void Clear()
+        {
+            ZoneRectangles.Clear();
+            Lines.Clear();
+        }
     }
+
+    public class Line
+    {
+        public Point first;
+        public Point last;
+
+        public Line(Point first, Point last)
+        {
+            this.first = first;
+            this.last = last;
+        }
+
+    }
+
+
 }

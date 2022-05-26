@@ -52,8 +52,8 @@ namespace WPFYOLO
             @"https://live.cmirit.ru:443/live/park-pob08_1920x1080.stream/playlist.m3u8",
             @"https://live.cmirit.ru:443/live/10school-03_1920x1080.stream/playlist.m3u8",
             @"https://live.cmirit.ru:443/live/smart14_1920x1080.stream/playlist.m3u8",
-            //@"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8",
-            @"https://live.cmirit.ru:443/live/jdvhod.stream/playlist.m3u8"
+            @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8",
+            //@"https://live.cmirit.ru:443/live/jdvhod.stream/playlist.m3u8"
         };
 
         public MainWindow()
@@ -328,7 +328,7 @@ namespace WPFYOLO
         }
         private void ClearIntruderOverlay()
         {
-            IntruderZone.ZoneRectangles.Clear();
+            IntruderZone.Clear();
             imgIntruderZoneOverlay = imgIntruderZoneOverlay.CopyBlank();
             FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
         }
@@ -337,6 +337,13 @@ namespace WPFYOLO
         {
             if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneRectangleTool))
                 currentZoneTool = new ZoneRectangleTool();
+            else currentZoneTool = null;
+        }
+
+        private void ButtonLineTool_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneRectangleTool))
+                currentZoneTool = new ZoneLineTool();
             else currentZoneTool = null;
         }
     }
