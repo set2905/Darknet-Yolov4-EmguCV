@@ -12,7 +12,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
-namespace WPFYOLO
+namespace DarknetYOLOv4.FrameHandler
 {
     public static class IntruderZone
     {
@@ -29,6 +29,15 @@ namespace WPFYOLO
             _rect.Height = Math.Abs(StartLocation.Y - EndLocation.Y);
             ZoneRectangles.Add(_rect);
             return _rect;
+        }
+
+        public static bool isPointIntruder(Point point)
+        {
+            foreach(Rectangle rectangle in ZoneRectangles)
+            {
+                if (rectangle.Contains(point)) return true;
+            }
+            return false;
         }
     }
 }

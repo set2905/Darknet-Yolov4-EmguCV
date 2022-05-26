@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace FrameProcessing
 {
     public class FrameProcessResult
@@ -14,6 +15,7 @@ namespace FrameProcessing
         public string Label;
 
         public double Value;
+        public Color Color;
 
 
 
@@ -39,6 +41,13 @@ namespace FrameProcessing
             this.Rectangle = Rectangle;
             this.Label = Label;
             this.Value = Value;
+        }
+
+        public FrameProcessResult(Rectangle Rectangle, string Label, Color _color)
+        {
+            this.Rectangle = Rectangle;
+            this.Label = Label;
+            this.Color = _color;
         }
     }
 }

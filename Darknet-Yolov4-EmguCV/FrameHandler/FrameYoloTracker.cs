@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using DarknetYOLOv4.Extensions.CVExtensions;
 using FrameProcessing;
+using DarknetYOLOv4.FrameHandler;
 
 namespace DarknetYOLOv4.FrameHandler
 {
@@ -148,7 +149,12 @@ namespace DarknetYOLOv4.FrameHandler
                 }
 
                 trackedObjs[i].TryUpdate(frame);
-                results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label + " " + trackedObjs[i].status));
+
+                Color col;
+                if (trackedObjs[i].IsIntruder) col = Color.FromArgb(0,0,255);
+                else col = Color.FromArgb(0, 255, 255);
+                results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label + " " + trackedObjs[i].status, col));
+                
             }
 
             /* if (moving != null)
@@ -163,7 +169,8 @@ namespace DarknetYOLOv4.FrameHandler
         {
             foreach (FrameProcessResult result in results)
             {
-                CvInvoke.Rectangle(frame, result.Rectangle, new MCvScalar(0, 255, 255), 3);
+                MCvScalar col = new MCvScalar(result.Color.R, result.Color.G, result.Color.B);
+                CvInvoke.Rectangle(frame, result.Rectangle, col, 3);
                 CvInvoke.PutText(frame, result.Label, new Point(result.Rectangle.X, result.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(0, 0, 0), 2);
             }
 
@@ -191,6 +198,7 @@ public class TrackedObject
     public int TrailCacheSize = 20;
     private int currentTrailIndex = 0;
 
+    public bool IsIntruder = false;
     public bool lostTrack = false;
     public bool Disposed = false;
     private int lostTrackLifeTime = 50;
@@ -202,7 +210,7 @@ public class TrackedObject
         InitTracker(Bbox, frame);
         PreviousPositions = new Point[TrailCacheSize];
 
-       // System.Random rnd = new System.Random();
+        // System.Random rnd = new System.Random();
         color = new MCvScalar(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
     }
 
@@ -250,6 +258,7 @@ public class TrackedObject
         }
     }
 
+
     private void UpdateTrail()
     {
         if (currentTrailIndex < PreviousPositions.Length)
@@ -261,11 +270,12 @@ public class TrackedObject
             {
                 PreviousPositions[currentTrailIndex] = currentPos;
                 currentTrailIndex++;
+                GetIntruder(currentPos);
             }
             else
             {
                 if (currentTrailIndex == 0) currentTrailIndex++;
-               // status = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
+                // status = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
                 //PerformCountDown();
 
             }
@@ -273,5 +283,20 @@ public class TrackedObject
         }
         else currentTrailIndex = 0;
     }
+
+    private void GetIntruder(Point currentPos)
+    {
+        if (IntruderZone.isPointIntruder(currentPos))
+        {
+            if (!IsIntruder)
+            {
+                IsIntruder = true;
+                label = "INTRUDER";
+                color = new MCvScalar(0, 0, 255);
+            }
+        }
+        else IsIntruder = false;
+    }
+
 
 }

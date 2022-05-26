@@ -83,6 +83,7 @@
     <Compile Include="FrameHandler\FrameObjectDetectorYOLO.cs" />
     <Compile Include="FrameHandler\FramePlayer.cs" />
     <Compile Include="FrameHandler\FrameYoloTracker.cs" />
+    <Compile Include="FrameHandler\IntruderZone.cs" />
     <Compile Include="ObjectDetectorForm.cs">
       <SubType>Form</SubType>
     </Compile>

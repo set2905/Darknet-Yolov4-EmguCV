@@ -332,6 +332,7 @@ namespace WPFYOLO
         }
         private void ClearIntruderOverlay()
         {
+            IntruderZone.ZoneRectangles.Clear();
             imgIntruderZoneOverlay = imgIntruderZoneOverlay.CopyBlank();
             FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
         }
