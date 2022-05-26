@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ using FrameProcessing;
 using WinForms = System.Windows.Forms;
 
 using Microsoft.Win32;
-
+using System.Windows.Input;
 
 namespace WPFYOLO
 {
@@ -27,7 +28,8 @@ namespace WPFYOLO
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private bool userDrawStarted = false;
+        Image<Bgr, byte> imgInput = new Emgu.CV.Image<Bgr, byte>(1280, 720);
 
 
         private Thread _buttonCoversThread;
@@ -226,6 +228,8 @@ namespace WPFYOLO
 
         private void SetPlayMode()
         {
+            if (currentFrameHandler != null)
+                currentFrameHandler.Stop();
             switch (currentPlayMode)
             {
                 case PlayMode.Play:
@@ -266,6 +270,64 @@ namespace WPFYOLO
 
             img.Dispose();
             CoverCapture.Dispose();
+        }
+
+
+        private void FrameUserDraw_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            userDrawStarted = true;
+
+
+
+            IntruderZone.StartLocation = GetMousePositionOnImage(e);
+
+            Trace.WriteLine("StartLocation: " + IntruderZone.StartLocation);
+
+        }
+
+        private void FrameUserDraw_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (userDrawStarted == true)
+            {
+                IntruderZone.EndLocation = GetMousePositionOnImage(e);
+
+                IntruderZone.GetRectangle();
+                //  Trace.WriteLine("EndLocation: "+ IntruderZone.EndLocation);
+                // FrameUserDraw.Invalidate();
+            }
+        }
+
+        private void FrameUserDraw_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (userDrawStarted == true)
+            {
+
+                IntruderZone.EndLocation = GetMousePositionOnImage(e);
+
+                userDrawStarted = false;
+                if (IntruderZone.rect != null)
+                {
+                    // imgInput.ROI = IntruderZone.rect;
+                    imgInput.Draw(IntruderZone.rect, new Bgr(System.Drawing.Color.FromName("SlateBlue")));
+
+                    Image<Bgr, byte> temp = imgInput.CopyBlank();
+                    imgInput.CopyTo(temp);
+                    //imgInput.ROI = new System.Drawing.Rectangle();
+                    FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
+                    Trace.WriteLine("EndLocation: " + IntruderZone.EndLocation);
+                }
+            }
+        }
+
+        private System.Drawing.Point GetMousePositionOnImage(MouseEventArgs e)
+        {
+            System.Windows.Point mousePos = e.GetPosition(FrameUserDraw);
+            mousePos.Y += FrameDisplay.ActualHeight / 2;
+            mousePos.X += FrameDisplay.ActualWidth / 2;
+            mousePos.Y = ((mousePos.Y * imgInput.Height) / FrameDisplay.ActualHeight);
+            mousePos.X = ((mousePos.X * imgInput.Width) / FrameDisplay.ActualWidth);
+
+            return new System.Drawing.Point((int)mousePos.X, (int)mousePos.Y); 
         }
 
     }

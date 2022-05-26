@@ -76,7 +76,18 @@
                 </Button>
             </Grid>
         </Grid>
-        <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="20" x:Name="FrameDisplay"/>
+        
+        <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="20" x:Name="FrameDisplay"
+                MouseDown="FrameUserDraw_MouseDown"
+               MouseMove="FrameUserDraw_MouseMove"
+               MouseUp="FrameUserDraw_MouseUp"
+               />
+        
+        <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="20" x:Name="FrameUserDraw"
+               MouseDown="FrameUserDraw_MouseDown"
+               MouseMove="FrameUserDraw_MouseMove"
+               MouseUp="FrameUserDraw_MouseUp"/>
+        
         <Button Grid.Column="0" Grid.Row="0" Margin="10"  x:Name="FrameButton1" Click="FrameButton1_Click" >
             <Image x:Name="capBtn1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </Button>
