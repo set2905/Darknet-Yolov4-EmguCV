@@ -252,9 +252,6 @@ public class TrackedObject
 
     private void UpdateTrail()
     {
-
-
-
         if (currentTrailIndex < PreviousPositions.Length)
         {
             Point currentPos = Bbox.Center();

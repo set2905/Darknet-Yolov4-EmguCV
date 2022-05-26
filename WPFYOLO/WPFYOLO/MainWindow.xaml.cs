@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+
 using System.Windows.Media.Imaging;
 using DarknetYOLOv4;
 using DarknetYOLOv4.FrameHandler;
@@ -29,7 +30,7 @@ namespace WPFYOLO
     public partial class MainWindow : Window
     {
         private bool userDrawStarted = false;
-        Image<Bgr, byte> imgInput = new Emgu.CV.Image<Bgr, byte>(1280, 720);
+        Image<Bgra, byte> imgIntruderZoneOverlay = new Emgu.CV.Image<Bgra, byte>(1280, 720);
 
 
         private Thread _buttonCoversThread;
@@ -143,6 +144,7 @@ namespace WPFYOLO
             if (currentFrameHandler != null && currentFrameHandler.isPlaying)
             {
                 currentFrameHandler.Stop();
+                ClearIntruderOverlay();
                 currentFrameHandler = null;
 
                 ToggleVideoChoice(true);
@@ -275,12 +277,12 @@ namespace WPFYOLO
 
         private void FrameUserDraw_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (currentFrameHandler == null || !currentFrameHandler.isPlaying) return;
             userDrawStarted = true;
-
-
-
             IntruderZone.StartLocation = GetMousePositionOnImage(e);
 
+            Trace.WriteLine(FrameDisplay.ActualWidth);
+            Trace.WriteLine(FrameUserDraw.ActualWidth);
             Trace.WriteLine("StartLocation: " + IntruderZone.StartLocation);
 
         }
@@ -291,11 +293,11 @@ namespace WPFYOLO
             {
                 IntruderZone.EndLocation = GetMousePositionOnImage(e);
 
-                IntruderZone.GetRectangle();
                 //  Trace.WriteLine("EndLocation: "+ IntruderZone.EndLocation);
                 // FrameUserDraw.Invalidate();
             }
         }
+
 
         private void FrameUserDraw_MouseUp(object sender, MouseEventArgs e)
         {
@@ -303,31 +305,35 @@ namespace WPFYOLO
             {
 
                 IntruderZone.EndLocation = GetMousePositionOnImage(e);
-
+                Trace.WriteLine("EndLocation: " + IntruderZone.EndLocation);
+                System.Drawing.Rectangle newRect = IntruderZone.AddRectangle();
                 userDrawStarted = false;
-                if (IntruderZone.rect != null)
+                if (newRect != null)
                 {
-                    // imgInput.ROI = IntruderZone.rect;
-                    imgInput.Draw(IntruderZone.rect, new Bgr(System.Drawing.Color.FromName("SlateBlue")));
+                    imgIntruderZoneOverlay.Draw(newRect, new Bgra(255, 255, 255, 180), 4);
 
-                    Image<Bgr, byte> temp = imgInput.CopyBlank();
-                    imgInput.CopyTo(temp);
-                    //imgInput.ROI = new System.Drawing.Rectangle();
+                    Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
+                    imgIntruderZoneOverlay.CopyTo(temp);
                     FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
-                    Trace.WriteLine("EndLocation: " + IntruderZone.EndLocation);
+                    
                 }
             }
         }
 
         private System.Drawing.Point GetMousePositionOnImage(MouseEventArgs e)
         {
-            System.Windows.Point mousePos = e.GetPosition(FrameUserDraw);
-            mousePos.Y += FrameDisplay.ActualHeight / 2;
-            mousePos.X += FrameDisplay.ActualWidth / 2;
-            mousePos.Y = ((mousePos.Y * imgInput.Height) / FrameDisplay.ActualHeight);
-            mousePos.X = ((mousePos.X * imgInput.Width) / FrameDisplay.ActualWidth);
+            System.Windows.Point mousePos = e.GetPosition(FrameDisplay);
+            //mousePos.Y += FrameDisplay.ActualHeight / 2;
+            // mousePos.X += FrameDisplay.ActualWidth / 2;
+            mousePos.Y = ((mousePos.Y * imgIntruderZoneOverlay.Height) / FrameDisplay.ActualHeight);
+            mousePos.X = ((mousePos.X * imgIntruderZoneOverlay.Width) / FrameDisplay.ActualWidth);
 
-            return new System.Drawing.Point((int)mousePos.X, (int)mousePos.Y); 
+            return new System.Drawing.Point((int)mousePos.X, (int)mousePos.Y);
+        }
+        private void ClearIntruderOverlay()
+        {
+            imgIntruderZoneOverlay = imgIntruderZoneOverlay.CopyBlank();
+            FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
         }
 
     }

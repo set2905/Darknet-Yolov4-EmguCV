@@ -16,19 +16,19 @@ namespace WPFYOLO
 {
     public static class IntruderZone
     {
-        public static Rectangle rect;
+        public static List<Rectangle> ZoneRectangles=new List<Rectangle>();
         public static System.Drawing.Point StartLocation;
         public static System.Drawing.Point EndLocation;
 
-        public static Rectangle GetRectangle()
+        public static Rectangle AddRectangle()
         {
-            rect = new Rectangle();
-            rect.X = Math.Min(StartLocation.X, EndLocation.X);
-            rect.Y = Math.Min(StartLocation.Y, EndLocation.Y);
-            rect.Width = Math.Abs(StartLocation.X - EndLocation.X);
-            rect.Height = Math.Abs(StartLocation.Y - EndLocation.Y);
-
-            return rect;
+            Rectangle _rect = new Rectangle();
+            _rect.X = Math.Min(StartLocation.X, EndLocation.X);
+            _rect.Y = Math.Min(StartLocation.Y, EndLocation.Y);
+            _rect.Width = Math.Abs(StartLocation.X - EndLocation.X);
+            _rect.Height = Math.Abs(StartLocation.Y - EndLocation.Y);
+            ZoneRectangles.Add(_rect);
+            return _rect;
         }
     }
 }
