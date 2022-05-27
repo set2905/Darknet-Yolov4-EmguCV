@@ -7,17 +7,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Diagnostics;
 
 using Emgu.CV;
 using Emgu.CV.Structure;
+using DarknetYOLOv4.Extensions.CVExtensions;
 
 namespace DarknetYOLOv4.FrameHandler
 {
     public static class IntruderZone
     {
         public static List<Line> Lines = new List<Line>();
-        public static List<Rectangle> ZoneRectangles=new List<Rectangle>();
+        public static List<Rectangle> ZoneRectangles = new List<Rectangle>();
         public static System.Drawing.Point StartLocation;
         public static System.Drawing.Point EndLocation;
 
@@ -26,6 +27,7 @@ namespace DarknetYOLOv4.FrameHandler
         {
             Line line = new Line(StartLocation, EndLocation);
             Lines.Add(line);
+            if (line.IsIntersecting(Lines[0])) Trace.WriteLine("Пересекаются!");
         }
 
 
@@ -42,12 +44,23 @@ namespace DarknetYOLOv4.FrameHandler
             return _rect;
         }
 
-        public static bool isPointIntruder(Point point)
+        public static bool isObjectIntruder(Point currentPosition, Point firstPosition)
         {
-            foreach(Rectangle rectangle in ZoneRectangles)
+            foreach (Rectangle rectangle in ZoneRectangles)
             {
-                if (rectangle.Contains(point)) return true;
+                if (rectangle.Contains(currentPosition)) return true;
             }
+
+            if (currentPosition != firstPosition)
+            {
+                Line moveSegment = new Line(currentPosition, firstPosition);
+                foreach (Line line in Lines)
+                {
+                    if (line.IsIntersecting(moveSegment)) return true;
+                }
+            }
+
+
             return false;
         }
 
@@ -68,7 +81,6 @@ namespace DarknetYOLOv4.FrameHandler
             this.first = first;
             this.last = last;
         }
-
     }
 
 

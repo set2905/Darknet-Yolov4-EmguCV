@@ -7,6 +7,7 @@ using System.Drawing;
 using DarknetYOLOv4.Extensions.CVExtensions;
 using FrameProcessing;
 using DarknetYOLOv4.FrameHandler;
+using System.Diagnostics;
 
 namespace DarknetYOLOv4.FrameHandler
 {
@@ -151,11 +152,18 @@ namespace DarknetYOLOv4.FrameHandler
                 trackedObjs[i].TryUpdate(frame);
 
                 Color col;
-                if (trackedObjs[i].IsIntruder) col = Color.FromArgb(0,0,255);
+                if (trackedObjs[i].IsIntruder) col = Color.FromArgb(0, 0, 255);
                 else col = Color.FromArgb(0, 255, 255);
                 results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label + " " + trackedObjs[i].status, col));
-                
+
+
+
+                CvInvoke.Line(frame, trackedObjs[i].PreviousPositions[trackedObjs[i].currentTrailIndex == 0 ? 0 : trackedObjs[i].currentTrailIndex - 1],
+                    trackedObjs[i].PreviousPositions[trackedObjs[i].GetIndexOfFirst()], trackedObjs[i].color);
+
             }
+
+
 
             /* if (moving != null)
                  foreach (FrameProcessResult m in moving)
@@ -196,7 +204,7 @@ public class TrackedObject
     public string status = "normal";
     public Point[] PreviousPositions;
     public int TrailCacheSize = 20;
-    private int currentTrailIndex = 0;
+    public int currentTrailIndex = 0;
 
     public bool IsIntruder = false;
     public bool lostTrack = false;
@@ -269,12 +277,18 @@ public class TrackedObject
             if (currentTrailIndex != 0 && !RectangleExtensions.isPointsClose(PreviousPositions[currentTrailIndex - 1], currentPos, 20))
             {
                 PreviousPositions[currentTrailIndex] = currentPos;
+                GetIntruder();
                 currentTrailIndex++;
-                GetIntruder(currentPos);
+
             }
             else
             {
-                if (currentTrailIndex == 0) currentTrailIndex++;
+                if (currentTrailIndex == 0)
+                {
+                    PreviousPositions[currentTrailIndex] = currentPos;
+                    GetIntruder();
+                    currentTrailIndex++;
+                }
                 // status = "Not Moving: " + (lostTrackLifeTime - lostTrackCountDown).ToString();
                 //PerformCountDown();
 
@@ -284,9 +298,18 @@ public class TrackedObject
         else currentTrailIndex = 0;
     }
 
-    private void GetIntruder(Point currentPos)
+    public int GetIndexOfFirst()
     {
-        if (IntruderZone.isPointIntruder(currentPos))
+        int indexOfFirst = 0;
+        if (currentTrailIndex + 1 < PreviousPositions.Length - 1 && !PreviousPositions[currentTrailIndex + 1].IsEmpty) indexOfFirst = currentTrailIndex + 1;
+        Trace.WriteLine("IndexOfFirst: " + indexOfFirst);
+        return indexOfFirst;
+    }
+
+    private void GetIntruder()
+    {
+        if (currentTrailIndex - 1 < 0) return;
+        if (IntruderZone.isObjectIntruder(PreviousPositions[currentTrailIndex - 1], PreviousPositions[GetIndexOfFirst()]))
         {
             if (!IsIntruder)
             {

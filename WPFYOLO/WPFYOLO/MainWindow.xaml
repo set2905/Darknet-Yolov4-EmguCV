@@ -74,7 +74,13 @@
                             </Image.Source>
                         </Image>
                     </RadioButton>
-                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" Click="ButtonLineTool_Click"></RadioButton>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" Click="ButtonLineTool_Click">
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="/images/RectTool.png" />
+                            </Image.Source>
+                        </Image>
+                    </RadioButton>
                     <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch"></RadioButton>
                     <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch"></RadioButton>
                 </Grid>

@@ -170,9 +170,6 @@ namespace WPFYOLO
                 PlayModeComboBox.IsEnabled = false;
                 StartButtonText.Text = "STOP";
             }
-
-
-
             //  SetPlayMode();
 
             if (currentFrameHandler == null) currentFrameHandler = new FramePlayer();
@@ -190,7 +187,6 @@ namespace WPFYOLO
             {
                 SetCover(VideoButtonsCovers[i], videos[i]);
             }
-
         }
         private void FrameButton1_Click(object sender, RoutedEventArgs e)
         {
@@ -212,9 +208,6 @@ namespace WPFYOLO
             SetVideo(VideoButtons.IndexOf(FrameButton4));
             ToggleFrameHandler();
         }
-
-
-
 
         void FixedFPSUpDownChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -298,7 +291,6 @@ namespace WPFYOLO
             if (userDrawStarted == true)
             {
                 IntruderZone.EndLocation = GetMousePositionOnImage(e);
-
                 //  Trace.WriteLine("EndLocation: "+ IntruderZone.EndLocation);
                 // FrameUserDraw.Invalidate();
             }
@@ -314,7 +306,6 @@ namespace WPFYOLO
                 Trace.WriteLine("EndLocation: " + IntruderZone.EndLocation);
                 if (currentZoneTool != null)
                     currentZoneTool.SetZone(imgIntruderZoneOverlay, FrameUserDraw);
-
             }
         }
 
@@ -342,7 +333,7 @@ namespace WPFYOLO
 
         private void ButtonLineTool_Click(object sender, RoutedEventArgs e)
         {
-            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneRectangleTool))
+            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneLineTool))
                 currentZoneTool = new ZoneLineTool();
             else currentZoneTool = null;
         }
