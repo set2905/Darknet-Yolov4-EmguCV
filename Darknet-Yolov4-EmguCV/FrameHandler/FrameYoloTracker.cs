@@ -302,7 +302,7 @@ public class TrackedObject
     {
         int indexOfFirst = 0;
         if (currentTrailIndex + 1 < PreviousPositions.Length - 1 && !PreviousPositions[currentTrailIndex + 1].IsEmpty) indexOfFirst = currentTrailIndex + 1;
-        Trace.WriteLine("IndexOfFirst: " + indexOfFirst);
+       // Trace.WriteLine("IndexOfFirst: " + indexOfFirst);
         return indexOfFirst;
     }
 

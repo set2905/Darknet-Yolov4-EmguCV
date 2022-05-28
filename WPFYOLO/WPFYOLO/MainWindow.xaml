@@ -77,11 +77,17 @@
                     <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="0" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" Click="ButtonLineTool_Click">
                         <Image>
                             <Image.Source>
-                                <BitmapImage UriSource="/images/RectTool.png" />
+                                <BitmapImage UriSource="/images/Line.jpg" />
                             </Image.Source>
                         </Image>
                     </RadioButton>
-                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch"></RadioButton>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" Click="ClearIntruderOverlay">
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="/images/Eraser.png" />
+                            </Image.Source>
+                        </Image>
+                    </RadioButton>
                     <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch"></RadioButton>
                 </Grid>
                 </Grid>

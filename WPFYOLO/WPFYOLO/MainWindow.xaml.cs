@@ -337,6 +337,11 @@ namespace WPFYOLO
                 currentZoneTool = new ZoneLineTool();
             else currentZoneTool = null;
         }
+
+        private void ClearIntruderOverlay(object sender, RoutedEventArgs e)
+        {
+            ClearIntruderOverlay();
+        }
     }
 
 

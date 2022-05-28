@@ -8,6 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="images\Eraser.png" />
+	  <None Remove="images\Line.jpg" />
 	  <None Remove="images\RectTool.png" />
 	</ItemGroup>
 
@@ -25,6 +27,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Resource Include="images\Eraser.png" />
+	  <Resource Include="images\Line.jpg" />
 	  <Resource Include="images\RectTool.png" />
 	</ItemGroup>
 
