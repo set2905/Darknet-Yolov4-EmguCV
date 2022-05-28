@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Diagnostics;
 using DarknetYOLOv4.FrameHandler;
 
 namespace DarknetYOLOv4.Extensions.CVExtensions
@@ -47,68 +48,34 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
             return Math.Sqrt(Math.Pow((p2.X - p1.X), 2) + Math.Pow((p2.Y - p1.Y), 2));
         }
 
-
-        // Given three collinear points p, q, r, the function checks if
-        // point q lies on line segment 'pr'
-        public static bool Contains(this Line pr, Point q)
+        //Govno
+        public static bool IsIntersecting(this Line p12, Line p34)
         {
-            if (q.X <= Math.Max(pr.first.X, pr.last.X) && q.X >= Math.Min(pr.first.X, pr.last.X) &&
-                q.Y <= Math.Max(pr.first.Y, pr.last.Y) && q.Y >= Math.Min(pr.first.Y, pr.last.Y))
-                return true;
+            bool isIntersecting = false;
 
-            return false;
-        }
+            Point p1 = p12.first;
+            Point p2 = p12.last;
+            Point p3 = p34.first;
+            Point p4 = p34.last;
 
-        // To find orientation of ordered triplet (p, q, r).
-        // The function returns following values
-        // 0 --> p, q and r are collinear
-        // 1 --> Clockwise
-        // 2 --> Counterclockwise
-       private static int GetOrientation(this Line pr, Point q)
-        {
-            Point p = pr.first;
-            Point r = pr.last;
-            // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
-            // for details of below formula.
-            int val = (q.Y - p.Y) * (r.X - q.X) -
-                    (q.X - p.X) * (r.X - q.X);
 
-            if (val == 0) return 0; // collinear
+            double denominator = (p4.Y - p3.Y) * (p2.X - p1.X) - (p4.X - p3.X) * (p2.Y - p1.Y);
 
-            return (val > 0) ? 1 : 2; // clock or counterclock wise
-        }
+            //Make sure the denominator is > 0, if so the lines are parallel
+            if (denominator != 0)
+            {
+                double u_a = ((p4.X - p3.X) * (p1.Y - p3.Y) - (p4.Y - p3.Y) * (p1.X - p3.X)) / denominator;
+                double u_b = ((p2.X - p1.X) * (p1.Y - p3.Y) - (p2.Y - p1.Y) * (p1.X - p3.X)) / denominator;
 
-        public static bool IsIntersecting(this Line pq1, Line pq2)
-        {
-            Point p1 = pq1.first;
-            Point p2 = pq2.first;
-            Point q1 = pq1.last;
-            Point q2 = pq2.last;
-            // Find the four orientations needed for general and
-            // special cases
-            int o1 = pq1.GetOrientation(p2);
-            int o2 = pq1.GetOrientation(q2);
-            int o3 = pq2.GetOrientation(p1);
-            int o4 = pq2.GetOrientation(q1);
+                //Is intersecting if u_a and u_b are between 0 and 1
+                if (u_a >= 0 && u_a <= 1 && u_b >= 0 && u_b <= 1)
+                {
+                   // Trace.WriteLine(p1 + " " + p2 + " " + p3 + " " + p4 + " "+denominator);
+                    isIntersecting = true;
+                }
+            }
 
-            // General case
-            if (o1 != o2 && o3 != o4)
-                return true;
-
-            // Special Cases
-            // p1, q1 and p2 are collinear and p2 lies on segment p1q1
-            if (o1 == 0 && pq1.Contains(p2)) return true;
-
-            // p1, q1 and q2 are collinear and q2 lies on segment p1q1
-            if (o2 == 0 && pq1.Contains(q2)) return true;
-
-            // p2, q2 and p1 are collinear and p1 lies on segment p2q2
-            if (o3 == 0 && pq2.Contains(p1)) return true;
-
-            // p2, q2 and q1 are collinear and q1 lies on segment p2q2
-            if (o4 == 0 && pq2.Contains(q1)) return true;
-
-            return false; // Doesn't fall in any of the above cases
+            return isIntersecting;
         }
 
 

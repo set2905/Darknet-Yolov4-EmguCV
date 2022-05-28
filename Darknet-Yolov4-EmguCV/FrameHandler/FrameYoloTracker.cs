@@ -187,7 +187,7 @@ namespace DarknetYOLOv4.FrameHandler
                 for (int i = 0; i < tracked.PreviousPositions.Length; i++)
                 {
                     if (tracked.PreviousPositions[i] != null)
-                        CvInvoke.Circle(frame, tracked.PreviousPositions[i], 5, tracked.color, -1);
+                        CvInvoke.Circle(frame, tracked.PreviousPositions[i], 3, tracked.color, -1);
                 }
             }
             return frame;
