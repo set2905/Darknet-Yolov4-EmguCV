@@ -78,6 +78,49 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
             return isIntersecting;
         }
 
+        public static double GetDistanceToLine(this Line line, Point point)
+        {
+            int x = point.X;
+            int y = point.Y;
+            int x1 = line.first.X;
+            int y1 = line.first.Y;
+            int x2 = line.last.X;
+            int y2 = line.last.Y;
+
+            int A = x - x1;
+            int B = y - y1;
+            int C = x2 - x1;
+            int D = y2 - y1;
+
+            int dot = A * C + B * D;
+            int len_sq = C * C + D * D;
+            int param = -1;
+            if (len_sq != 0) //in case of 0 length line
+                param = dot / len_sq;
+
+            int xx, yy;
+
+            if (param < 0)
+            {
+                xx = x1;
+                yy = y1;
+            }
+            else if (param > 1)
+            {
+                xx = x2;
+                yy = y2;
+            }
+            else
+            {
+                xx = x1 + param * C;
+                yy = y1 + param * D;
+            }
+
+            int dx = x - xx;
+            int dy = y - yy;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
 
     }
 }

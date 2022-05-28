@@ -27,6 +27,8 @@ namespace WPFYOLO
                 Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
                 imgIntruderZoneOverlay.CopyTo(temp);
                 FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
+
+                IntruderZone.ReDraw(imgIntruderZoneOverlay, FrameUserDraw);
             }
         }
     }

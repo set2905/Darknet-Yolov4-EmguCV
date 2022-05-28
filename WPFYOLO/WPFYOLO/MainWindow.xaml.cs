@@ -342,6 +342,13 @@ namespace WPFYOLO
         {
             ClearIntruderOverlay();
         }
+
+        private void ButtonEraserTool_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneEraserTool))
+                currentZoneTool = new ZoneEraserTool();
+            else currentZoneTool = null;
+        }
     }
 
 

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using DarknetYOLOv4.Extensions.CVExtensions;
+using FrameProcessing;
 
 namespace DarknetYOLOv4.FrameHandler
 {
@@ -62,6 +63,43 @@ namespace DarknetYOLOv4.FrameHandler
 
 
             return false;
+        }
+
+        public static void ReDraw(Image<Bgra, byte> imgIntruderZoneOverlay, System.Windows.Controls.Image FrameUserDraw)
+        {
+            imgIntruderZoneOverlay = imgIntruderZoneOverlay.CopyBlank();
+           // FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
+
+            foreach (Rectangle rect in ZoneRectangles)
+            {
+                imgIntruderZoneOverlay.Draw(rect, new Bgra(255, 255, 255, 180), 4);
+            }
+            foreach (Line ln in Lines)
+            {
+                imgIntruderZoneOverlay.DrawPolyline(new Point[2] { ln.first, ln.last }, false, new Bgra(255, 0, 0, 180), 4);
+            }
+            Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
+            imgIntruderZoneOverlay.CopyTo(temp);
+            FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
+        }
+
+        public static void DeleteClosestZoneElement(Point location)
+        {
+            double closestDistance = double.MaxValue;
+            //Point closestPoint = Point.Empty;
+            Line closest = null;
+
+            foreach (Line line in Lines)
+            {
+                double dist = line.GetDistanceToLine(location);
+                if (dist < closestDistance)
+                {
+                    closest = line;
+                    closestDistance = dist;
+                }
+            }
+            if (closest != null)
+                Lines.Remove(closest);
         }
 
         public static void Clear()
