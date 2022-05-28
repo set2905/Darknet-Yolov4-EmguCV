@@ -23,10 +23,11 @@ namespace WPFYOLO
             
             if (newRect != null && !newRect.IsEmpty)
             {
+                /*
                 imgIntruderZoneOverlay.Draw(newRect, new Bgra(255, 255, 255, 180), 4);
                 Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
                 imgIntruderZoneOverlay.CopyTo(temp);
-                FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
+                FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());*/
 
                 IntruderZone.ReDraw(imgIntruderZoneOverlay, FrameUserDraw);
             }

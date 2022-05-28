@@ -17,11 +17,11 @@ namespace WPFYOLO
         public override void SetZone(Image<Bgra, byte> imgIntruderZoneOverlay, System.Windows.Controls.Image FrameUserDraw)
         {
             IntruderZone.AddLine();
-
+            /*
             imgIntruderZoneOverlay.DrawPolyline(new Point[2] { IntruderZone.StartLocation,IntruderZone.EndLocation },false, new Bgra(255, 0, 0, 180), 4);
             Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
             imgIntruderZoneOverlay.CopyTo(temp);
-            FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());
+            FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(temp.ToBitmap());*/
 
             IntruderZone.ReDraw(imgIntruderZoneOverlay, FrameUserDraw);
         }

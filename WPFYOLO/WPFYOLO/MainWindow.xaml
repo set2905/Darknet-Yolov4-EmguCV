@@ -82,13 +82,15 @@
                         </Image>
                     </RadioButton>
                     <Button  Grid.Row="1" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" Click="ClearIntruderOverlay">
+
+                    </Button>
+                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch" Click="ButtonEraserTool_Click">
                         <Image>
                             <Image.Source>
                                 <BitmapImage UriSource="/images/Eraser.png" />
                             </Image.Source>
                         </Image>
-                    </Button>
-                    <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch" Click="ButtonEraserTool_Click"></RadioButton>
+                    </RadioButton>
                 </Grid>
                 </Grid>
             <Grid Grid.Row="2">

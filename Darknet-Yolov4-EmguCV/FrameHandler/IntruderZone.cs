@@ -68,7 +68,7 @@ namespace DarknetYOLOv4.FrameHandler
         public static void ReDraw(Image<Bgra, byte> imgIntruderZoneOverlay, System.Windows.Controls.Image FrameUserDraw)
         {
             imgIntruderZoneOverlay = imgIntruderZoneOverlay.CopyBlank();
-           // FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
+            // FrameUserDraw.Source = BitmapSourceConvert.ToBitmapSource(imgIntruderZoneOverlay.ToBitmap());
 
             foreach (Rectangle rect in ZoneRectangles)
             {
@@ -87,7 +87,7 @@ namespace DarknetYOLOv4.FrameHandler
         {
             double closestDistance = double.MaxValue;
             //Point closestPoint = Point.Empty;
-            Line closest = null;
+            Object closest = null;
 
             foreach (Line line in Lines)
             {
@@ -98,8 +98,24 @@ namespace DarknetYOLOv4.FrameHandler
                     closestDistance = dist;
                 }
             }
+
+            foreach (Rectangle rect in ZoneRectangles)
+            {
+                double dist = rect.GetDistanceToRect(location);
+                if (dist < closestDistance)
+                {
+                    closest = rect;
+                    closestDistance = dist;
+                }
+            }
+
             if (closest != null)
-                Lines.Remove(closest);
+            {
+                if (closest.GetType() == typeof(Line))
+                    Lines.Remove((Line)closest);
+                if (closest.GetType() == typeof(Rectangle))
+                    ZoneRectangles.Remove((Rectangle)closest);
+            }
         }
 
         public static void Clear()

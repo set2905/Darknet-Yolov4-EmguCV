@@ -43,6 +43,13 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
                              rect.Top + rect.Height / 2);
         }
 
+        public static double GetDistanceToRect(this Rectangle rect, Point p)
+        {
+            int dx = Math.Max(rect.Location.X - p.X, p.X - rect.Location.X);
+            var dy = Math.Max(rect.Location.Y-rect.Height - p.Y, p.Y - rect.Location.Y-rect.Width);
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         public static double GetDistance(Point p1, Point p2)
         {
             return Math.Sqrt(Math.Pow((p2.X - p1.X), 2) + Math.Pow((p2.Y - p1.Y), 2));
