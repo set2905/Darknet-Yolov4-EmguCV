@@ -26,7 +26,7 @@ namespace DarknetYOLOv4.FrameHandler
     {
 
         protected string labels = @"E:\YOLOv4Network\obj.names";
-        protected string weights = @"E:\YOLOv4Network\custom-yolov4-tiny-detector_final.weights";
+        protected string weights = @"E:\YOLOv4Network\custom-yolov4-tiny-detector_best.weights";
         protected string cfg = @"E:\YOLOv4Network\custom-yolov4-tiny-detector.cfg";
 
         public override void Initialize()
