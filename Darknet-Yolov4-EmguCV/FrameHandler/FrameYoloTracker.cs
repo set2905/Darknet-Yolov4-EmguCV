@@ -215,11 +215,10 @@ public class TrackedObject
     public TrackedObject(Rectangle bbox, Mat frame, System.Random rnd)
     {
         Bbox = bbox;
-        InitTracker(Bbox, frame);
         PreviousPositions = new Point[TrailCacheSize];
-
         // System.Random rnd = new System.Random();
         color = new MCvScalar(rnd.Next(0, 255), rnd.Next(0, 255), rnd.Next(0, 255));
+        InitTracker(Bbox, frame);
     }
 
     public void InitTracker(Rectangle bbox, Mat frame)
@@ -229,6 +228,7 @@ public class TrackedObject
         Tracker.Init(frame, bbox);
         lostTrackCountDown = 0;
         lostTrack = false;
+        GetIntruder();
     }
 
     public bool TryUpdate(Mat frame)
@@ -308,8 +308,9 @@ public class TrackedObject
 
     private void GetIntruder()
     {
-        if (currentTrailIndex - 1 < 0) return;
-        if (IntruderZone.isObjectIntruder(PreviousPositions[currentTrailIndex - 1], PreviousPositions[GetIndexOfFirst()]))
+        int index = currentTrailIndex - 1;
+        if (index< 0) index=0;
+        if (IntruderZone.isObjectIntruder(PreviousPositions[index], PreviousPositions[GetIndexOfFirst()]))
         {
             if (!IsIntruder)
             {
