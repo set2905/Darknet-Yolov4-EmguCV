@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:WPFYOLO"
         xmlns:objdetection="clr-namespace:DarknetYOLOv4;assembly=Darknet-Yolov4-EmguCV"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1450">
-    
+        Title="MainWindow" Height="688" Width="1565">
+
     <Grid x:Name="ObjectTrackerWindow" Background="#dcdde1">
         <Grid.RowDefinitions>
 
@@ -24,9 +24,9 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="2" Grid.RowSpan="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="650"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height=".05*"/>
+                <RowDefinition Height=".5*"/>
+                <RowDefinition Height=".05*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -38,7 +38,10 @@
                           ItemsSource="{local:EnumBindingSourceExtension objdetection:PlayMode}"/>
 
                 <CheckBox Grid.Column="1" IsChecked="True" x:Name="FixedFPSCheckBox" VerticalAlignment="Center" HorizontalAlignment="Left" Checked="FixedFPSCheckBox_Checked">
-                    <TextBlock HorizontalAlignment="Left" Width="50" FontSize="10" Height="15">Fixed FPS</TextBlock>
+
+                    <Viewbox>
+                        <TextBlock VerticalAlignment="Center">Fixed FPS</TextBlock>
+                    </Viewbox>
                     <CheckBox.LayoutTransform>
                         <ScaleTransform ScaleX="2" ScaleY="2"/>
                     </CheckBox.LayoutTransform>
@@ -49,10 +52,10 @@
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition />
+                    <RowDefinition Height=".25*"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="1" Background="#f5f6fa" BorderBrush="#f5f6fa" BorderThickness="1" CornerRadius="8,8,3,3">
+                <Border VerticalAlignment="Stretch" Grid.Row="1" Background="#f5f6fa" BorderBrush="#f5f6fa" BorderThickness="1" CornerRadius="8,8,3,3">
                     <TextBlock Text="" x:Name="StatusTextBox"/>
                 </Border>
                 <Grid Grid.Row="0">
@@ -96,13 +99,16 @@
                         </Image>
                     </RadioButton>
                 </Grid>
-                </Grid>
+            </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <Button  Grid.Column="0" Margin="3" HorizontalAlignment="Stretch" x:Name="StartButton" Click="StartButton_Click">
                     <Viewbox>
                         <TextBlock Text="Start" x:Name="StartButtonText"/>
@@ -121,18 +127,18 @@
                 </Button>
             </Grid>
         </Grid>
-        
+
         <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="20" x:Name="FrameDisplay"
                 MouseDown="FrameUserDraw_MouseDown"
                MouseMove="FrameUserDraw_MouseMove"
                MouseUp="FrameUserDraw_MouseUp"
                />
-        
+
         <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="20" x:Name="FrameUserDraw"
                MouseDown="FrameUserDraw_MouseDown"
                MouseMove="FrameUserDraw_MouseMove"
                MouseUp="FrameUserDraw_MouseUp"/>
-        
+
         <Button Grid.Column="0" Grid.Row="0" Margin="10"  x:Name="FrameButton1" Click="FrameButton1_Click" >
             <Image x:Name="capBtn1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </Button>
