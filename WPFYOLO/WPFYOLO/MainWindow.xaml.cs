@@ -74,7 +74,8 @@ namespace WPFYOLO
             VideoButtonsCovers.Add(capBtn4);
 
             ToggleVideoChoice(true);
-            PlayModeComboBox.SelectedIndex = 0;
+            PlayModeComboBox.SelectedIndex = 3;
+            
 
             // _buttonCoversThread = new Thread(new ThreadStart(UpdateVideoCovers));
             //_buttonCoversThread.Start();

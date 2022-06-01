@@ -157,14 +157,18 @@ namespace DarknetYOLOv4.FrameHandler
                 results.Add(new FrameProcessResult(trackedObjs[i].Bbox, trackedObjs[i].label + " " + trackedObjs[i].status, col));
 
 
+                if (trackedObjs[i].IsIntruder && !trackedObjs[i].IsSnapShotted)
+                {
+                    trackedObjs[i].IsSnapShotted = true;
+                    // SaveSnapshot(frame, trackedObjs[i].Bbox);
+                    SnapshotRequired = true;
+                    SaveSnapshot(frame);
+                }
 
-                CvInvoke.Line(frame, trackedObjs[i].PreviousPositions[trackedObjs[i].currentTrailIndex == 0 ? 0 : trackedObjs[i].currentTrailIndex - 1],
-                    trackedObjs[i].PreviousPositions[trackedObjs[i].GetIndexOfFirst()], trackedObjs[i].color);
+                //CvInvoke.Line(frame, trackedObjs[i].PreviousPositions[trackedObjs[i].currentTrailIndex == 0 ? 0 : trackedObjs[i].currentTrailIndex - 1],
+               //     trackedObjs[i].PreviousPositions[trackedObjs[i].GetIndexOfFirst()], trackedObjs[i].color);
 
             }
-
-
-
             /* if (moving != null)
                  foreach (FrameProcessResult m in moving)
                  {
@@ -206,6 +210,7 @@ public class TrackedObject
     public int TrailCacheSize = 20;
     public int currentTrailIndex = 0;
 
+    public bool IsSnapShotted=false;
     public bool IsIntruder = false;
     public bool lostTrack = false;
     public bool Disposed = false;
@@ -314,6 +319,8 @@ public class TrackedObject
         {
             if (!IsIntruder)
             {
+                //Объект стал интрудером
+                //SnapshotRequired = true;
                 IsIntruder = true;
                 label = "INTRUDER";
                 color = new MCvScalar(0, 0, 255);

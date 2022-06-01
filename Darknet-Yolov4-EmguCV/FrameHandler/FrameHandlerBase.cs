@@ -69,6 +69,7 @@ namespace DarknetYOLOv4.FrameHandler
             {
                 Image<Bgr, Byte> snapshot = frame.ToImage<Bgr, Byte>();
 
+
                 string newFileName;
                 for (int i = 1; true; i++)
                 {
@@ -83,6 +84,27 @@ namespace DarknetYOLOv4.FrameHandler
                 SnapshotRequired = false;
                 Console.WriteLine($"Snapshot saved: {newFileName}");
             }
+        }
+        public void SaveSnapshot(Mat frame, Rectangle ROI)
+        {
+            if (ROI.X < 0) ROI.X = 0;
+            if (ROI.Y < 0) ROI.Y = 0;
+            Image<Bgr, Byte> snapshot = frame.ToImage<Bgr, Byte>();
+                snapshot = snapshot.Copy(ROI);
+
+                string newFileName;
+                for (int i = 1; true; i++)
+                {
+                    //this is so that you can alter the name and keep the file format 
+                    newFileName = snapShotDirectory + $"\\ROI{i}_" + snapshotFileName;
+                    if (!File.Exists(newFileName))
+                    {
+                        break;
+                    }
+                }
+                snapshot.Save(newFileName);
+                Console.WriteLine($"Snapshot with ROI saved: {newFileName}");
+
         }
 
         public void Stop()

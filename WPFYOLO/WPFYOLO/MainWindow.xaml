@@ -37,7 +37,7 @@
                 <ComboBox Grid.Column="0" Height="30" VerticalAlignment="Center" x:Name="PlayModeComboBox" SelectionChanged="PlayModeComboBox_SelectionChanged"
                           ItemsSource="{local:EnumBindingSourceExtension objdetection:PlayMode}"/>
 
-                <CheckBox Grid.Column="1" x:Name="FixedFPSCheckBox" VerticalAlignment="Center" HorizontalAlignment="Left" Checked="FixedFPSCheckBox_Checked">
+                <CheckBox Grid.Column="1" IsChecked="True" x:Name="FixedFPSCheckBox" VerticalAlignment="Center" HorizontalAlignment="Left" Checked="FixedFPSCheckBox_Checked">
                     <TextBlock HorizontalAlignment="Left" Width="50" FontSize="10" Height="15">Fixed FPS</TextBlock>
                     <CheckBox.LayoutTransform>
                         <ScaleTransform ScaleX="2" ScaleY="2"/>
@@ -82,7 +82,11 @@
                         </Image>
                     </RadioButton>
                     <Button  Grid.Row="1" Grid.Column="1" Margin="3" HorizontalAlignment="Stretch" Click="ClearIntruderOverlay">
-
+                        <Image>
+                            <Image.Source>
+                                <BitmapImage UriSource="/images/X.png" />
+                            </Image.Source>
+                        </Image>
                     </Button>
                     <RadioButton  Style="{StaticResource {x:Type ToggleButton}}" Grid.Row="1" Grid.Column="0" Margin="3" HorizontalAlignment="Stretch" Click="ButtonEraserTool_Click">
                         <Image>
