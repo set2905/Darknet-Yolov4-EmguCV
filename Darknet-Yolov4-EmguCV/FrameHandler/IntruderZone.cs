@@ -67,6 +67,11 @@ namespace DarknetYOLOv4.FrameHandler
                 }
             }
 
+           foreach(Quad quad in Quads)
+            {
+                if (quad.isPointInside(currentPosition)) return true;
+            }
+
 
             return false;
         }
@@ -84,11 +89,11 @@ namespace DarknetYOLOv4.FrameHandler
             {
                 imgIntruderZoneOverlay.DrawPolyline(new Point[2] { ln.first, ln.last }, false, new Bgra(255, 0, 0, 180), 4);
             }
-            foreach(Quad quad in Quads)
+            foreach (Quad quad in Quads)
             {
                 imgIntruderZoneOverlay.DrawPolyline(quad.points, true, new Bgra(255, 0, 100, 150), 4);
             }
-            foreach(Point point in TempPoints)
+            foreach (Point point in TempPoints)
             {
                 CvInvoke.Circle(imgIntruderZoneOverlay, point, 3, new MCvScalar(255, 0, 255, 255), -1);
             }
@@ -155,13 +160,36 @@ namespace DarknetYOLOv4.FrameHandler
 
     public class Quad
     {
-        public Point[] points=new Point[4];
-        public Quad(Point point1, Point point2, Point point3, Point point4 )
+        public Point[] points = new Point[4];
+        public Quad(Point point1, Point point2, Point point3, Point point4)
         {
             this.points[0] = point1;
             this.points[1] = point2;
             this.points[2] = point3;
             this.points[3] = point4;
+        }
+
+        public double GetArea()
+        {
+            //надо кешировать
+            double Tri1 = RectangleExtensions.GetTriangleArea(points[0], points[1], points[2]);
+            double Tri2 = RectangleExtensions.GetTriangleArea(points[2], points[3], points[0]);
+            return Tri1 + Tri2;
+
+        }
+
+        public bool isPointInside(Point p)
+        {
+            double Tri1 = RectangleExtensions.GetTriangleArea(points[0], points[1], p);
+            double Tri2 = RectangleExtensions.GetTriangleArea(points[1], points[2], p);
+            double Tri3 = RectangleExtensions.GetTriangleArea(points[2], points[3], p);
+            double Tri4 = RectangleExtensions.GetTriangleArea(points[3], points[0], p);
+            double Area = Tri1 + Tri2 + Tri3 + Tri4;
+
+            if (Area > GetArea())
+                return false;
+            else
+                return true;
         }
     }
 
