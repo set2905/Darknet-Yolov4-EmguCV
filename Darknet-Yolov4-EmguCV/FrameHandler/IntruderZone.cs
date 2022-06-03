@@ -18,6 +18,8 @@ namespace DarknetYOLOv4.FrameHandler
 {
     public static class IntruderZone
     {
+        public static List<Point> TempPoints = new List<Point>();
+        public static List<Quad> Quads = new List<Quad>();
         public static List<Line> Lines = new List<Line>();
         public static List<Rectangle> ZoneRectangles = new List<Rectangle>();
         public static System.Drawing.Point StartLocation;
@@ -28,7 +30,6 @@ namespace DarknetYOLOv4.FrameHandler
         {
             Line line = new Line(StartLocation, EndLocation);
             Lines.Add(line);
-            if (line.IsIntersecting(Lines[0])) Trace.WriteLine("Пересекаются!");
         }
 
 
@@ -43,6 +44,11 @@ namespace DarknetYOLOv4.FrameHandler
             if (_rect.Width * _rect.Height < 5000) return Rectangle.Empty;
             ZoneRectangles.Add(_rect);
             return _rect;
+        }
+
+        public static void AddQuad(Quad quad)
+        {
+            Quads.Add(quad);
         }
 
         public static bool isObjectIntruder(Point currentPosition, Point firstPosition)
@@ -77,6 +83,14 @@ namespace DarknetYOLOv4.FrameHandler
             foreach (Line ln in Lines)
             {
                 imgIntruderZoneOverlay.DrawPolyline(new Point[2] { ln.first, ln.last }, false, new Bgra(255, 0, 0, 180), 4);
+            }
+            foreach(Quad quad in Quads)
+            {
+                imgIntruderZoneOverlay.DrawPolyline(quad.points, true, new Bgra(255, 0, 100, 150), 4);
+            }
+            foreach(Point point in TempPoints)
+            {
+                CvInvoke.Circle(imgIntruderZoneOverlay, point, 3, new MCvScalar(255, 0, 255, 255), -1);
             }
             Image<Bgra, byte> temp = imgIntruderZoneOverlay.CopyBlank();
             imgIntruderZoneOverlay.CopyTo(temp);
@@ -122,6 +136,8 @@ namespace DarknetYOLOv4.FrameHandler
         {
             ZoneRectangles.Clear();
             Lines.Clear();
+            Quads.Clear();
+            TempPoints.Clear();
         }
     }
 
@@ -134,6 +150,18 @@ namespace DarknetYOLOv4.FrameHandler
         {
             this.first = first;
             this.last = last;
+        }
+    }
+
+    public class Quad
+    {
+        public Point[] points=new Point[4];
+        public Quad(Point point1, Point point2, Point point3, Point point4 )
+        {
+            this.points[0] = point1;
+            this.points[1] = point2;
+            this.points[2] = point3;
+            this.points[3] = point4;
         }
     }
 

@@ -346,8 +346,8 @@ namespace WPFYOLO
 
         private void ButtonEraserTool_Click(object sender, RoutedEventArgs e)
         {
-            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneEraserTool))
-                currentZoneTool = new ZoneEraserTool();
+            if (currentZoneTool == null || currentZoneTool.GetType() != typeof(ZoneVirtualPlane))
+                currentZoneTool = new ZoneVirtualPlane();
             else currentZoneTool = null;
         }
     }

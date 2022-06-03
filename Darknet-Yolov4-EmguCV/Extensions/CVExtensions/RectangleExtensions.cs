@@ -55,7 +55,7 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
             return Math.Sqrt(Math.Pow((p2.X - p1.X), 2) + Math.Pow((p2.Y - p1.Y), 2));
         }
 
-        //Govno
+
         public static bool IsIntersecting(this Line p12, Line p34)
         {
             bool isIntersecting = false;
@@ -83,6 +83,17 @@ namespace DarknetYOLOv4.Extensions.CVExtensions
             }
 
             return isIntersecting;
+        }
+
+        public static double GetTriangleArea(Point p1, Point p2, Point p3)
+        {
+            double side1 = GetDistance(p1,p2);
+            double side2 = GetDistance(p2, p3);
+            double side3 = GetDistance(p3, p1);
+
+            double semiperimeter = (side1 + side2 + side3) / 2;
+            double Area = Math.Sqrt(semiperimeter * (semiperimeter - side1) * (semiperimeter - side2) * (semiperimeter - side3));
+            return Area;
         }
 
         public static double GetDistanceToLine(this Line line, Point point)
