@@ -161,12 +161,14 @@ namespace DarknetYOLOv4.FrameHandler
     public class Quad
     {
         public Point[] points = new Point[4];
+        public double Area;
         public Quad(Point point1, Point point2, Point point3, Point point4)
         {
             this.points[0] = point1;
             this.points[1] = point2;
             this.points[2] = point3;
             this.points[3] = point4;
+            Area = GetArea();
         }
 
         public double GetArea()
@@ -186,7 +188,7 @@ namespace DarknetYOLOv4.FrameHandler
             double Tri4 = RectangleExtensions.GetTriangleArea(points[3], points[0], p);
             double Area = Tri1 + Tri2 + Tri3 + Tri4;
 
-            if (Area > GetArea())
+            if (Area-0.001 > this.Area)
                 return false;
             else
                 return true;

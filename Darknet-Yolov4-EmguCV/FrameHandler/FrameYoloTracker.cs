@@ -233,7 +233,7 @@ public class TrackedObject
         Tracker.Init(frame, bbox);
         lostTrackCountDown = 0;
         lostTrack = false;
-        GetIntruder();
+        TryUpdate(frame);
     }
 
     public bool TryUpdate(Mat frame)
