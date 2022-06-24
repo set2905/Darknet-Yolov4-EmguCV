@@ -48,7 +48,7 @@ namespace DarknetYOLOv4.FrameHandler
         public string currentVideo = @"https://live.cmirit.ru:443/live/smart16_1920x1080.stream/playlist.m3u8";
         public bool SnapshotRequired = false;
         private string snapshotFileName = "snapshot.jpg";
-        public string snapShotDirectory = @"E:\Репа\EmguCVYolov4\Darknet-Yolov4-EmguCV\bin\Debug\snapshots";
+        public string snapShotDirectory;
 
         protected int frameProcessTime = 0;
         protected int algorithmExecTime = 0;
@@ -59,12 +59,16 @@ namespace DarknetYOLOv4.FrameHandler
 
         public virtual void Initialize()
         {
+            var filePath = Directory.GetCurrentDirectory();
+            snapShotDirectory = Path.Combine(filePath, "snapshots");
+
             cap = new VideoCapture(currentVideo);
             cap.Set(Emgu.CV.CvEnum.CapProp.Buffersize, 3);
         }
 
         protected void SaveSnapshot(Mat frame)
         {
+           
             if (SnapshotRequired)
             {
                 Image<Bgr, Byte> snapshot = frame.ToImage<Bgr, Byte>();
