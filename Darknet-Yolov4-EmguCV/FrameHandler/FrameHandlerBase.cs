@@ -39,7 +39,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected Size OriginalSize = new Size(1280, 720);
 
         protected VideoCapture cap;
-        protected DarknetYOLO model;
+        
         public bool isPlaying = false;
         public string StatusText = "";
         //protected ObjectDetectorForm videoForm;

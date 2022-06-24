@@ -28,7 +28,7 @@ namespace DarknetYOLOv4.FrameHandler
         protected string labels = @"E:\YOLOv4Network\obj.names";
         protected string weights = @"E:\YOLOv4Network\custom-yolov4-tiny-detector_best.weights";
         protected string cfg = @"E:\YOLOv4Network\custom-yolov4-tiny-detector.cfg";
-
+        protected DarknetYOLO model;
         public override void Initialize()
         {
             base.Initialize();
@@ -50,7 +50,7 @@ namespace DarknetYOLOv4.FrameHandler
                 string text = item.Label + " " + item.Value;
                 CvInvoke.Rectangle(frame, new Rectangle(item.Rectangle.X - 2, item.Rectangle.Y - 33, item.Rectangle.Width + 4, 40), new MCvScalar(255, 0, 0), -1);
                 CvInvoke.PutText(frame, text, new Point(item.Rectangle.X, item.Rectangle.Y - 15), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.6, new MCvScalar(255, 255, 255), 2);
-                CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(255, 0, 0), 3);
+                CvInvoke.Rectangle(frame, item.Rectangle, new MCvScalar(0, 0, 255), 3);
             }
             // videoForm.pictureBox1.Image = frame.ToBitmap();
             return frame;
