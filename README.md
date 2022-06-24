@@ -13,3 +13,4 @@ Intrusion detection prototype using EmguCV, WPF.
 3. Создание прямоугольника.
 
 
+![image](https://user-images.githubusercontent.com/72752613/175509799-1725518f-1186-4419-8cd1-19e1440c9de0.png)
