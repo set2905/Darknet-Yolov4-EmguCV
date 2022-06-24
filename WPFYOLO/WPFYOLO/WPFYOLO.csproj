@@ -8,6 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="NetModel\**" />
+	  <EmbeddedResource Remove="NetModel\**" />
+	  <None Remove="NetModel\**" />
+	  <Page Remove="NetModel\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="images\Eraser.png" />
 	  <None Remove="images\Line.jpg" />
 	  <None Remove="images\quad.png" />

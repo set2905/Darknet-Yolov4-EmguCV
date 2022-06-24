@@ -43,6 +43,7 @@ namespace DarknetYolo
         /// <param name="target">Preferred computation target.</param>
         public DarknetYOLO(string labelsPath, string weightsPath, string configPath, PreferredBackend backend = PreferredBackend.OpenCV, PreferredTarget target = PreferredTarget.Cpu)
         {
+
             Enum.TryParse(backend.ToString(), out Emgu.CV.Dnn.Backend b);
             Enum.TryParse(target.ToString(), out Emgu.CV.Dnn.Target t);
             Network = DnnInvoke.ReadNetFromDarknet(configPath, weightsPath);

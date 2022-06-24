@@ -58,6 +58,13 @@ namespace DarknetYOLOv4.FrameHandler
 
             private void LoadModel()
         {
+            var filePath = Directory.GetCurrentDirectory();
+            
+
+            labels = Path.Combine(filePath, "NetModel\\obj.names");
+            weights = Path.Combine(filePath, "NetModel\\custom-yolov4-tiny-detector_best.weights");
+            cfg = Path.Combine(filePath, "NetModel\\custom-yolov4-tiny-detector.cfg");
+
             SetStatus("[INFO] Loading Model...");
             model = new DarknetYOLO(labels, weights, cfg, PreferredBackend.Cuda, PreferredTarget.Cuda);
             model.NMSThreshold = 0.4f;
